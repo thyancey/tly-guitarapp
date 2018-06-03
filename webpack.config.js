@@ -25,7 +25,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['*', '.js', '.jsx', '.less'],
-    modules: [path.resolve(__dirname, 'src'), 'node_modules']
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+    alias:{
+      src: path.resolve(__dirname, 'src/')
+    }
   },
   output: {
     path: __dirname + '/dist',

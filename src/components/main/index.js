@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { connect } from '../../store';
+import { connect } from 'src/store';
 require('./style.less');
 
 class Main extends Component {

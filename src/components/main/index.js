@@ -8,14 +8,14 @@ class Main extends Component {
   render() {
     if(!this.props.loaded){
       return (
-        <div>
+        <div id="sample">
           <h1>{'Please wait... loading...'}</h1>
           <button onClick={() => this.props.actions.toggleLoaded()}>{'toggle'}</button>
         </div>
       );
     }else{
       return (
-        <div>
+        <div id="sample" className="loaded">
           <h1>{'LOADED'}</h1>
           <button onClick={() => this.props.actions.toggleLoaded()}>{'toggle'}</button>
         </div>

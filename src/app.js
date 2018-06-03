@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
-import Main from './components/main';
-
-import { Provider } from './store';
+import Main from 'src/components/main';
+import { Provider } from 'src/store';
 
 class App extends Component {
   render() {

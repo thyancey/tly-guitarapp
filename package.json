@@ -24,6 +24,7 @@
     "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
+    "immutable": "^3.8.2",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
     "react": "^16.4.0",

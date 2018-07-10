@@ -12,15 +12,34 @@ p, span, h1, h2, h3, h4, h5, h6{
 html{
   font-size: 62.5%;
 
-
   body{
     font-family: @font-style-body;
     font-weight: 500;
     font-size: 1.8rem;
 
     margin:0;
-    background-color:@color-grey;
-    color:@color-red;
+    background-color:@color-black;
+    color:@color-purple;
   }
 }
 
+
+
+.main{
+  position:absolute;
+  left:0px;
+  top:0px;
+  width:100%;
+  height:100%;
+  overflow-y:hidden;
+
+  .control-panel{
+    position:absolute;
+    width:@control-panel-width;
+    left:0px;
+    top:0px;
+    text-align:center;
+    overflow-y:scroll;
+  }
+
+}

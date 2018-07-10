@@ -31,15 +31,15 @@ class ControlPanel extends Component {
     return retArray;
   }
 
-  createTuningButtons(tuning){
+  createInstrumentButtons(instrument){
     const retArray = [];
-    for(var tuningLabel in tuning){
-      if(tuning.hasOwnProperty(tuningLabel)){
-        retArray.push(<StoreButton  actionMethod={this.props.actions.setTuning}
-                                    actionParam={tuningLabel}
-                                    isActive={(tuningLabel === this.props.tuning)} 
-                                    title={tuning[tuningLabel].title}
-                                    key={'tuning-' + tuningLabel}/>);
+    for(var instrumentLabel in instrument){
+      if(instrument.hasOwnProperty(instrumentLabel)){
+        retArray.push(<StoreButton  actionMethod={this.props.actions.setInstrument}
+                                    actionParam={instrumentLabel}
+                                    isActive={(instrumentLabel === this.props.instrument)} 
+                                    title={instrument[instrumentLabel].title}
+                                    key={'instrument-' + instrumentLabel}/>);
       }
     }
     return retArray;
@@ -73,9 +73,9 @@ class ControlPanel extends Component {
             <span key={'note-' + index}>{note}</span>
           )}
         </div>
-        <span>Tuning</span>
-        <div className="tuning-buttons">
-          {this.createTuningButtons(MusicMan.getTuning())}
+        <span>Instrument</span>
+        <div className="instrument-buttons">
+          {this.createInstrumentButtons(MusicMan.getInstruments())}
         </div>
       </div>
     );
@@ -89,6 +89,6 @@ class ControlPanel extends Component {
 export default connect(state => ({ 
   musicKey: state.musicKey,
   scale: state.scale,
-  tuning: state.tuning,
+  instrument: state.instrument,
   octave: state.octave
 }))(ControlPanel);

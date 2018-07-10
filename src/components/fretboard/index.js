@@ -32,13 +32,13 @@ class Fretboard extends Component {
       simpleNotes.push(octaveNotes[n].split('-')[0]);
     }
 
-    const chordFretIdxs = MusicMan.getChordFretIdxs(this.props.chord, this.props.tuning);
+    const chordFretIdxs = MusicMan.getChordFretIdxs(this.props.chord, this.props.instrument);
 
-    var tuningResult = MusicMan.getTunedNotesFromLabel(this.props.tuning);
-      // console.log("HEY tuningResult", tuningResult);
-    var strings = tuningResult.strings;
-    var fretBounds = tuningResult.fretBounds;
-    // var nuts = tuningResult.nuts;
+    var instrumentResult = MusicMan.getInstrumentNotesFromLabel(this.props.instrument);
+      // console.log("HEY instrumentResult", instrumentResult);
+    var strings = instrumentResult.strings;
+    var fretBounds = instrumentResult.fretBounds;
+    // var nuts = instrumentResult.nuts;
 
     for(var sIdx = 0; sIdx < strings.length; sIdx++){
 
@@ -90,5 +90,5 @@ export default connect(state => ({
   octave: state.octave,
   scale: state.scale,
   chord: state.chord,
-  tuning: state.tuning
+  instrument: state.instrument
 }))(Fretboard);

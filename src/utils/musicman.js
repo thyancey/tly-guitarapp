@@ -1,4 +1,5 @@
 import MDATA from 'src/data/musicdata.js';
+import IDATA from 'src/data/instrumentdata.js';
 
 
 class MusicMan{
@@ -16,8 +17,8 @@ class MusicMan{
   static getScales(){
     return MDATA.scales;
   }
-  static getTuning(){
-    return MDATA.tuning;
+  static getInstruments(){
+    return IDATA;
   }
 
   static getScaleSequence(scaleLabel){
@@ -92,36 +93,36 @@ class MusicMan{
 
 
 
-  static getTunedChords(tuningLabel){
+  static getInstrumentChords(instrumentLabel){
     try{
-      return MDATA.tuning[tuningLabel].chords;
+      return IDATA[instrumentLabel].chords;
     }catch(e){
-      console.error(`could not find chords for tuning ${tuningLabel}`, e);
+      console.error(`could not find chords for tuning ${instrumentLabel}`, e);
       return null;
     }
   }
 
-  static getTunedStrings(tuningLabel){
+  static getInstrumentStrings(instrumentLabel){
     try{
-      return MDATA.tuning[tuningLabel].strings;
+      return IDATA[instrumentLabel].strings;
     }catch(e){
-      console.error(`could not find strings for tuning ${tuningLabel}`, e);
+      console.error(`could not find strings for tuning ${instrumentLabel}`, e);
       return null;
     }
   }
 
-  static getTunedNotesFromLabel(tuningLabel){
-    const tuningStringsArray = MusicMan.getTunedStrings(tuningLabel);
+  static getInstrumentNotesFromLabel(instrumentLabel){
+    const tuningStringsArray = MusicMan.getInstrumentStrings(instrumentLabel);
     // console.log('1');
     // console.log(tuningStringsArray);
     return {
-      'strings': MusicMan.getTunedNotes(tuningStringsArray),
+      'strings': MusicMan.getInstrumentNotes(tuningStringsArray),
       'fretBounds': MusicMan.getFretBoundsArray(tuningStringsArray)
     }
   }
 
-  static getTunedNotes(tuningStringsArray){
-    // console.log('getTunedNotes', tuningStringsArray);
+  static getInstrumentNotes(tuningStringsArray){
+    // console.log('getInstrumentNotes', tuningStringsArray);
     const retStrings = [];
     for(var s = 0; s < tuningStringsArray.length; s++){
       let stringNotes = [];
@@ -157,8 +158,8 @@ class MusicMan{
 
 
 
-  static getChordFretIdxs(chordLabel, tuningLabel){
-    const chordObj = MusicMan.getChordObj(chordLabel, tuningLabel);
+  static getChordFretIdxs(chordLabel, instrumentLabel){
+    const chordObj = MusicMan.getChordObj(chordLabel, instrumentLabel);
     if(!chordObj){
       return [];
     }
@@ -166,8 +167,8 @@ class MusicMan{
     return chordObj.fingering;
   }
 
-  static getChordObj(chordLabel, tuningLabel){
-    const chordsObj = MusicMan.getTunedChords(tuningLabel);
+  static getChordObj(chordLabel, instrumentLabel){
+    const chordsObj = MusicMan.getInstrumentChords(instrumentLabel);
     if(!chordsObj){
       return null;
     }

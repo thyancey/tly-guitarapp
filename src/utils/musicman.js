@@ -1,4 +1,5 @@
-import MDATA from 'src/data/musicdata.json';
+import MDATA from 'src/data/musicdata.js';
+
 
 class MusicMan{
 
@@ -23,7 +24,7 @@ class MusicMan{
     try{
       return MDATA.scales[scaleLabel].sequence;
     }catch(e){
-      console.error(`could not find scale with label ${scaleLabel}`, e);
+      console.error(`could not find scale sequence for scale with label ${scaleLabel}`, e);
       return null;
     }
   }
@@ -81,10 +82,116 @@ class MusicMan{
     let curIdx = MusicMan.getNoteIndex(rootNote);
     for(var i = 0; i < sequence.length; i++){
       scale.push(MusicMan.getNoteAtIndex(curIdx + sequence[i], octave));
-      curIdx += sequence[i];
     }
 
     return scale;
+  }
+
+
+
+
+
+
+  static getTunedChords(tuningLabel){
+    try{
+      return MDATA.tuning[tuningLabel].chords;
+    }catch(e){
+      console.error(`could not find chords for tuning ${tuningLabel}`, e);
+      return null;
+    }
+  }
+
+  static getTunedStrings(tuningLabel){
+    try{
+      return MDATA.tuning[tuningLabel].strings;
+    }catch(e){
+      console.error(`could not find strings for tuning ${tuningLabel}`, e);
+      return null;
+    }
+  }
+
+  static getTunedNotesFromLabel(tuningLabel){
+    const tuningStringsArray = MusicMan.getTunedStrings(tuningLabel);
+    // console.log('1');
+    // console.log(tuningStringsArray);
+    return {
+      'strings': MusicMan.getTunedNotes(tuningStringsArray),
+      'fretBounds': MusicMan.getFretBoundsArray(tuningStringsArray)
+    }
+  }
+
+  static getTunedNotes(tuningStringsArray){
+    // console.log('getTunedNotes', tuningStringsArray);
+    const retStrings = [];
+    for(var s = 0; s < tuningStringsArray.length; s++){
+      let stringNotes = [];
+      // console.log('tuningStringsArray! ', tuningStringsArray)
+      const octaveNote = tuningStringsArray[s].note;
+      let noteIdx = MusicMan.getNoteIndex(octaveNote.split('-')[0]);
+      let octave = octaveNote.split('-')[1];
+
+      //- +1 for the 'nut'
+      const numFrets = tuningStringsArray[s].frets[1] - tuningStringsArray[s].frets[0] + 1;
+
+      for(var f = 0; f < numFrets; f++){
+        //- pushes something like 20, 1
+        stringNotes.push(MusicMan.getNoteAtIndex(noteIdx + f, octave));
+      }
+      //- pushes all notes in a string
+      retStrings.push(stringNotes);
+    }
+
+    //- return array of strings, each with array of notes
+    return retStrings;
+  }
+
+  static getFretBoundsArray(tuningStringsArray){
+    const retFrets = [];
+
+    for(var s = 0; s < tuningStringsArray.length; s++){
+      retFrets.push(tuningStringsArray[s].frets);
+    }
+
+    return retFrets;
+  }
+
+
+
+  static getChordFretIdxs(chordLabel, tuningLabel){
+    const chordObj = MusicMan.getChordObj(chordLabel, tuningLabel);
+    if(!chordObj){
+      return [];
+    }
+
+    return chordObj.fingering;
+  }
+
+  static getChordObj(chordLabel, tuningLabel){
+    const chordsObj = MusicMan.getTunedChords(tuningLabel);
+    if(!chordsObj){
+      return null;
+    }
+
+    const chordObj = chordsObj[chordLabel];
+    if(!chordObj){
+      return null;
+    }
+
+    return chordObj;
+  }
+
+  static getNoteChange(oldOctaveNote, newOctaveNote){
+    const oldIdx = MusicMan.getNoteIndex(oldOctaveNote.split('-')[0]);
+    const oldOctave = oldOctaveNote.split('-')[1];
+    const newIdx = MusicMan.getNoteIndex(newOctaveNote.split('-')[0]);
+    const newOctave = newOctaveNote.split('-')[1];
+
+
+    const octaveChange = (newOctave - oldOctave) * 12;
+    const idxChange = newIdx - oldIdx;
+    const noteChange = octaveChange + idxChange;
+
+    return noteChange;
   }
 
 }

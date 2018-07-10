@@ -3,6 +3,7 @@ import { connect } from 'src/store';
 
 import MusicMan from 'src/utils/musicman';
 import ControlPanel from 'src/components/control-panel';
+import Fretboard from 'src/components/fretboard';
 
 require('./style.less');
 
@@ -17,6 +18,7 @@ class Main extends Component {
     return(
       <div className="main">
         <ControlPanel />
+        <Fretboard />
       </div>
     );
   }

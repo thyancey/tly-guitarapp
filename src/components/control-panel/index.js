@@ -66,7 +66,7 @@ class ControlPanel extends Component {
           {this.createScaleButtons(MusicMan.getScales())}
         </div>
         <div className="active-octave">
-          <span>Octave: {this.props.octive}</span>
+          <span>Octave: {this.props.octave}</span>
         </div>
         <div className="active-notes">
           {simpleNotes.map((note, index) => 

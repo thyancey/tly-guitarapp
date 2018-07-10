@@ -23,7 +23,9 @@ html{
   }
 }
 
-
+body{
+  font-size: 62.5%;
+}
 
 .main{
   position:absolute;
@@ -36,10 +38,19 @@ html{
   .control-panel{
     position:absolute;
     width:@control-panel-width;
+    
+    height:100%;
     left:0px;
     top:0px;
-    text-align:center;
     overflow-y:scroll;
   }
 
+  .fretboard-container{
+    position:absolute;
+    left:@control-panel-width;
+    right:@fret-panel-width;
+    top:0;
+    height:100%;
+    overflow-y:scroll;
+  }
 }

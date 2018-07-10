@@ -6,7 +6,7 @@ const store = {
     notes: List.of('C', 'D', 'E', 'F', 'G', 'A', 'B', 'C'),
     musicKey: 'C',
     scale: 'major',
-    activeScale: 'major',
+    shapeScale:'',
     tuning: 'standard',
     octave: '2',
     chord: null,

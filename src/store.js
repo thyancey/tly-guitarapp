@@ -1,5 +1,6 @@
 import { initStore } from 'react-waterfall';
 import {List} from 'immutable';
+import MusicMan from 'src/utils/musicman';
 
 const store = {
   initialState: {
@@ -7,6 +8,7 @@ const store = {
     musicKey: 'C',
     scale: 'major',
     instrument: 'guitar-standard',
+    midiInstrument: 'electricGuitar',
     octave: 2,
     chord: null,
     selectionMode:{
@@ -17,7 +19,13 @@ const store = {
   actions: {
     setMusicKey: ({ musicKey }, newMusicKey) => ({ musicKey: newMusicKey }),
     setScale: ({ scale }, newScale) => ({ scale: newScale }),
-    setInstrument: ({ instrument }, newInstrument) => ({ instrument: newInstrument }),
+    setInstrument: ({ instrument, midiInstrument, chord }, newInstrument) => {
+      return { 
+        instrument: newInstrument,
+        midiInstrument: MusicMan.getInstrumentMidiId(newInstrument),
+        chord: null
+      }
+    },
     setOctave: ({ octave }, newOctave) => ({ octave: newOctave }),
     setChord: ({ chord }, newChord) => ({ chord: newChord }),
     setSelectionMode: ({ selectionMode }, newSelectionMode) => ({ selectionMode: newSelectionMode })

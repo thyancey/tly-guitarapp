@@ -5,7 +5,7 @@ export default class Fret extends Component {
   render() {
     let className = 'fret';
 
-    if(this.props.activeChord){
+    if(this.props.chord){
       if(this.props.isChordFret){
         className += ' active-fret';
 

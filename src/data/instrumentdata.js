@@ -1,5 +1,6 @@
 export default {
   "guitar-standard":{
+    "midiId": "electricGuitar",
     "title": "Guitar (Standard)",
     "strings": [
       {
@@ -396,6 +397,7 @@ export default {
   },
   "guitar-drop-d":{
     "title": "Guitar (Drop D)",
+    "midiId": "electricGuitar",
     "strings": [
       {
         "note":"D-1",
@@ -425,6 +427,7 @@ export default {
   },
   "bass-standard":{
     "title": "Bass (Standard)",
+    "midiId": "electricBass",
     "strings": [
       {
         "note":"E-1",
@@ -446,6 +449,7 @@ export default {
   },
   "banjo-open-g":{
     "title": "Banjo (Open G)",
+    "midiId": "banjo",
     "strings": [
       {
         "note":"G-3",
@@ -471,6 +475,7 @@ export default {
   },
   "ukelele-soprano":{
     "title": "Ukelele (Soprano)",
+    "midiId": "nylonGuitar",
     "strings": [
       {
         "note":"G-3",
@@ -488,10 +493,174 @@ export default {
         "note":"A-4",
         "frets":[0,12]
       }
-    ]
+    ],
+    "chords":{
+      "A":{
+        "title": "A",
+        "root": "A",
+        "triad": "major",
+        "fingering": [2,1,0,0]
+      },
+      "A-m":{
+        "title": "Am",
+        "root": "A",
+        "triad": "minor",
+        "fingering": [2,0,0,0]
+      },
+      "A-dim":{
+        "title": "Adim",
+        "root": "A",
+        "triad": "diminished",
+        "fingering": [1,3,5,3]
+      },
+      "A-m-7":{
+        "title": "Am7",
+        "root": "A",
+        "fingering": [0,0,0,0]
+      },
+      "B":{
+        "title": "B",
+        "root": "B",
+        "triad": "major",
+        "fingering": [4,3,2,2]
+      },
+      "B-m":{
+        "title": "Bm",
+        "root": "B",
+        "triad": "minor",
+        "fingering": [4,2,2,2]
+      },
+      "B-dim":{
+        "title": "Bdim",
+        "root": "B",
+        "triad": "diminished",
+        "fingering": [4,2,1,2]
+      },
+      "B-m-7":{
+        "title": "Bm7",
+        "root": "B",
+        "fingering": [1,1,1,1]
+      },
+      "C":{
+        "title": "C",
+        "root": "C",
+        "triad": "major",
+        "fingering": [0,0,0,3]
+      },
+      "C-m":{
+        "title": "Cm",
+        "root": "C",
+        "triad": "minor",
+        "fingering": [0,3,3,3]
+      },
+      "C-dim":{
+        "title": "Cdim",
+        "root": "C",
+        "triad": "diminished",
+        "fingering": [-1,3,2,3]
+      },
+      "C-7":{
+        "title": "C7",
+        "root": "C",
+        "fingering": [0,0,0,1]
+      },
+      "C-add-9":{
+        "title": "Cadd9",
+        "root": "C",
+        "fingering": [0,2,0,3]
+      },
+      "D":{
+        "title": "D",
+        "root": "D",
+        "triad": "major",
+        "fingering": [2,2,2,0]
+      },
+      "D-m":{
+        "title": "Dm",
+        "root": "D",
+        "triad": "minor",
+        "fingering": [2,2,1,0]
+      },
+      "D-dim":{
+        "title": "Ddim",
+        "root": "D",
+        "triad": "diminished",
+        "fingering": [1,2,1,-1]
+      },
+      "E":{
+        "title": "E",
+        "root": "E",
+        "triad": "major",
+        "fingering": [1,4,0,2]
+      },
+      "E-m":{
+        "title": "Em",
+        "root": "E",
+        "triad": "minor",
+        "fingering": [0,4,3,2]
+      },
+      "E-dim":{
+        "title": "Edim",
+        "root": "E",
+        "triad": "diminished",
+        "fingering": [0,4,0,1]
+      },
+      "E-7":{
+        "title": "E7",
+        "root": "E",
+        "fingering": [1,2,0,2]
+      },
+      "E-m-7":{
+        "title": "Em7",
+        "root": "E",
+        "fingering": [0,2,0,2]
+      },
+      "F":{
+        "title": "F",
+        "root": "F",
+        "triad": "major",
+        "fingering": [2,0,1,0]
+      },
+      "F-m":{
+        "title": "Fm",
+        "root": "F",
+        "triad": "minor",
+        "fingering": [0,4,3,2]
+      },
+      "F-dim":{
+        "title": "Fdim",
+        "root": "F",
+        "triad": "diminished",
+        "fingering": [1,-1,1,2]
+      },
+      "G":{
+        "title": "G",
+        "root": "G",
+        "triad": "major",
+        "fingering": [0,2,3,2]
+      },
+      "G-m":{
+        "title": "Gm",
+        "root": "G",
+        "triad": "minor",
+        "fingering": [0,2,3,1]
+      },
+      "G-dim":{
+        "title": "Gdim",
+        "root": "G",
+        "triad": "diminished",
+        "fingering": [0,1,3,1]
+      },
+      "G-7":{
+        "title": "G7",
+        "root": "G",
+        "fingering": [0,2,1,2]
+      }
+    }
   },
   "shamisen-hon-choshi":{
     "title": "Shamisen (Hon Choshi)",
+    "midiId": "shamisen",
     "strings": [
       {
         "note":"C-3",

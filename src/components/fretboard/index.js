@@ -36,10 +36,8 @@ class Fretboard extends Component {
     const chordFretIdxs = MusicMan.getChordFretIdxs(this.props.chord, this.props.instrument);
 
     var instrumentResult = MusicMan.getInstrumentNotesFromLabel(this.props.instrument);
-      // console.log("HEY instrumentResult", instrumentResult);
     var strings = instrumentResult.strings;
     var fretBounds = instrumentResult.fretBounds;
-    // var nuts = instrumentResult.nuts;
 
     for(var sIdx = 0; sIdx < strings.length; sIdx++){
 

@@ -4,15 +4,25 @@ import MIDISounds from 'midi-sounds-react';
 
 require('./style.less');
 
+const DEFAULT_INSTRUMENT = 'electricGuitar';
 
 const INSTRUMENTS = {
-  'steelGuitar': {
+  nylonGuitar: {
+    id: 253
+  },
+  steelGuitar: {
     id: 260
   },
-  'electricGuitar': {
+  electricGuitar: {
     id: 288
   },
-  'shamisen': {
+  electricBass: {
+    id: 378
+  },
+  banjo: {
+    id: 1131
+  },
+  shamisen: {
     id: 1139
   }
 }
@@ -35,7 +45,7 @@ export default class MusicBox extends Component {
 
     this.state = {
       // curInstrument: INSTRUMENTS.steelGuitar
-      curInstrument: INSTRUMENTS.shamisen
+      curInstrument: INSTRUMENTS[DEFAULT_INSTRUMENT]
     };
   }
 
@@ -77,15 +87,22 @@ export default class MusicBox extends Component {
     }
   }
 
+  setMidiInstrument(newId){
+    const foundInstrument = INSTRUMENTS[newId];
+    this.midiSounds.cacheInstrument(foundInstrument.id);
+    this.setState({curInstrument: foundInstrument})
+  }
+
   componentDidMount() {
     //- TODO, documentation said to do this to init it or something?
+    this.midiSounds.cacheInstrument(this.state.curInstrument.id);
     this.setState(this.state);
   }
 
   componentDidUpdate(prevProps){
-    // if(prevProps.singleNote !== this.props.singleNote){
-    //   this.playSingleNote(this.props.singleNote);
-    // }
+    if(prevProps.midiInstrument !== this.props.midiInstrument){
+      this.setMidiInstrument(this.props.midiInstrument)
+    }
   }
 
   onMusicEvent(musicEvent){
@@ -95,7 +112,7 @@ export default class MusicBox extends Component {
   render() {
     return(
       <div id="musicbox">
-        <MIDISounds ref={(ref) => (this.midiSounds = ref)} appElementName="app" instruments={this.getInstruments()} />
+        <MIDISounds ref={(ref) => (this.midiSounds = ref)} appElementName="app"  />
       </div>
     );
   }

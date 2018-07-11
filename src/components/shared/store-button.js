@@ -10,7 +10,6 @@ export default class StoreButton extends Component {
     }
 
     if(this.props.isDisabled){
-      console.log(this.props.title + " is disabled");
       className += ' disabled-button';
 
       return (

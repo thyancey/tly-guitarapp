@@ -84,7 +84,7 @@ class FretColumn extends Component {
 
     // console.log(stringIdx + ' isChordFret');
     // console.log(this.props.chord + ' && ' + fretIdx + ' === ' + this.props.chordFretIdx);
-    // console.log(isChordFret);
+    // console.log('WELL IS IT? ', isChordFret);
 
     return (
       <Fret key={'s-' + stringIdx + '-f-' + fretIdx} 

@@ -21,6 +21,16 @@ class MusicMan{
     return IDATA;
   }
 
+
+  static getScaleTriadType(scaleLabel){
+    try{
+      return MDATA.scales[scaleLabel].triad;
+    }catch(e){
+      console.error(`could not find scale triad for scale with label ${scaleLabel}`, e);
+      return null;
+    }
+  }
+
   static getScaleSequence(scaleLabel){
     try{
       return MDATA.scales[scaleLabel].sequence;
@@ -97,8 +107,14 @@ class MusicMan{
 
 
 
-
-
+  static getInstrumentMidiId(instrumentLabel){
+    try{
+      return IDATA[instrumentLabel].midiId;
+    }catch(e){
+      console.error(`could not find midiId for instrument ${instrumentLabel}`, e);
+      return null;
+    }
+  }
 
   static getInstrumentChords(instrumentLabel){
     try{
@@ -202,6 +218,132 @@ class MusicMan{
   }
 
 
+  static getChordDefinitions(instrumentLabel, musicKey, scaleLabel){
+    const chords = MusicMan.getInstrumentChords(instrumentLabel) || [];
+
+    if(musicKey && scaleLabel){
+      //- get chords for key and scale
+      return(MusicMan.getScaleChords(chords, musicKey, scaleLabel));
+    }else{
+      const retChords = [];
+      for(var key in chords){
+        retChords.push(chords[key]);
+      } 
+
+      return retChords;
+    }
+  }
+
+  static getScaleChords(chords, musicKey, scaleLabel){
+    // console.log('getScaleChords')
+    const scaleChords = [];
+
+    const triadType = MusicMan.getScaleTriadType(scaleLabel);
+      //- TODO if no triadType found, just give up, I dunno how to do this
+    if(!triadType){
+      return [];
+    }
+
+    //- will get something like ["major", "minor", "minor", "etc"]
+    const triadLabels = MDATA.scaleTriads[triadType];
+    if(!triadLabels){
+      return [];
+    }
+
+    const scaleNotes = MusicMan.getScale(musicKey, scaleLabel);
+    if(!scaleNotes){
+      return [];
+    }
+
+    // console.log(scaleNotes);
+
+    let triadIdx = 0;
+
+    const retChords = [];
+    for(var i = 0; i < scaleNotes.length; i++){
+      // console.log('-----------------------');
+      // console.log('now checking: ' + scaleNotes[i]);
+      let found = false;
+      //- looping through [C, D, E, F, ...]
+      for(var chordLabel in chords){
+        if(chords.hasOwnProperty(chordLabel)){
+        //- looping through [C, C-m, C-dim, D, D-m, D-dim, ...]
+
+          if(chords[chordLabel].root === scaleNotes[i]){
+            //- matched [C] with [C, C-m, C-dim] now check triad
+            // console.log('(root) found ' + chordLabel + ' for ' + scaleNotes[i]);
+
+            // console.log('triad checking: ' + chords[chordLabel].triad + ' and ' + triadLabels[triadIdx]);
+            if(chords[chordLabel].triad !== undefined && chords[chordLabel].triad === triadLabels[triadIdx]){
+              // console.log('(triad) found ' + chords[chordLabel].triad + ' for ' + triadLabels[triadIdx]);
+              let chordObj = chords[chordLabel];
+              chordObj.id = chordObj.id || chordLabel;
+              scaleChords.push(chords[chordLabel]);
+              triadIdx++;
+              found = true;
+              break;
+            }
+          }
+        }
+      }
+
+
+      if(!found){
+        //- found nothing, so return crap
+        scaleChords.push(
+          {
+            "title": scaleNotes[i] + this.getReadableTriad(triadLabels[triadIdx]),
+            "root": scaleNotes[i],
+            "triad": null,
+            "fingering": null,
+            "disabled":true
+          }
+        );
+        triadIdx++;
+      }
+    }
+
+
+    // console.log(scaleChords);
+
+
+    return scaleChords;
+  }
+
+  static getReadableTriad(triadLabel){
+    switch(triadLabel){
+      case 'major': return ''
+        break;
+      case 'minor': return 'm'
+        break;
+      case 'diminished': return 'dim'
+        break;
+      default: return triadLabel
+    }
+  }
+
+  static getChordNotes(chordLabel, tuningLabel){
+    const retNotes = [];
+
+    const chordObj = MusicMan.getChordObj(chordLabel, tuningLabel);
+    if(!chordObj){
+      return retNotes;
+    }
+
+    // const chordObj = MusicMan.getNestedMusicObject('chords', chordLabel);
+    const strings = MusicMan.getInstrumentNotesFromLabel(tuningLabel).strings;
+
+    for(var sn = 0; sn < chordObj.fingering.length; sn++){
+      const fingerIdx = chordObj.fingering[sn];
+      if(fingerIdx > -1){
+        retNotes.push(strings[sn][fingerIdx]);
+      }
+    }
+
+    return retNotes;
+  }
+
+/* MIDI STUFF */
   static getMidiNote(octaveNote){
     // console.log('getMidiNote(' + octaveNote + ')');
     // console.log('and ', MusicMan.getNoteChange('C-2', octaveNote));

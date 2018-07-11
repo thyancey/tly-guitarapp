@@ -7,23 +7,20 @@ import Fret from'./fret';
 
 class FretColumn extends Component {
 
-  selectNote(octaveNote, midiNote, fIdx){
-    console.log('selectNote: ' + midiNote + ', ' + octaveNote);
+  selectNote(octaveNote, fIdx){
+    // console.log('selectNote: ' + octaveNote + ', ' + fIdx);
+    let note = octaveNote.split('-')[0];
+    let octave = octaveNote.split('-')[1];
 
     if(this.props.selectionMode.noteClick){
-      this.props.actions.setMusicKey(octaveNote.split('-')[0]);
-      this.props.actions.setOctave(octaveNote.split('-')[1]);
+      this.props.actions.setMusicKey(note);
+      this.props.actions.setOctave(octave);
     }
 
-/*
-    if(this.props.selectionMode.shapeScale){
-      const exactScale = global.musicMan.getShapedScale(octaveNote, this.props.scale, fIdx);
-      this.props.setShapeScale(exactScale);
-    }*/
+    // const octaveNotes = MusicMan.getScale(note, this.props.scale, octave);
+    // global.musicBox.playMidiScale(octaveNotes);
 
-    //const scaleNotes = global.musicMan.getExactScale(octaveNote, this.props.scale);
-    // global.musicMan.playMidiScale(scaleNotes);
-    // MusicMan.playMidiNote(octaveNote);
+    global.musicBox.playMidiNote(octaveNote);
   }
 
   renderSpacer(stringIdx, fretIdx){
@@ -52,7 +49,7 @@ class FretColumn extends Component {
     // console.log('fretData', fretData);
     const note = octaveNote.split('-')[0];
     const octave = octaveNote.split('-')[1];
-    const midiNote = MusicMan.getNoteChange('C-2', octaveNote) + 50;
+
     const scalePosition = scaleNotes.indexOf(octaveNote);
     const noteIdx = this.props.notes.indexOf(note);
 
@@ -72,15 +69,14 @@ class FretColumn extends Component {
             octaveNote={octaveNote} 
             note={note} 
             octave={octave} 
-            midiNote={midiNote} 
-            selectNote={(octaveNote, midiNote, fIdx) => this.selectNote(octaveNote, midiNote, fIdx)}/>
+            selectNote={(octaveNote, fIdx) => this.selectNote(octaveNote, fIdx)}/>
     );
   }
 
   //- fret bounds have a start stop, ex, [5,10] means there are only 11 frets, from 5 to 10. The first 5 and remaining frets should be filled empty
   //- frets are real notes which should sit within the fret bounds
   //- chordFretIdx is the index of a fret that should be the only one showing
-  getFretsInColumn(s, frets, fretBounds, scaleNotes, shapeScale){
+  getFretsInColumn(s, frets, fretBounds, scaleNotes){
     let retVal = [];
 
     const finalFrets = [];
@@ -124,7 +120,7 @@ class FretColumn extends Component {
       // <div className="fret-column" stringIdx={s} >
     return (
       <div className="fret-column" >
-        {this.getFretsInColumn(s, this.props.frets, this.props.fretBounds, this.props.scaleNotes, this.props.shapeScale)}
+        {this.getFretsInColumn(s, this.props.frets, this.props.fretBounds, this.props.scaleNotes)}
       </div>
     );
   }
@@ -133,7 +129,6 @@ class FretColumn extends Component {
 export default connect(state => ({ 
   chord: state.chord,
   selectionMode: state.selectionMode,
-  shapeScale: state.shapeScale,
   scale: state.scale,
   octave: state.octave
 }))(FretColumn);

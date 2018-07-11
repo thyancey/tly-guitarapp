@@ -23,7 +23,7 @@ export default class Fret extends Component {
     // console.warn('noteIdx: ' + this.props.noteIdx);
 
     return (
-      <div className={className} onClick={() => this.props.selectNote(this.props.octaveNote, this.props.midiNote, this.props.fretIdx)}>
+      <div className={className} onClick={() => this.props.selectNote(this.props.octaveNote, this.props.fretIdx)}>
         <div className="round-fret fret-note">
           <div className="round-fret-circle">
             <span>{this.props.note}</span>
@@ -36,7 +36,7 @@ export default class Fret extends Component {
         </div>
         <div className="round-fret fret-octave">
           <div className="round-fret-circle">
-            <span>{this.props.octave}</span>
+            <span>{this.props.note + '-' + this.props.octave}</span>
           </div>
         </div>
       </div>

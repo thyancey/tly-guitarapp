@@ -5,13 +5,15 @@ import MusicMan from 'src/utils/musicman';
 import ControlPanel from 'src/components/control-panel';
 import Fretboard from 'src/components/fretboard';
 
+import MusicBox from 'src/utils/musicbox';
+
 require('./style.less');
 
 class Main extends Component {
   constructor(){
     super();
 
-    console.log('there are ' + MusicMan.getNumFrets() + ' frets');
+    global.musicBox = new MusicBox('basic');
   }
 
   render() {

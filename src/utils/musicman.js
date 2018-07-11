@@ -85,6 +85,7 @@ class MusicMan{
       scale.push(MusicMan.getNoteAtIndex(curIdx + sequence[i], octave));
     }
 
+    // console.log('getScale() from ' + rootNote + ', returning ', scale);
     return scale;
   }
 
@@ -97,7 +98,7 @@ class MusicMan{
     try{
       return IDATA[instrumentLabel].chords;
     }catch(e){
-      console.error(`could not find chords for tuning ${instrumentLabel}`, e);
+      console.error(`could not find chords for instrument ${instrumentLabel}`, e);
       return null;
     }
   }
@@ -106,33 +107,33 @@ class MusicMan{
     try{
       return IDATA[instrumentLabel].strings;
     }catch(e){
-      console.error(`could not find strings for tuning ${instrumentLabel}`, e);
+      console.error(`could not find strings for instrument ${instrumentLabel}`, e);
       return null;
     }
   }
 
   static getInstrumentNotesFromLabel(instrumentLabel){
-    const tuningStringsArray = MusicMan.getInstrumentStrings(instrumentLabel);
+    const instrumentStrings = MusicMan.getInstrumentStrings(instrumentLabel);
     // console.log('1');
-    // console.log(tuningStringsArray);
+    // console.log(instrumentStrings);
     return {
-      'strings': MusicMan.getInstrumentNotes(tuningStringsArray),
-      'fretBounds': MusicMan.getFretBoundsArray(tuningStringsArray)
+      'strings': MusicMan.getInstrumentNotes(instrumentStrings),
+      'fretBounds': MusicMan.getFretBoundsArray(instrumentStrings)
     }
   }
 
-  static getInstrumentNotes(tuningStringsArray){
-    // console.log('getInstrumentNotes', tuningStringsArray);
+  static getInstrumentNotes(instrumentStrings){
+    // console.log('getInstrumentNotes', instrumentStrings);
     const retStrings = [];
-    for(var s = 0; s < tuningStringsArray.length; s++){
+    for(var s = 0; s < instrumentStrings.length; s++){
       let stringNotes = [];
-      // console.log('tuningStringsArray! ', tuningStringsArray)
-      const octaveNote = tuningStringsArray[s].note;
+      // console.log('instrumentStrings! ', instrumentStrings)
+      const octaveNote = instrumentStrings[s].note;
       let noteIdx = MusicMan.getNoteIndex(octaveNote.split('-')[0]);
       let octave = octaveNote.split('-')[1];
 
       //- +1 for the 'nut'
-      const numFrets = tuningStringsArray[s].frets[1] - tuningStringsArray[s].frets[0] + 1;
+      const numFrets = instrumentStrings[s].frets[1] - instrumentStrings[s].frets[0] + 1;
 
       for(var f = 0; f < numFrets; f++){
         //- pushes something like 20, 1
@@ -146,11 +147,11 @@ class MusicMan{
     return retStrings;
   }
 
-  static getFretBoundsArray(tuningStringsArray){
+  static getFretBoundsArray(instrumentStrings){
     const retFrets = [];
 
-    for(var s = 0; s < tuningStringsArray.length; s++){
-      retFrets.push(tuningStringsArray[s].frets);
+    for(var s = 0; s < instrumentStrings.length; s++){
+      retFrets.push(instrumentStrings[s].frets);
     }
 
     return retFrets;
@@ -187,7 +188,6 @@ class MusicMan{
     const newIdx = MusicMan.getNoteIndex(newOctaveNote.split('-')[0]);
     const newOctave = newOctaveNote.split('-')[1];
 
-
     const octaveChange = (newOctave - oldOctave) * 12;
     const idxChange = newIdx - oldIdx;
     const noteChange = octaveChange + idxChange;
@@ -195,6 +195,40 @@ class MusicMan{
     return noteChange;
   }
 
+
+  static getMidiNote(octaveNote){
+    // console.log('getMidiNote(' + octaveNote + ')');
+    // console.log('and ', MusicMan.getNoteChange('C-2', octaveNote));
+    return MusicMan.getNoteChange('C-2', octaveNote) + 48;
+  }
+
+  /*
+    static playMidiNote(octaveNote){
+      midiPlayer.playNote(MusicMan.getMidiNote(octaveNote));
+    }
+
+    static playMidiScale(scaleNotes, descend){
+      const midiNotes = [];
+      for(var i = 0; i < scaleNotes.length; i++){
+        midiNotes.push(MusicMan.getMidiNote(scaleNotes[i]));
+      }
+      if(descend){
+        let len = midiNotes.length;
+        for(var d = len - 2; d >= 0; d--){
+          midiNotes.push(midiNotes[d]);
+        }
+      }
+      midiPlayer.playNotes(midiNotes);
+    }
+
+    static playMidiChord(scaleNotes){
+      const midiNotes = [];
+      for(var i = 0; i < scaleNotes.length; i++){
+        midiNotes.push(MusicMan.getMidiNote(scaleNotes[i]));
+      }
+      midiPlayer.playChord(midiNotes);
+    }
+  */
 }
 
 export default MusicMan;

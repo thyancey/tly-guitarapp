@@ -6,7 +6,6 @@ const store = {
     notes: List.of('C', 'D', 'E', 'F', 'G', 'A', 'B', 'C'),
     musicKey: 'C',
     scale: 'major',
-    shapeScale:'',
     instrument: 'guitar-standard',
     octave: '2',
     chord: null,
@@ -17,7 +16,6 @@ const store = {
   actions: {
     setMusicKey: ({ musicKey }, newMusicKey) => ({ musicKey: newMusicKey }),
     setScale: ({ scale }, newScale) => ({ scale: newScale }),
-    setShapeScale: ({ shapeScale }, newShapeScale) => ({ shapeScale: newShapeScale }),
     setInstrument: ({ instrument }, newInstrument) => ({ instrument: newInstrument }),
     setOctave: ({ octave }, newOctave) => ({ octave: newOctave }),
     setChord: ({ chord }, newChord) => ({ chord: newChord }),

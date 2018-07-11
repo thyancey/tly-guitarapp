@@ -44,13 +44,14 @@ class Fretboard extends Component {
 
 
       retVal.push(
-        <FretColumn scaleNotes={octaveNotes}
+        <FretColumn key={'fc-' + sIdx} 
+                    scaleNotes={octaveNotes}
                     chordFretIdx={chordFretIdxs[sIdx]}
                     notes={simpleNotes} 
                     stringIdx={sIdx} 
                     frets={strings[sIdx]} 
                     fretBounds={fretBounds[sIdx]} 
-                    key={'fc-' + sIdx} />
+                    dispatchMusicEvent={this.props.dispatchMusicEvent} />
       );
     }
     return retVal;

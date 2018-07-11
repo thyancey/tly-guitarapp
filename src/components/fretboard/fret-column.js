@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'src/store';
 
+import { PLAY_TYPES } from 'src/components/musicbox';
+
 import MusicMan from 'src/utils/musicman';
 
 import Fret from'./fret';
@@ -17,10 +19,31 @@ class FretColumn extends Component {
       this.props.actions.setOctave(octave);
     }
 
-    // const octaveNotes = MusicMan.getScale(note, this.props.scale, octave);
-    // global.musicBox.playMidiScale(octaveNotes);
+    this.triggerSound('NOTE', octaveNote);
+    // this.triggerSound('STRUM_DOWN', octaveNote);
+  }
 
-    global.musicBox.playMidiNote(octaveNote);
+  triggerSound(type, octaveNote){
+    if(PLAY_TYPES.indexOf(type) === -1){
+      console.error(`given type "${type}" is not a valid note trigger type. Available types: ${PLAY_TYPES}`);
+      return null;
+    }else{
+      if(type === 'NOTE'){
+        const midiNote = MusicMan.getMidiNote(octaveNote);
+        this.props.dispatchMusicEvent({
+          type: type,
+          notes: [midiNote]
+        });
+      }else{
+        const octaveNotes = MusicMan.getScale(octaveNote, this.props.scale);
+        const midiNotes = MusicMan.getMidiScale(octaveNotes);
+        this.props.dispatchMusicEvent({
+          type: type,
+          notes: midiNotes
+        });
+      }
+    }
+
   }
 
   renderSpacer(stringIdx, fretIdx){

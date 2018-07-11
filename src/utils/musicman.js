@@ -69,19 +69,27 @@ class MusicMan{
     return Math.floor(noteIdx / MDATA.notes.length) + parseInt(curOctave);
   }
 
-  /* returns a full scale based on a root note (c), a label (major), and an (optional) octave (2)
-    //- ex, C with major scale, and no octave returns
+  /* returns a full scale based on an octave note and a label (major)
+    //- ex, ("C-", "major") returns
     //- C, D, E, F, G, A, B, C
 
-    //- C with major scale and octave 2 gives
+    //- ("C-2", "major") returns 
     //- C-2, D-2, E-2, F-2, G-2, A-3, B-3, C-3
   */
-  static getScale(rootNote, scaleLabel, octave){
+  static getScale(octaveNote, scaleLabel){
+    if(octaveNote.indexOf('-') === -1){
+      octaveNote += '-';
+    }
+    const note = octaveNote.split('-')[0];
+    const octave = octaveNote.split('-')[1] || null;
+
+
     const sequence = this.getScaleSequence(scaleLabel);
     let scale = [];
 
-    let curIdx = MusicMan.getNoteIndex(rootNote);
+    let curIdx = MusicMan.getNoteIndex(note);
     for(var i = 0; i < sequence.length; i++){
+      //- it's ok to pass octave here as null if this was called without an octave note
       scale.push(MusicMan.getNoteAtIndex(curIdx + sequence[i], octave));
     }
 
@@ -202,33 +210,29 @@ class MusicMan{
     return MusicMan.getNoteChange('C-2', octaveNote) + 48;
   }
 
-  /*
-    static playMidiNote(octaveNote){
-      midiPlayer.playNote(MusicMan.getMidiNote(octaveNote));
+  static getMidiScale(scaleNotes, descend){
+    const midiNotes = [];
+    for(let i = 0; i < scaleNotes.length; i++){
+      midiNotes.push(MusicMan.getMidiNote(scaleNotes[i]));
+    }
+    if(descend){
+      let len = midiNotes.length;
+      for(let d = len - 2; d >= 0; d--){
+        midiNotes.push(midiNotes[d]);
+      }
     }
 
-    static playMidiScale(scaleNotes, descend){
-      const midiNotes = [];
-      for(var i = 0; i < scaleNotes.length; i++){
-        midiNotes.push(MusicMan.getMidiNote(scaleNotes[i]));
-      }
-      if(descend){
-        let len = midiNotes.length;
-        for(var d = len - 2; d >= 0; d--){
-          midiNotes.push(midiNotes[d]);
-        }
-      }
-      midiPlayer.playNotes(midiNotes);
+    return midiNotes;
+  }
+
+  static getMidiChord(scaleNotes){
+    const midiNotes = [];
+    for(let i = 0; i < scaleNotes.length; i++){
+      midiNotes.push(MusicMan.getMidiNote(scaleNotes[i]));
     }
 
-    static playMidiChord(scaleNotes){
-      const midiNotes = [];
-      for(var i = 0; i < scaleNotes.length; i++){
-        midiNotes.push(MusicMan.getMidiNote(scaleNotes[i]));
-      }
-      midiPlayer.playChord(midiNotes);
-    }
-  */
+    return midiNotes;
+  }
 }
 
 export default MusicMan;

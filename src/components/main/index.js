@@ -5,22 +5,26 @@ import MusicMan from 'src/utils/musicman';
 import ControlPanel from 'src/components/control-panel';
 import Fretboard from 'src/components/fretboard';
 
-import MusicBox from 'src/utils/musicbox';
+// import MusicBox from 'src/utils/musicbox';
+import MusicBox from 'src/components/musicbox';
 
 require('./style.less');
 
 class Main extends Component {
   constructor(){
     super();
+  }
 
-    global.musicBox = new MusicBox('basic');
+  dispatchMusicEvent(musicEvent){
+    this.refs.musicBox.onMusicEvent(musicEvent);
   }
 
   render() {
     return(
-      <div className="main">
+      <div className="main" >
+        <MusicBox ref="musicBox" />
         <ControlPanel />
-        <Fretboard />
+        <Fretboard dispatchMusicEvent={(musicEvent) => this.dispatchMusicEvent(musicEvent)} />
       </div>
     );
   }
@@ -71,6 +75,5 @@ class Main extends Component {
 //- pass this component through the connect method to attach store values to props.
 //- actions get mapped to props without explicitly stating anything. you can use any action from the store.
 export default connect(state => ({ 
-  loaded: state.loaded,
-  autoPlay: state.autoPlay
+  musicKey: state.musicKey
 }))(Main);

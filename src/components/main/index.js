@@ -5,7 +5,6 @@ import MusicMan from 'src/utils/musicman';
 import ControlPanel from 'src/components/control-panel';
 import Fretboard from 'src/components/fretboard';
 
-// import MusicBox from 'src/utils/musicbox';
 import MusicBox from 'src/components/musicbox';
 
 require('./style.less');
@@ -23,7 +22,7 @@ class Main extends Component {
     return(
       <div className="main" >
         <MusicBox ref="musicBox" />
-        <ControlPanel />
+        <ControlPanel dispatchMusicEvent={(musicEvent) => this.dispatchMusicEvent(musicEvent)}/>
         <Fretboard dispatchMusicEvent={(musicEvent) => this.dispatchMusicEvent(musicEvent)} />
       </div>
     );

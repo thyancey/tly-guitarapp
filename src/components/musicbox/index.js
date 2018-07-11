@@ -8,12 +8,18 @@ require('./style.less');
 const INSTRUMENTS = {
   'steelGuitar': {
     id: 260
+  },
+  'electricGuitar': {
+    id: 288
+  },
+  'shamisen': {
+    id: 1139
   }
 }
 
 const SCALE_SPEED = .25;
 const SUSTAIN_VALUES = {
-  NOTE:2,
+  NOTE:1.25,
   SCALE:1,
   CHORD:2.5,
   STRUM_UP:2.5,
@@ -21,14 +27,15 @@ const SUSTAIN_VALUES = {
   SNAP:2.5
 }
 
-export const PLAY_TYPES = [ 'NOTE', 'SCALE', 'CHORD', 'STRUM_UP', 'STRUM_DOWN', 'SNAP' ];
+export const PLAY_TYPES = [ 'NOTE', 'SCALE', 'SCALE_FULL', 'CHORD', 'STRUM_UP', 'STRUM_DOWN', 'SNAP' ];
 
 export default class MusicBox extends Component {
   constructor(){
     super();
 
     this.state = {
-      curInstrument: INSTRUMENTS.steelGuitar
+      // curInstrument: INSTRUMENTS.steelGuitar
+      curInstrument: INSTRUMENTS.shamisen
     };
   }
 
@@ -46,11 +53,18 @@ export default class MusicBox extends Component {
     }
   }
 
+  /* [ 1, 2, 3, 4 ] -> [ 1, 2, 3, 4, 3, 2, 1 ] */
+  playFullScale(midiNotes) {
+    this.playScale(midiNotes.slice(0).concat(midiNotes.reverse().slice(1)));
+  }
+
   playNotes(midiNotes, type){
     switch(type){
       case 'NOTE': this.midiSounds.playChordNow(this.state.curInstrument.id, midiNotes, SUSTAIN_VALUES.NOTE);
         break;
       case 'SCALE': this.playScale(midiNotes);
+        break;
+      case 'SCALE_FULL': this.playFullScale(midiNotes);
         break;
       case 'CHORD': this.midiSounds.playChordNow(this.state.curInstrument.id, midiNotes, SUSTAIN_VALUES.CHORD);
         break;

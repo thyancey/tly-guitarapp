@@ -4,6 +4,7 @@ import { connect } from 'src/store';
 import MusicMan from 'src/utils/musicman';
 import FretRow from './fret-row';
 import FretColumn from './fret-column';
+import SelectionTools from 'src/components/selection-tools';
 
 require('./style.less');
 
@@ -78,6 +79,8 @@ class Fretboard extends Component {
             <div className="string" key="s-6"/>
           </div>
         </div>
+
+        <SelectionTools selectionMode={this.props.selectionMode} setSelectionMode={this.props.actions.setSelectionMode} />
       </div>
     );
   }
@@ -91,5 +94,6 @@ export default connect(state => ({
   octave: state.octave,
   scale: state.scale,
   chord: state.chord,
-  instrument: state.instrument
+  instrument: state.instrument,
+  selectionMode: state.selectionMode
 }))(Fretboard);

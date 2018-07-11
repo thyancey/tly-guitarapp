@@ -19,7 +19,11 @@ class FretColumn extends Component {
       this.props.actions.setOctave(octave);
     }
 
-    this.triggerSound('NOTE', octaveNote);
+    if(this.props.selectionMode.scaleMode){
+      this.triggerSound('SCALE_FULL', octaveNote);
+    }else{
+      this.triggerSound('NOTE', octaveNote);
+    }
     // this.triggerSound('STRUM_DOWN', octaveNote);
   }
 

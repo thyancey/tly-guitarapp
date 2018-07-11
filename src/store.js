@@ -7,10 +7,11 @@ const store = {
     musicKey: 'C',
     scale: 'major',
     instrument: 'guitar-standard',
-    octave: '2',
+    octave: 2,
     chord: null,
     selectionMode:{
-      noteClick:false
+      noteClick:false,
+      scaleMode:false
     }
   },
   actions: {

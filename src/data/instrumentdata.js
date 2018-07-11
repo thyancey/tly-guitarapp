@@ -489,5 +489,22 @@ export default {
         "frets":[0,12]
       }
     ]
+  },
+  "shamisen-hon-choshi":{
+    "title": "Shamisen (Hon Choshi)",
+    "strings": [
+      {
+        "note":"C-3",
+        "frets":[0,12]
+      },
+      {
+        "note":"F-3",
+        "frets":[0,12]
+      },
+      {
+        "note":"C-4",
+        "frets":[0,12]
+      }
+    ]
   }
 };

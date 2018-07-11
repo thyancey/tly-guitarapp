@@ -54,7 +54,7 @@ class MusicMan{
 
     let noteName = MDATA.notes[calcIdx]
 
-    if(octave !== undefined){
+    if(octave !== null){
       noteName = this.getNoteInOctaveFormat(noteName, noteIdx, octave);
     }
 
@@ -83,7 +83,6 @@ class MusicMan{
     const note = octaveNote.split('-')[0];
     const octave = octaveNote.split('-')[1] || null;
 
-
     const sequence = this.getScaleSequence(scaleLabel);
     let scale = [];
 
@@ -92,8 +91,7 @@ class MusicMan{
       //- it's ok to pass octave here as null if this was called without an octave note
       scale.push(MusicMan.getNoteAtIndex(curIdx + sequence[i], octave));
     }
-
-    // console.log('getScale() from ' + rootNote + ', returning ', scale);
+    
     return scale;
   }
 

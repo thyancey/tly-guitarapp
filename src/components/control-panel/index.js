@@ -12,8 +12,14 @@ class ControlPanel extends Component {
     this.props.actions.setScale(scaleLabel);
     this.props.actions.setChord(null);
 
-    const scaleNotes = MusicMan.getScale(this.props.musicKey, scaleLabel, this.props.octave);
-    // MusicMan.playMidiScale(scaleNotes, true);
+
+    const octaveNote = `${this.props.musicKey}-${this.props.octave}`;
+    const scaleNotes = MusicMan.getScale(octaveNote, scaleLabel);
+    const midiNotes = MusicMan.getMidiScale(scaleNotes);
+    this.props.dispatchMusicEvent({
+      type: 'SCALE_FULL',
+      notes: midiNotes
+    });
   }
 
   createScaleButtons(scales){
@@ -57,6 +63,7 @@ class ControlPanel extends Component {
 
   render() {
     const simpleNotes = MusicMan.getScale(this.props.musicKey, this.props.scale);
+
     return (
       <div className="control-panel">
         <div className="key-buttons">

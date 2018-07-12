@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 
 require('./style.less');
 
-export default class StoreButton extends Component {
+export default class ComboButton extends Component {
   render() {
-    let className = 'image-button';
+    let className = 'combo-button';
     if(this.props.isActive){
       className += ' active-button';
     }
@@ -16,7 +16,10 @@ export default class StoreButton extends Component {
 
     return (
       <div className={className} onClick={() => this.props.onClickMethod(this.props.onClickParam)} alt={this.props.title}>
-        <div className={iconClass} />
+        <div className="icon-container">
+          <div className={iconClass} />
+        </div>
+        <p>{this.props.title}</p>
       </div>
     );
   }

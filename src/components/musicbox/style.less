@@ -1,13 +1,14 @@
 @import "~themes/variables.less";
 
-#musicbox{
-  display:none;
-  // position:fixed;
-  // left:300px;
-  // top:300px;
-  // width:400px;
-  // height:200px;
+.musicbox-container{
+  background-color: @color-blue;
+  border:.4rem solid @color-white;
+  padding: 1rem;
+  color: @color-white;
 
-  // background-color:white;
-  // z-index:10000000000;
+  border-radius:1rem;
+
+  &.muted{
+    background-color:@color-red;
+  }
 }

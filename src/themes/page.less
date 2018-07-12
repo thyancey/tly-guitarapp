@@ -1,5 +1,8 @@
 @import './variables.less';
 
+.hidden{
+  display:none;
+}
 
 *{
   box-sizing:border-box;
@@ -27,6 +30,27 @@ body{
   font-size: 62.5%;
 }
 
+h1{
+  font-size:3rem;
+}
+h2{
+  font-size:2rem;
+}
+
+.panel-container{
+  margin:1rem;
+  padding:1rem;
+  background-color:@color-black;
+  border:@border-thickness solid @color-white;
+  border-radius: 1rem;
+  text-align:center;
+
+  h2{
+    color: @color-white;
+    margin-bottom:1rem;
+  }
+}
+
 .main{
   position:absolute;
   left:0px;
@@ -45,6 +69,10 @@ body{
     overflow-y:auto;
   }
 
+  .musicbox-container{
+    display:none;
+  }
+
   .fretboard-container{
     position:absolute;
 
@@ -55,7 +83,7 @@ body{
     overflow-y:auto;
   }
 
-  .chord-panel-container{
+  .panelgroup-right{
     position:absolute;
     width:@chord-panel-width;
     
@@ -64,3 +92,4 @@ body{
     overflow-y:auto;
   }
 }
+

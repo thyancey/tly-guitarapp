@@ -4,7 +4,7 @@
   cursor:pointer;
   background-color: @color-blue;
   color:@color-white;
-  border:.25rem solid @color-white;
+  border:@border-thickness solid @color-white;
 
   &:hover {
     background:@color-blue-dark;
@@ -29,42 +29,37 @@
 }
 
 
-.image-button{
-  height:6rem;
-  width:6rem;
+
+.combo-button{
   background: @color-blue; 
-  border: .4rem solid @color-white;
+  border: @border-thickness solid @color-white;
   border-radius:1rem;
-  margin:.5rem;
   cursor:pointer;
-  padding:1rem;
+  padding:.5rem;
 
   &:hover {
     background:@color-blue-dark;
   }
 
-  span{
-    text-align:center;
-    color:@color-blue-light;
-    font-size:.8rem;
-    text-decoration:none;
-  }
-
   &.active-button{
     background: @color-purple;
-    border: .4rem solid @color-white;
 
     &:hover {
       background:@color-purple-dark;
     }
-
-    span{
-      color:@color-white;
-    }
   }
 
-  .button-icon{
+  .icon-container{
+    height:6rem;
+    width:6rem;
+    padding:1rem;
+  }
 
+  p{
+    text-align:center;
+    color:@color-blue-light;
+    font-size:1rem;
+    text-decoration:none;
   }
 }
 

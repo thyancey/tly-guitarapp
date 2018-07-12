@@ -11,6 +11,7 @@ const store = {
     midiInstrument: 'electricGuitar',
     octave: 2,
     chord: null,
+    volume: .4,
     selectionMode:{
       noteClick:false,
       scaleMode:false
@@ -26,6 +27,7 @@ const store = {
         chord: null
       }
     },
+    setVolume: ({ volume }, newVolume) => ({ volume: newVolume }),
     setOctave: ({ octave }, newOctave) => ({ octave: newOctave }),
     setChord: ({ chord }, newChord) => ({ chord: newChord }),
     setSelectionMode: ({ selectionMode }, newSelectionMode) => ({ selectionMode: newSelectionMode })

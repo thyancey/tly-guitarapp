@@ -44,7 +44,6 @@ export default class MusicBox extends Component {
     super();
 
     this.state = {
-      // curInstrument: INSTRUMENTS.steelGuitar
       curInstrument: INSTRUMENTS[DEFAULT_INSTRUMENT]
     };
   }
@@ -97,11 +96,15 @@ export default class MusicBox extends Component {
     //- TODO, documentation said to do this to init it or something?
     this.midiSounds.cacheInstrument(this.state.curInstrument.id);
     this.setState(this.state);
+    this.setVolume(this.props.volume);
   }
 
   componentDidUpdate(prevProps){
     if(prevProps.midiInstrument !== this.props.midiInstrument){
       this.setMidiInstrument(this.props.midiInstrument)
+    }
+    if(prevProps.volume !== this.props.volume){
+      this.setVolume(this.props.volume);
     }
   }
 
@@ -109,10 +112,17 @@ export default class MusicBox extends Component {
     this.playNotes(musicEvent.notes, musicEvent.type);
   }
 
+  setVolume(newVolume){
+    console.log('setting volume to ', newVolume)
+    this.midiSounds.setMasterVolume(newVolume);
+  }
+
   render() {
     return(
-      <div id="musicbox">
-        <MIDISounds ref={(ref) => (this.midiSounds = ref)} appElementName="app"  />
+      <div className='musicbox-container'>
+        <div className="hidden">
+          <MIDISounds ref={(ref) => (this.midiSounds = ref)} appElementName="app"  />
+        </div>
       </div>
     );
   }

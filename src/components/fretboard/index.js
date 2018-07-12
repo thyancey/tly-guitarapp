@@ -4,7 +4,6 @@ import { connect } from 'src/store';
 import MusicMan from 'src/utils/musicman';
 import FretRow from './fret-row';
 import FretColumn from './fret-column';
-import SelectionTools from 'src/components/selection-tools';
 
 require('./style.less');
 
@@ -78,20 +77,16 @@ class Fretboard extends Component {
           </div>
         </div>
 
-        <SelectionTools selectionMode={this.props.selectionMode} setSelectionMode={this.props.actions.setSelectionMode} />
       </div>
     );
   }
 }
 
 
-//- pass this component through the connect method to attach store values to props.
-//- actions get mapped to props without explicitly stating anything. you can use any action from the store.
 export default connect(state => ({ 
   musicKey: state.musicKey,
   octave: state.octave,
   scale: state.scale,
   chord: state.chord,
-  instrument: state.instrument,
-  selectionMode: state.selectionMode
+  instrument: state.instrument
 }))(Fretboard);

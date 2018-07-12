@@ -1,8 +1,23 @@
 @import "~themes/variables.less";
 
+
+
 .selection-tools{
-  position:absolute;
-  top:0px;
-  right:0px;
-  z-index:1;
+
+  .selection-buttons{
+    >*{
+      display:inline-block;
+      margin:.5rem;
+
+    }
+  }
+
+  .volume-container{
+    text-align:center;
+    color:@color-white;
+
+    input{
+      cursor:pointer;
+    }
+  }
 }

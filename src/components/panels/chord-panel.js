@@ -19,7 +19,7 @@ class ChordPanel extends Component {
     const chordNotes = MusicMan.getChordNotes(chordLabel, this.props.instrument);
     const midiNotes = MusicMan.getMidiScale(chordNotes);
     
-    this.props.dispatchMusicEvent({
+    this.props.actions.dispatchMusicEvent({
       type: 'STRUM_DOWN',
       notes: midiNotes
     });

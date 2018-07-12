@@ -113,7 +113,6 @@ export default class MusicBox extends Component {
   }
 
   setVolume(newVolume){
-    console.log('setting volume to ', newVolume)
     this.midiSounds.setMasterVolume(newVolume);
   }
 

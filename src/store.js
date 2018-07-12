@@ -12,25 +12,35 @@ const store = {
     octave: 2,
     chord: null,
     volume: .4,
+    fretChanges: 0,
     selectionMode:{
       noteClick:false,
       scaleMode:false
     }
   },
   actions: {
-    setMusicKey: ({ musicKey }, newMusicKey) => ({ musicKey: newMusicKey }),
-    setScale: ({ scale }, newScale) => ({ scale: newScale }),
-    setInstrument: ({ instrument, midiInstrument, chord }, newInstrument) => {
+    setMusicKey: ({ musicKey, fretChanges }, newMusicKey) => ({ musicKey: newMusicKey, fretChanges: fretChanges+1 }),
+    setScale: ({ scale, fretChanges }, newScale) => ({ scale: newScale, fretChanges: fretChanges+1 }),
+    setInstrument: ({ instrument, midiInstrument, chord, fretChanges }, newInstrument) => {
       return { 
         instrument: newInstrument,
         midiInstrument: MusicMan.getInstrumentMidiId(newInstrument),
-        chord: null
+        chord: null,
+        fretChanges: fretChanges+1
       }
     },
     setVolume: ({ volume }, newVolume) => ({ volume: newVolume }),
-    setOctave: ({ octave }, newOctave) => ({ octave: newOctave }),
-    setChord: ({ chord }, newChord) => ({ chord: newChord }),
-    setSelectionMode: ({ selectionMode }, newSelectionMode) => ({ selectionMode: newSelectionMode })
+    setOctave: ({ octave, fretChanges }, newOctave) => ({ octave: newOctave, fretChanges: fretChanges+1 }),
+    setChord: ({ chord, fretChanges }, newChord) => ({ chord: newChord, fretChanges: fretChanges+1 }),
+    setSelectionMode: ({ selectionMode }, newSelectionMode) => ({ selectionMode: newSelectionMode }),
+    dispatchMusicEvent: ({}, musicEvent) => {
+      if(!global.dispatchMusicEvent){
+        console.error('dispatchMusicEvent method was not defined on window.');
+      }else{
+        global.dispatchMusicEvent(musicEvent);
+      }
+      return {};
+    }
   }
 };
  

@@ -14,7 +14,8 @@ class ScalePanel extends Component {
     const octaveNote = `${this.props.musicKey}-${this.props.octave}`;
     const scaleNotes = MusicMan.getScale(octaveNote, scaleLabel);
     const midiNotes = MusicMan.getMidiScale(scaleNotes);
-    this.props.dispatchMusicEvent({
+
+    this.props.actions.dispatchMusicEvent({
       type: 'SCALE_FULL',
       notes: midiNotes
     });

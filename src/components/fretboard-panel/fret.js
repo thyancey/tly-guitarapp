@@ -20,8 +20,6 @@ export default class Fret extends Component {
       }
     }
 
-    // console.warn('noteIdx: ' + this.props.noteIdx);
-
     return (
       <div className={className} onClick={() => this.props.selectNote(this.props.octaveNote, this.props.fretIdx)}>
         <div className="round-fret fret-note">

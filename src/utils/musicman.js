@@ -21,7 +21,6 @@ class MusicMan{
     return IDATA;
   }
 
-
   static getScaleTriadType(scaleLabel){
     try{
       return MDATA.scales[scaleLabel].triad;

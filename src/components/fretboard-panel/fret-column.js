@@ -8,9 +8,15 @@ import MusicMan from 'src/utils/musicman';
 import Fret from'./fret';
 
 class FretColumn extends Component {
+  constructor(){
+    super();
+
+    this.state = {
+      savedFrets: []
+    }
+  }
 
   selectNote(octaveNote, fIdx){
-    // console.log('selectNote: ' + octaveNote + ', ' + fIdx);
     let note = octaveNote.split('-')[0];
     let octave = octaveNote.split('-')[1];
 
@@ -24,7 +30,6 @@ class FretColumn extends Component {
     }else{
       this.triggerSound('NOTE', octaveNote);
     }
-    // this.triggerSound('STRUM_DOWN', octaveNote);
   }
 
   triggerSound(type, octaveNote){
@@ -50,7 +55,7 @@ class FretColumn extends Component {
 
   }
 
-  renderSpacer(stringIdx, fretIdx){
+  calcSpacer(stringIdx, fretIdx){
     //- get the spacer
     let className = 'fret-spacer';
     if(fretIdx === 0){
@@ -59,21 +64,23 @@ class FretColumn extends Component {
       className += ' fret-spacer-fret';
     }
 
-    return (
-      <div key={'s-' + stringIdx + '-fs-' + fretIdx} className={className}/>
-    )
+    return {
+      type: 'spacer',
+      key: 's-' + stringIdx + '-fs-' + fretIdx,
+      className: className
+    }
   }
 
-  renderBlankFret(stringIdx, fretIdx){
-    return (
-      <div key={'fs-' + fretIdx} className="fret" >
-      </div>
-    );
+  calcBlankFret(stringIdx, fretIdx){
+    return {
+      type: 'blank',
+      key: 'fs-' + fretIdx,
+      className: 'fret'
+    }
   }
 
-  renderFret(stringIdx, fretIdx, fretData, scaleNotes){
+  calcFret(stringIdx, fretIdx, fretData, scaleNotes){
     const octaveNote = fretData.octaveNote;
-    // console.log('fretData', fretData);
     const note = octaveNote.split('-')[0];
     const octave = octaveNote.split('-')[1];
 
@@ -82,28 +89,25 @@ class FretColumn extends Component {
 
     const isChordFret = this.props.chord && fretIdx === this.props.chordFretIdx;
 
-    // console.log(stringIdx + ' isChordFret');
-    // console.log(this.props.chord + ' && ' + fretIdx + ' === ' + this.props.chordFretIdx);
-    // console.log('WELL IS IT? ', isChordFret);
-
-    return (
-      <Fret key={'s-' + stringIdx + '-f-' + fretIdx} 
-            fretIdx={fretIdx} 
-            scalePosition={scalePosition} 
-            noteIdx={noteIdx}
-            isChordFret={isChordFret}
-            chord={this.props.chord}
-            octaveNote={octaveNote} 
-            note={note} 
-            octave={octave} 
-            selectNote={(octaveNote, fIdx) => this.selectNote(octaveNote, fIdx)}/>
-    );
+    return ({
+      type: 'fret',
+      key: 's-' + stringIdx + '-f-' + fretIdx,
+      fretIdx: fretIdx,
+      scalePosition: scalePosition,
+      noteIdx: noteIdx,
+      isChordFret: isChordFret,
+      chord: this.props.chord,
+      octaveNote: octaveNote,
+      note: note,
+      octave: octave,
+      selectNote:  (octaveNote, fIdx) => this.selectNote(octaveNote, fIdx)
+    });
   }
 
   //- fret bounds have a start stop, ex, [5,10] means there are only 11 frets, from 5 to 10. The first 5 and remaining frets should be filled empty
   //- frets are real notes which should sit within the fret bounds
   //- chordFretIdx is the index of a fret that should be the only one showing
-  getFretsInColumn(s, frets, fretBounds, scaleNotes){
+  calcFretsInColumn(s, frets, fretBounds, scaleNotes){
     let retVal = [];
 
     const finalFrets = [];
@@ -124,30 +128,55 @@ class FretColumn extends Component {
       });
     }
 
-    // console.log('finalFrets', finalFrets);
-
     //- TODO, instruments with shorter bridges for certain strings would have some fretBounds[1] logic here.
 
     for(let f = 0; f < finalFrets.length; f++){
       if(finalFrets[f].type === 'empty'){
-        retVal.push(this.renderBlankFret(s, f));
-        retVal.push(this.renderSpacer(s, f));
+        retVal.push(this.calcBlankFret(s, f));
+        retVal.push(this.calcSpacer(s, f));
       }else if(finalFrets[f].type === 'fret'){
-        retVal.push(this.renderFret(s, f, finalFrets[f], scaleNotes));
-        retVal.push(this.renderSpacer(s, f));
+        retVal.push(this.calcFret(s, f, finalFrets[f], scaleNotes));
+        retVal.push(this.calcSpacer(s, f));
       }
     }
 
     return retVal;
   }
 
-  render() {
-    const s = this.props.stringIdx;
+  //- TODO: I've tried to optimize the render/recalculation workflow a bit, but it's really the parent's (fret container) job to 
+  //- tell this guy when to recalculate. It is, but it's all kinda janky and isn't easy to follow. needs a refactor.
+  recalcFrets(){
+    this.setState({'savedFrets':this.calcFretsInColumn(this.props.stringIdx, this.props.frets, this.props.fretBounds, this.props.scaleNotes)});
+  }
 
-      // <div className="fret-column" stringIdx={s} >
+  componentDidMount() {
+    this.recalcFrets();
+  }
+
+  componentDidUpdate(prevProps){
+    if(prevProps.fretChanges !== this.props.fretChanges){
+      this.recalcFrets();
+    }
+  }
+
+
+  renderFrets(frets){
+    const retVal = [];
+    frets.forEach((f, idx) => {
+      switch(f.type){
+        case 'fret': retVal.push(<Fret {...f}/>);
+          break;
+        default: retVal.push(<div {...f}/>);
+      }
+    });
+
+    return retVal;
+  }
+
+  render() {
     return (
       <div className="fret-column" >
-        {this.getFretsInColumn(s, this.props.frets, this.props.fretBounds, this.props.scaleNotes)}
+        {this.renderFrets(this.state.savedFrets)}
       </div>
     );
   }

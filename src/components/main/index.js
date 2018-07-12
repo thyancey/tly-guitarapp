@@ -16,11 +16,11 @@ require('./style.less');
 
 class Main extends Component {
   constructor(){
-    super();
-  }
+    global.dispatchMusicEvent = (musicEvent) => {
+      this.refs.musicBox.onMusicEvent(musicEvent);
+    }
 
-  dispatchMusicEvent(musicEvent){
-    this.refs.musicBox.onMusicEvent(musicEvent);
+    super();
   }
 
   render() {
@@ -30,14 +30,14 @@ class Main extends Component {
 
         <div className="panelgroup-left">
           <MusicKeyPanel />
-          <ScalePanel dispatchMusicEvent={(musicEvent) => this.dispatchMusicEvent(musicEvent)}/>
+          <ScalePanel />
         </div>
         <div className="panelgroup-center">
           <NoteDisplayPanel />
-          <Fretboard dispatchMusicEvent={(musicEvent) => this.dispatchMusicEvent(musicEvent)} />
+          <Fretboard />
         </div>
         <div className="panelgroup-right">
-          <ChordPanel dispatchMusicEvent={(musicEvent) => this.dispatchMusicEvent(musicEvent)} />
+          <ChordPanel />
           <InstrumentPanel />
           <ToolsPanel />
         </div>

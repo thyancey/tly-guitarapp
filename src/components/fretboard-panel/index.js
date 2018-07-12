@@ -8,23 +8,16 @@ import FretColumn from './fret-column';
 require('./style.less');
 
 class Fretboard extends Component {
-  getFretRows(octaveNotes){
-    let retVal = [];
-    let numFrets = MusicMan.getNumFrets();
+  constructor(){
+    super();
 
-    let simpleNotes = [];
-    for(let n = 0; n < octaveNotes.length; n++){
-      simpleNotes.push(octaveNotes[n].split('-')[0]);
+    this.state = {
+      fretColumns: [],
+      fretRows: []
     }
-    for(let fIdx = 0; fIdx < numFrets; fIdx++){
-      retVal.push(
-        <FretRow notes={simpleNotes} fretIdx={fIdx} key={'fr-' + fIdx} />
-      );
-    }
-    return retVal;
   }
 
-  getFretColumns(octaveNotes){
+  calcFretColumns(octaveNotes){
     var retVal = [];
 
     let simpleNotes = [];
@@ -39,43 +32,82 @@ class Fretboard extends Component {
     var fretBounds = instrumentResult.fretBounds;
 
     for(var sIdx = 0; sIdx < strings.length; sIdx++){
-
-
       retVal.push(
-        <FretColumn key={'fc-' + sIdx} 
+        <FretColumn key={'fc-' + sIdx}
                     scaleNotes={octaveNotes}
                     chordFretIdx={chordFretIdxs[sIdx]}
-                    notes={simpleNotes} 
-                    stringIdx={sIdx} 
-                    frets={strings[sIdx]} 
-                    fretBounds={fretBounds[sIdx]} 
-                    dispatchMusicEvent={this.props.dispatchMusicEvent} />
+                    notes={simpleNotes}
+                    stringIdx={sIdx}
+                    frets={strings[sIdx]}
+                    fretBounds={fretBounds[sIdx]}
+                    fretChanges={this.props.fretChanges}
+                    dispatchMusicEvent={this.props.actions.dispatchMusicEvent} />
       );
     }
+
     return retVal;
   }
-  
-  render() {
-    // const octaveNotes = [1];
+
+  calcFretRows(octaveNotes){
+    let retVal = [];
+    let numFrets = MusicMan.getNumFrets();
+
+    let simpleNotes = [];
+    for(let n = 0; n < octaveNotes.length; n++){
+      simpleNotes.push(octaveNotes[n].split('-')[0]);
+    }
+    for(let fIdx = 0; fIdx < numFrets; fIdx++){
+      retVal.push({
+        key:'fr-' + fIdx,
+        notes:simpleNotes,
+        fretIdx:fIdx
+      });
+    }
+
+    return retVal;
+  }
+
+
+  componentDidMount() {
+    this.recalcFrets();
+  }
+
+  recalcFrets(){
     const octaveNotes = MusicMan.getScale(this.props.musicKey, this.props.scale, this.props.octave);
+    this.setState({
+      fretColumns: this.calcFretColumns(octaveNotes),
+      fretRows: this.calcFretRows(octaveNotes),
+    });
+  }
+
+  componentDidUpdate(prevProps){
+    if(prevProps.fretChanges !== this.props.fretChanges){
+      this.recalcFrets();
+    }
+  }
+
+  //- I don't usually like spreads, but it makes sense here. Only calculate fret stuff when you have to.
+  //- save pretty much everything you want to give to the components in state, then just pass it in on render.
+  render() {
+
     return (
       <div className="panel-container fret-panel">
         <h2>{'Fretboard'}</h2>
 
         <div className="fretboard">
           <div className="fret-rows-container" >
-            {this.getFretRows(octaveNotes)}
+            { this.state.fretRows.map(fr => (<FretRow {...fr}/>)) }
           </div>
           <div className="fret-column-container" >
-            {this.getFretColumns(octaveNotes)}
+            { this.state.fretColumns.map(fc => (fc)) }
           </div>
           <div className="string-container" >
-            <div className="string" key="s-1"/>
-            <div className="string" key="s-2"/>
-            <div className="string" key="s-3"/>
-            <div className="string" key="s-4"/>
-            <div className="string" key="s-5"/>
-            <div className="string" key="s-6"/>
+            { 
+              //- one string for each fret row.
+              this.state.fretColumns.map((fc,idx) => (
+                <div className="string" key={'s-' + idx} />
+              ))
+            }
           </div>
         </div>
       </div>
@@ -89,5 +121,6 @@ export default connect(state => ({
   octave: state.octave,
   scale: state.scale,
   chord: state.chord,
-  instrument: state.instrument
+  instrument: state.instrument,
+  fretChanges: state.fretChanges
 }))(Fretboard);

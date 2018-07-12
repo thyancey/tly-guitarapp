@@ -15,7 +15,7 @@ export default class ComboButton extends Component {
     }
 
     return (
-      <div className={className} onClick={() => this.props.onClickMethod(this.props.onClickParam)} alt={this.props.title}>
+      <div className={className} onClick={(e) => this.props.onClickMethod(this.props.onClickParam)} alt={this.props.title}>
         <div className="icon-container">
           <div className={iconClass} />
         </div>

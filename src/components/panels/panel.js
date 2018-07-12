@@ -14,12 +14,14 @@ export default class Panel extends Component {
   startDragEvent(){
     this.setState({ holding: false });
 
-    this.props.startDrag({
-      id: this.props.id,
-      class: this.props.panelClass,
-      width: this.reffers.offsetWidth,
-      height: this.reffers.offsetHeight
-    });
+    this.props.startDrag(this.props.id);
+
+    // this.props.startDrag({
+    //   id: this.props.id,
+    //   class: this.props.panelClass,
+    //   width: this.reffers.offsetWidth,
+    //   height: this.reffers.offsetHeight
+    // });
   }
 
   startHoldTimer(){

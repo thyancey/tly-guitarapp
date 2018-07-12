@@ -76,7 +76,7 @@ export default class DragCover extends Component {
   }
 
   onMouseUp(e){
-    this.props.stopDrag(e, this.props.heldPanel);
+    this.props.stopDrag(e, this.props.heldPanelId);
   }
 
   render() {

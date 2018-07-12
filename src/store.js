@@ -22,7 +22,7 @@ const allElementsFromPoint = (x, y) => {
 }
 
 const removePanel = (panelId, panelPositions) => {
-  // console.log('removing ', panelId);
+  // console.log('removePanel ', panelId);
   for(var position in panelPositions){
     for(let i = 0; i < panelPositions[position].length; i++){
       if(panelPositions[position][i] === panelId){
@@ -36,10 +36,45 @@ const removePanel = (panelId, panelPositions) => {
 }
 
 const insertPanel = (panelId, panelPositions, targetPanel, targetIndex) => {
+  // console.log('insertPanel ', panelId);
   panelPositions[targetPanel].splice(targetIndex, 0, panelId);
   return panelPositions;
 }
 
+const getCachedData = (key, fallback) => {
+  try{
+    const jsonString = global.localStorage.getItem('tly-guitarapp') || '{}';
+    const cachedData = JSON.parse(jsonString);
+
+    return cachedData[key] || fallback;
+  }catch(e){
+    console.log('error when getting cachedData', e);
+    return fallback;
+  }
+}
+
+const setCachedData = (key, value) => {
+  // console.log('setCachedData', key, value);
+  try{
+    const jsonString = global.localStorage.getItem('tly-guitarapp') || '{}';
+    const cachedData = JSON.parse(jsonString);
+    cachedData[key] = value;
+
+    global.localStorage.setItem('tly-guitarapp', JSON.stringify(cachedData));
+    return true;
+  }catch(e){
+    console.log('error when setting cachedData', e);
+    return false;
+  }
+}
+
+const DEFAULT_SETTINGS = {
+  layout:{
+    left: ['musicKey', 'scale'],
+    center: ['notedisplay', 'fret'],
+    right: ['chord', 'instrument', 'tools']
+  }
+}
 
 const store = {
   initialState: {
@@ -56,21 +91,19 @@ const store = {
       noteClick:false,
       scaleMode:false
     },
-    panelPositions: {
-      left: ['musicKey', 'scale'],
-      center: ['notedisplay', 'fret'],
-      right: ['chord', 'instrument', 'tools']
-    },
+    panelPositions: getCachedData('panelPositions', DEFAULT_SETTINGS.layout),
     isDragging: false,
     spacerPosition:null,
-    heldPanel:null,
     heldPanelId:null,
     panelChanges: 0
   },
   actions: {
     setMusicKey: ({ musicKey, fretChanges }, newMusicKey) => ({ musicKey: newMusicKey, fretChanges: fretChanges+1 }),
     setScale: ({ scale, fretChanges }, newScale) => ({ scale: newScale, fretChanges: fretChanges+1 }),
-    setSpacerPosition: ({ spacerPosition }, newSpacerPosition) => ({ spacerPosition: newSpacerPosition }),
+    setVolume: ({ volume }, newVolume) => ({ volume: newVolume }),
+    setOctave: ({ octave, fretChanges }, newOctave) => ({ octave: newOctave, fretChanges: fretChanges+1 }),
+    setChord: ({ chord, fretChanges }, newChord) => ({ chord: newChord, fretChanges: fretChanges+1 }),
+    setSelectionMode: ({ selectionMode }, newSelectionMode) => ({ selectionMode: newSelectionMode }),
     setInstrument: ({ instrument, midiInstrument, chord, fretChanges }, newInstrument) => {
       return { 
         instrument: newInstrument,
@@ -79,32 +112,46 @@ const store = {
         fretChanges: fretChanges+1
       }
     },
-    setVolume: ({ volume }, newVolume) => ({ volume: newVolume }),
-    setOctave: ({ octave, fretChanges }, newOctave) => ({ octave: newOctave, fretChanges: fretChanges+1 }),
-    setChord: ({ chord, fretChanges }, newChord) => ({ chord: newChord, fretChanges: fretChanges+1 }),
-    setSelectionMode: ({ selectionMode }, newSelectionMode) => ({ selectionMode: newSelectionMode }),
-    dragPanel: ({ isDragging, heldPanel, heldPanelId }, newPanel) => ({ 
+
+    /* layout customization stuff */
+    setSpacerPosition: ({ spacerPosition }, newSpacerPosition) => ({ spacerPosition: newSpacerPosition }),
+    dragPanel: ({ isDragging, heldPanelId }, newPanelId) => ({ 
       isDragging: true,
-      heldPanel: newPanel,
-      heldPanelId: newPanel.id
+      heldPanelId: newPanelId
     }),
-    dropPanel: ({ isDragging, spacerPosition, panelPositions, heldPanel, heldPanelId }, panelId) => { 
+    dropPanel: ({ isDragging, spacerPosition, panelPositions, heldPanelId }, panelId) => { 
       if(spacerPosition){
-        // console.log('spacerPosition ', spacerPosition);
         panelPositions = removePanel(panelId, panelPositions);
         panelPositions = insertPanel(panelId, panelPositions, spacerPosition.panel, spacerPosition.index);
+
+        setCachedData('panelPositions', panelPositions);
+
+        return{
+          panelPositions: panelPositions,
+          spacerPosition:null,
+          heldPanelId: null,
+          isDragging: false 
+        }
       }else{
-
-      }
-
-      return{
-        panelPositions: panelPositions,
-        spacerPosition:null,
-        heldPanel: null,
-        heldPanelId: null,
-        isDragging: false 
+        return{
+          spacerPosition:null,
+          heldPanelId: null,
+          isDragging: false 
+        }
       }
     },
+
+    setDefaultSettings(){
+      try{
+        global.localStorage.removeItem('tly-guitarapp');
+        global.location.reload();
+      }catch(e){
+        global.location.reload();
+      }
+      return {};
+    },
+
+    //- todo, this probably isn't the most react way to do something, but it works just fine for now
     dispatchMusicEvent: ({}, musicEvent) => {
       if(!global.dispatchMusicEvent){
         console.error('dispatchMusicEvent method was not defined on window.');

@@ -32,6 +32,11 @@ class ToolsPanel extends Component {
                         isActive={this.props.selectionMode.scaleMode}
                         icon="icon-scalemode" 
                         title="Play scales" />
+
+          <ComboButton  onClickMethod={this.props.actions.setDefaultSettings}
+                        isActive={false}
+                        icon="icon-reset" 
+                        title="Reset Layout" />
         </div>
         <div className="volume-container">
           <p>{'volume'}</p>

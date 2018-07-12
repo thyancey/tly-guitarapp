@@ -20,7 +20,6 @@ require('./style.less');
 class Main extends Component {
   constructor(){
     super();
-
     global.dispatchMusicEvent = (musicEvent) => {
       this.refs.musicBox.onMusicEvent(musicEvent);
     }
@@ -66,13 +65,12 @@ class Main extends Component {
     };
   }
 
-  onPanelStartedDrag(heldPanel){
-    this.props.actions.dragPanel(heldPanel);
+  onPanelStartedDrag(panelId){
+    this.props.actions.dragPanel(panelId);
   }
 
-  onCoverStoppedDrag(e, hp){
-    // console.log('onCoverStoppedDrag', hp);
-    this.props.actions.dropPanel(hp.id);
+  onCoverStoppedDrag(e, panelId){
+    this.props.actions.dropPanel(panelId);
   }
 
   renderPanelGroup(positionId, panelPositions, spacerPosition){
@@ -129,7 +127,6 @@ class Main extends Component {
         <MusicBox ref="musicBox" midiInstrument={this.props.midiInstrument} volume={this.props.volume} />
         <DragCover  isDragging={this.props.isDragging} 
                     stopDrag={(e, hp) => this.onCoverStoppedDrag(e, hp)}
-                    heldPanel={this.props.heldPanel} 
                     heldPanelId={this.props.heldPanelId} 
                     panelPositions={this.props.panelPositions} 
                     setSpacerPosition={this.props.actions.setSpacerPosition} />
@@ -155,6 +152,5 @@ export default connect(state => ({
   panelChanges: state.panelChanges,
   spacerPosition: state.spacerPosition,
   isDragging: state.isDragging,
-  heldPanel: state.heldPanel,
   heldPanelId: state.heldPanelId
 }))(Main);

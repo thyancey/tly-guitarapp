@@ -9,15 +9,14 @@
   height:0;
   z-index:-1;
 
-  background-color:green;
-
   &.dragging{
-
     width:100%;
     height:100%;
     z-index:999999;
     opacity:0;
   }
+
+
 }
 
 .main{
@@ -39,7 +38,7 @@
     right:@fret-panel-width;
     top:0;
     height:100%;
-    overflow-y:auto;
+    overflow-y:none;
   }
 
   .panelgroup-left{
@@ -49,7 +48,7 @@
     left:0px;
     top:0px;
     height:100%;
-    overflow-y:auto;
+    overflow-y:none;
   }
 
   .panelgroup-right{
@@ -59,7 +58,7 @@
     top:0px;
     right:0px;
     height:100%;
-    overflow-y:auto;
+    overflow-y:none;
   }
 }
 

@@ -27,7 +27,7 @@ class Main extends Component {
     this.state = {
       panels:{
         musicKey:{
-          panelClass: 'musicKey',
+          panelClass: 'musickey',
           title: 'Key',
           component: <MusicKeyPanel/>
         },

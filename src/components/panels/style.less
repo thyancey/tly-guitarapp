@@ -5,7 +5,9 @@
   .panel-container{
     opacity:.75;
     border-style: dashed;
+    margin:2rem;
 
+    transition: margin .2s, opacity .2s;
   }
 }
 
@@ -16,6 +18,7 @@
   border:@border-thickness solid @color-white;
   border-radius: 1rem;
   text-align:center;
+  max-height:100%;
 
   h2{
     color: @color-white;
@@ -30,7 +33,6 @@
     cursor: -webkit-grab;
   }
 
-  
   .panel-header{
     &:hover{
       background-color:purple;
@@ -55,27 +57,24 @@
 }
 
 .panel-musickey{
-  >.store-button{
+
+  .store-button{
     display:inline-block;
     margin:0.25rem;
-    width:25%;
+    width:~"calc(25% - .5rem)";
   }
 }
 
-.panel-scale{
-  >.store-button{
-    margin:0.5rem;
-  }
-}
-
-.panel-instrument{
-  >.store-button{
+.panel-chord, .panel-scale, .panel-instrument{
+  .store-button{
+    font-size:1.5rem;
+    padding:.25rem;
     margin:0.5rem;
   }
 }
 
 .panel-notedisplay{
-  >.store-button{
+  .store-button{
     margin:0.5rem;
   }
 

@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'src/store';
 
 import MusicMan from 'src/utils/musicman';
-import ControlPanel from 'src/components/control-panel';
-import Fretboard from 'src/components/fretboard';
-import ChordPanel from 'src/components/chord-panel';
-import SelectionTools from 'src/components/selection-tools';
-
+import Fretboard from 'src/components/fretboard-panel';
 import MusicBox from 'src/components/musicbox';
+
+import ChordPanel from 'src/components/panels/chord-panel';
+import InstrumentPanel from 'src/components/panels/instrument-panel';
+import MusicKeyPanel from 'src/components/panels/musickey-panel';
+import NoteDisplayPanel from 'src/components/panels/notedisplay-panel';
+import ScalePanel from 'src/components/panels/scale-panel';
+import ToolsPanel from 'src/components/panels/tools-panel';
 
 require('./style.less');
 
@@ -24,11 +27,19 @@ class Main extends Component {
     return(
       <div className="main" >
         <MusicBox ref="musicBox" midiInstrument={this.props.midiInstrument} volume={this.props.volume} />
-        <ControlPanel dispatchMusicEvent={(musicEvent) => this.dispatchMusicEvent(musicEvent)}/>
-        <Fretboard dispatchMusicEvent={(musicEvent) => this.dispatchMusicEvent(musicEvent)} />
+
+        <div className="panelgroup-left">
+          <MusicKeyPanel />
+          <ScalePanel dispatchMusicEvent={(musicEvent) => this.dispatchMusicEvent(musicEvent)}/>
+        </div>
+        <div className="panelgroup-center">
+          <NoteDisplayPanel />
+          <Fretboard dispatchMusicEvent={(musicEvent) => this.dispatchMusicEvent(musicEvent)} />
+        </div>
         <div className="panelgroup-right">
-          <SelectionTools />
           <ChordPanel dispatchMusicEvent={(musicEvent) => this.dispatchMusicEvent(musicEvent)} />
+          <InstrumentPanel />
+          <ToolsPanel />
         </div>
       </div>
     );

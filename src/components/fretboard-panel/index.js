@@ -59,7 +59,9 @@ class Fretboard extends Component {
     // const octaveNotes = [1];
     const octaveNotes = MusicMan.getScale(this.props.musicKey, this.props.scale, this.props.octave);
     return (
-      <div className="fretboard-container">
+      <div className="panel-container fret-panel">
+        <h2>{'Fretboard'}</h2>
+
         <div className="fretboard">
           <div className="fret-rows-container" >
             {this.getFretRows(octaveNotes)}
@@ -76,7 +78,6 @@ class Fretboard extends Component {
             <div className="string" key="s-6"/>
           </div>
         </div>
-
       </div>
     );
   }

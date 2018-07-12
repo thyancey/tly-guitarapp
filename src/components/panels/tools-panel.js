@@ -4,7 +4,7 @@ import { connect } from 'src/store';
 require('./style.less');
 import ComboButton from 'src/components/shared/combo-button';
 
-class SelectionTools extends Component {
+class ToolsPanel extends Component {
   onToggleWriteMode(mode){
     let newSelectionMode = Object.assign({}, this.props.selectionMode);
     newSelectionMode.noteClick = !mode;
@@ -19,8 +19,8 @@ class SelectionTools extends Component {
 
   render() {
     return(
-      <div className="selection-tools panel-container">
-        <h2>{'Selection Tools'}</h2>
+      <div className="panel-tools panel-container">
+        <h2>{'Settings'}</h2>
         <div className="selection-buttons">
           <ComboButton  onClickMethod={(mode) => this.onToggleWriteMode(mode)}
                         onClickParam={this.props.selectionMode.noteClick}
@@ -47,4 +47,4 @@ class SelectionTools extends Component {
 export default connect(state => ({ 
   selectionMode: state.selectionMode,
   volume: state.volume,
-}))(SelectionTools);
+}))(ToolsPanel);

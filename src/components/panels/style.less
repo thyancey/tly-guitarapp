@@ -1,0 +1,67 @@
+@import "~themes/variables.less";
+
+.panel-container{
+  margin:1rem;
+  padding:1rem;
+  background-color:@color-black;
+  border:@border-thickness solid @color-white;
+  border-radius: 1rem;
+  text-align:center;
+
+  h2{
+    color: @color-white;
+    margin-bottom:1rem;
+  }
+}
+
+
+.panel-musickey{
+  >.store-button{
+    display:inline-block;
+    margin:0.25rem;
+    width:25%;
+  }
+}
+
+.panel-scale{
+  >.store-button{
+    margin:0.5rem;
+  }
+}
+
+.panel-instrument{
+  >.store-button{
+    margin:0.5rem;
+  }
+}
+
+.panel-notedisplay{
+  >.store-button{
+    margin:0.5rem;
+  }
+
+  span{
+    padding:.5rem;
+  }
+}
+
+
+.panel-tools{
+
+  .selection-buttons{
+    >*{
+      display:inline-block;
+      margin:.5rem;
+
+    }
+  }
+
+  .volume-container{
+    text-align:center;
+    color:@color-white;
+
+    input{
+      cursor:pointer;
+    }
+  }
+}

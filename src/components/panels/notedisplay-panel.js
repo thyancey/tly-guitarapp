@@ -11,8 +11,7 @@ class NoteDisplayPanel extends Component {
     const simpleNotes = MusicMan.getScale(this.props.musicKey, this.props.scale);
 
     return (
-      <div className="panel-container panel-notedisplay">
-        <h2>{'Notes'}</h2>
+      <div>
         <div className="active-notes">
           {simpleNotes.map((note, index) => 
             <span key={'note-' + index}>{note}</span>

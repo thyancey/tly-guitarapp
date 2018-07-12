@@ -24,8 +24,7 @@ class ControlPanel extends Component {
 
   render() {
     return (
-      <div className="panel-container panel-instrument">
-        <h2>{'Instrument'}</h2>
+      <div>
         {this.createInstrumentButtons(MusicMan.getInstruments())}
       </div>
     );

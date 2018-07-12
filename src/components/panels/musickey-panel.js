@@ -19,8 +19,7 @@ class MusicKeyPanel extends Component {
 
   render() {
     return (
-      <div className="panel-container panel-musickey">
-        <h2>{'Key'}</h2>
+      <div>
         {this.createNoteButtons()}
       </div>
     );

@@ -38,8 +38,7 @@ class ScalePanel extends Component {
 
   render() {
     return (
-      <div className="panel-container panel-scale">
-        <h2>{'Scale'}</h2>
+      <div>
         {this.createScaleButtons(MusicMan.getScales())}
       </div>
     );

@@ -91,9 +91,7 @@ class Fretboard extends Component {
   render() {
 
     return (
-      <div className="panel-container fret-panel">
-        <h2>{'Fretboard'}</h2>
-
+      <div>
         <div className="fretboard">
           <div className="fret-rows-container" >
             { this.state.fretRows.map(fr => (<FretRow {...fr}/>)) }

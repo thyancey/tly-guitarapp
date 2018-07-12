@@ -19,8 +19,7 @@ class ToolsPanel extends Component {
 
   render() {
     return(
-      <div className="panel-tools panel-container">
-        <h2>{'Settings'}</h2>
+      <div>
         <div className="selection-buttons">
           <ComboButton  onClickMethod={(mode) => this.onToggleWriteMode(mode)}
                         onClickParam={this.props.selectionMode.noteClick}

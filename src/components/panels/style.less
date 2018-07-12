@@ -1,5 +1,14 @@
 @import "~themes/variables.less";
 
+
+.dragging{
+  .panel-container{
+    opacity:.75;
+    border-style: dashed;
+
+  }
+}
+
 .panel-container{
   margin:1rem;
   padding:1rem;
@@ -12,8 +21,38 @@
     color: @color-white;
     margin-bottom:1rem;
   }
+
+  .panel-header{
+    background-color:black;
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+  }
+
+  
+  .panel-header{
+    &:hover{
+      background-color:purple;
+    }
+  }
+
+  &.holding{
+    opacity:.2;
+    transition: all .2s;
+
+  }
+
+  &.dragging{
+    opacity:.2;
+  }
 }
 
+.panel-spacer{
+  width:100%;
+  height:1rem;
+  background-color:@color-purple;
+}
 
 .panel-musickey{
   >.store-button{

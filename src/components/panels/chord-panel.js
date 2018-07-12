@@ -9,11 +9,9 @@ require('./style.less');
 class ChordPanel extends Component {
 
   onChordClick(chordLabel){
-    // console.log('onChordClick(' + chordLabel + ')');
     if(this.props.chord === chordLabel){
       chordLabel = null;
     }
-    // console.log('setChord(' + chordLabel + ')');
     this.props.actions.setChord(chordLabel);
 
     const chordNotes = MusicMan.getChordNotes(chordLabel, this.props.instrument);
@@ -43,8 +41,7 @@ class ChordPanel extends Component {
 
   render() {
     return (
-      <div className="chords panel-container">
-        <h2>{'Open Chords'}</h2>
+      <div>
         <div className="chord-buttons">
           {this.createChordButtons(this.props.instrument, this.props.musicKey, this.props.scale)}
         </div>

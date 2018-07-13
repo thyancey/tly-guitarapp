@@ -9,6 +9,7 @@ import ChordPanel from 'src/components/panels/chord-panel';
 import InstrumentPanel from 'src/components/panels/instrument-panel';
 import MusicKeyPanel from 'src/components/panels/musickey-panel';
 import NoteDisplayPanel from 'src/components/panels/notedisplay-panel';
+import ChordDisplayPanel from 'src/components/panels/chorddisplay-panel';
 import ScalePanel from 'src/components/panels/scale-panel';
 import ToolsPanel from 'src/components/panels/tools-panel';
 import Panel from 'src/components/panels/panel';
@@ -40,6 +41,11 @@ class Main extends Component {
           panelClass: 'notedisplay',
           title: 'Notes',
           component: <NoteDisplayPanel/>
+        },
+        chorddisplay:{
+          panelClass: 'chorddisplay',
+          title: 'Chords',
+          component: <ChordDisplayPanel/>
         },
         fret:{
           panelClass: 'fret',
@@ -75,46 +81,40 @@ class Main extends Component {
 
   renderPanelGroup(positionId, panelPositions, spacerPosition){
     // console.log('renderPanelGroup(' + positionId + ', ', panelPositions);
-    let interrupter = 0;
-    let spacerIdx = -1;
-
-    if(spacerPosition && spacerPosition.panel === positionId){
-      // console.log(positionId + ' got a spacer at ' + spacerPosition.index);
-      spacerIdx = spacerPosition.index;
-    }
     const retVal = [];
     panelPositions.forEach((panelId, idx) => {
       const panel = this.state.panels[panelId];
       if(!panel){
         console.error(`invalid panel "${panelId}" requested`);
-        interrupter ++;
         return;
-      }
-
-      if(spacerIdx > -1){
-        if(idx === spacerIdx){
-          retVal.push(<div key={interrupter} className={'panel-spacer'} />);
-          interrupter ++;
-        }
       }
 
       retVal.push(
         <Panel  id={panelId} 
                 isBeingDragged={panelId === this.props.heldPanelId}
-                key={interrupter} 
+                key={idx} 
                 panelClass={panel.panelClass} 
                 title={panel.title} 
                 children={panel.component} 
                 startDrag={e => this.onPanelStartedDrag(e)} >
         </Panel>
       );
-
-      interrupter ++;
     });
+
+    if(spacerPosition && spacerPosition.panel === positionId){
+      retVal.splice(spacerPosition.index, 0, this.renderSpacer());
+    }
 
     return retVal;
   }
 
+  renderSpacer(){
+    return (
+      <div key="spacer" className={'panel-spacer'}>
+        <div />
+      </div>
+    );
+  }
 
   render() {
     let mainClassName = 'main';
@@ -124,23 +124,23 @@ class Main extends Component {
 
     return(
       <div className={mainClassName} >
-        <MusicBox ref="musicBox" midiInstrument={this.props.midiInstrument} volume={this.props.volume} />
+        <MusicBox ref="musicBox" scale={this.props.scale} midiInstrument={this.props.midiInstrument} volume={this.props.volume} />
         <DragCover  isDragging={this.props.isDragging} 
                     stopDrag={(e, hp) => this.onCoverStoppedDrag(e, hp)}
                     heldPanelId={this.props.heldPanelId} 
                     panelPositions={this.props.panelPositions} 
                     setSpacerPosition={this.props.actions.setSpacerPosition} />
-        <div className="panelgroup mod-left">
+        <div className="panelgroup mod-left" data-panelgroup="left">
           <div className="panelgroup-column">
           {this.renderPanelGroup('left', this.props.panelPositions.left, this.props.spacerPosition)}
           </div>
         </div>
-        <div className="panelgroup mod-center">
+        <div className="panelgroup mod-center" data-panelgroup="center">
           <div className="panelgroup-column">
           {this.renderPanelGroup('center', this.props.panelPositions.center, this.props.spacerPosition)}
           </div>
         </div>
-        <div className="panelgroup mod-right">
+        <div className="panelgroup mod-right" data-panelgroup="right">
           <div className="panelgroup-column">
           {this.renderPanelGroup('right', this.props.panelPositions.right, this.props.spacerPosition)}
           </div>
@@ -154,6 +154,7 @@ class Main extends Component {
 export default connect(state => ({
   midiInstrument: state.midiInstrument,
   volume: state.volume,
+  scale: state.scale,
   panelPositions: state.panelPositions,
   panelChanges: state.panelChanges,
   spacerPosition: state.spacerPosition,

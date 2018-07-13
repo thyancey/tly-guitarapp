@@ -32,11 +32,13 @@ export default class Fret extends Component {
             <span>{this.props.fretIdx}</span>
           </div>
         </div>
+        {/*}
         <div className="round-fret fret-octave">
           <div className="round-fret-circle">
             <span>{this.props.note + '' + this.props.octave}</span>
           </div>
         </div>
+      */}
       </div>
     );
   }

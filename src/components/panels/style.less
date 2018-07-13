@@ -49,56 +49,73 @@
 }
 
 
-
 .panel-spacer{
+  position:relative;
   width:100%;
-  height:1rem;
-  background-color:@color-red;
-}
+  height:0rem;
 
-.panel-musickey{
-  .store-button{
-    display:inline-block;
-    margin:0.25rem;
-    width:~"calc(25% - .5rem)";
+  >div{
+    position:absolute;
+    height:2rem;
+    top:-1rem;
+    left:0;
+    width:100%;
+
+    background-color:@color-red;
   }
 }
 
-.panel-chord, .panel-scale, .panel-instrument{
-  .store-button{
-    font-size:1.5rem;
-    padding:.25rem;
-    margin:0.5rem;
-  }
-}
+.panel-container{
 
-.panel-notedisplay{
-  .store-button{
-    margin:0.5rem;
-  }
-
-  span{
-    padding:.5rem;
-  }
-}
-
-
-.panel-tools{
-  .selection-buttons{
-    >*{
+  &.panel-musickey{
+    .store-button{
       display:inline-block;
-      margin:.5rem;
-      width:6rem;
-
+      margin:0.25rem;
+      width:~"calc(25% - .5rem)";
     }
   }
 
-  .volume-container{
-    text-align:center;
-    color:@color-white;
+  &.panel-chord,
+  &.panel-scale,
+  &.panel-instrument{
+    .store-button{
+      font-size:1.5rem;
+      padding:.25rem;
+      margin:0.5rem;
+    }
+  }
 
-    input{
-      cursor:pointer;
+  &.panel-notedisplay,
+  &.panel-chorddisplay{
+    min-height:8rem;
+    .store-button{
+      margin:0.5rem;
+    }
+
+    span{
+      display:inline-block;
+      padding:.5rem;
+    }
+  }
+
+
+
+  &.panel-tools{
+    .selection-buttons{
+      >*{
+        display:inline-block;
+        margin:.5rem;
+        width:6rem;
+      }
+    }
+
+    .volume-container{
+      text-align:center;
+      color:@color-white;
+
+      input{
+        cursor:pointer;
+      }
     }
   }
 }

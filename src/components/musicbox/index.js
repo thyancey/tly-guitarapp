@@ -71,9 +71,13 @@ export default class MusicBox extends Component {
     switch(type){
       case 'NOTE': this.midiSounds.playChordNow(this.state.curInstrument.id, midiNotes, SUSTAIN_VALUES.NOTE);
         break;
-      case 'SCALE': this.playScale(midiNotes);
+      case 'SCALE': 
+        this.midiSounds.cancelQueue();
+        this.playScale(midiNotes);
         break;
-      case 'SCALE_FULL': this.playFullScale(midiNotes);
+      case 'SCALE_FULL': 
+        this.midiSounds.cancelQueue();
+        this.playFullScale(midiNotes);
         break;
       case 'CHORD': this.midiSounds.playChordNow(this.state.curInstrument.id, midiNotes, SUSTAIN_VALUES.CHORD);
         break;

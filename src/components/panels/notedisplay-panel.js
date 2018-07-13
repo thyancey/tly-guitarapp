@@ -12,9 +12,9 @@ class NoteDisplayPanel extends Component {
 
     return (
       <div className="active-notes">
-        {simpleNotes.map((note, index) => 
+        {simpleNotes.map((note, index) => (
           <span key={'note-' + index}>{note}</span>
-        )}
+        ))}
       </div>
     );
   }

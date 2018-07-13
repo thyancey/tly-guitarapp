@@ -17,6 +17,7 @@
   text-align:left;
 
   .string{
+    opacity:.5;
     display:inline-block;
     width:@string-width;
     height:100%;
@@ -79,14 +80,14 @@
       // background-color:red;
 
       .fret-note{
-        display:none;
+        // display:none;
       }
       .fret-idx{
         display:none;
       }
-      .fret-octave{
-        display:inline-block;
-      }
+      // .fret-octave{
+      //   display:inline-block;
+      // }
     }
   }
 }
@@ -117,7 +118,7 @@
     background-size: 100% 100%;
     background-repeat: no-repeat;
     width:100%;
-    opacity:.30;
+    opacity:.2;
     z-index:-1;
 
     &.one-dot{
@@ -140,6 +141,7 @@
   }
 
   .fret-bar{
+    opacity:.5;
     background-image:url("~images/fret.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -162,7 +164,10 @@
   &.root-fret{
     .round-fret{
       .round-fret-circle {
-        background: @color-red;
+        background-color: @color-red;
+        span{
+          // color:white;
+        }
       }
     }
   }
@@ -170,13 +175,18 @@
   .round-fret{
     .round-fret-circle {
       opacity:1;
+      box-shadow: 0px 0px 10px @color-red;
+      span{
+        font-weight:600;
+      }
     }
   }
 
   &:hover{
     .round-fret{
       .round-fret-circle {
-        background:@color-purple-dark;
+        background-color:@color-purple-dark;
+        transition: all .2s;
       }
     }
   }
@@ -204,17 +214,19 @@
     width:100%;
     padding-top:50%;
     padding-bottom:50%;
-    line-height:1em;
-    margin-top:-0.5em;
+    line-height:1rem;
+    margin-top:-0.4rem;
 
     text-align:center;
-    font-size:.8em;
+    font-size:1.5rem;
     text-decoration:none;
+
+    font-family:arial;
   }
 
   .round-fret-circle {
-    opacity:.3;
-    background: @color-blue-light; 
+    opacity:.2;
+    background-color: @color-blue-light; 
 
     width: 100%;
     height:0;
@@ -222,9 +234,23 @@
     border-radius: 50%;
     cursor:pointer;
     overflow:hidden;
+    font-weight:600;
 
-    &:hover {
-      background:@color-blue-dark;
+
+  }
+}
+
+.fret{
+  &:hover {
+    .round-fret-circle {
+      opacity:1;
+      background-color:@color-black;
+      box-shadow: 0px 0px 25px @color-white;
+      transition: all .2s;
+      span{
+        color:@color-white;
+        transition: color .2s;
+      }
     }
   }
 }

@@ -28,45 +28,45 @@
   .musicbox-container{
     display:none;
   }
+}
 
-  .panelgroup{
-    position:absolute;
+.panelgroup{
+  position:absolute;
 
-    top:0px;
-    height:100%;
+  top:0px;
+  height:100%;
+  overflow-y:auto;
+
+  &.mod-left{
+    width:@panelgroup-left-width;
+    left:0;
+  }
+  &.mod-center{
+    width:@panelgroup-center-width;
+    left:@panelgroup-left-width;
+  }
+  &.mod-right{
+    width:@panelgroup-right-width;
+    right:0;
+  }
+}
+
+.panelgroup-column{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+
+.panel-container{
+  flex-shrink:1;
+  min-height:15rem;
+  display:flex;
+  flex-direction:column;
+
+  overflow: hidden;
+
+  .panel-body{
     overflow-y:auto;
-
-    &.mod-left{
-      width:@panelgroup-left-width;
-      left:0;
-    }
-    &.mod-center{
-      width:@panelgroup-center-width;
-      left:@panelgroup-left-width;
-    }
-    &.mod-right{
-      width:@panelgroup-right-width;
-      right:0;
-    }
-  }
-
-  .panelgroup-column{
-    display:flex;
-    flex-direction:column;
-    height:100%;
-  }
-
-  .panel-container{
-    flex-shrink:1;
-    min-height:150px;
-    display:flex;
-    flex-direction:column;
-
-    overflow: hidden;
-
-    .panel-body{
-      overflow-y:auto;
-    }
   }
 }
 

@@ -23,6 +23,7 @@ const allElementsFromPoint = (x, y) => {
   return elements;
 }
 
+//- just loop through some nested key/object pairs to find a matching panelId
 const getPanelPositionOfThis = (panelPositions, panelId) => {
   for(let position in panelPositions){
     const pArr = panelPositions[position];
@@ -51,13 +52,21 @@ export default class DragCover extends Component {
     }
   }
 
-  setSpacerOnPanel(id){
-    const posObj = getPanelPositionOfThis(this.props.panelPositions, id);
+  setSpacerOnEmptyPanel(panelGroupId){
+    this.props.setSpacerPosition({
+      panel: panelGroupId,
+      index: 0
+    });
+  }
+
+  setSpacerOnPanel(targetPanelId, placeBelow){
+    const posObj = getPanelPositionOfThis(this.props.panelPositions, targetPanelId);
+    const panelOffset = placeBelow ? 1 : 0;
 
     if(posObj){
       this.props.setSpacerPosition({
         panel: posObj[0],
-        index: posObj[1]
+        index: posObj[1] + panelOffset //- plus one puts it beneath
       });
     }else{
       this.props.setSpacerPosition(null);
@@ -67,11 +76,32 @@ export default class DragCover extends Component {
   onMouseMove(e){
     const allElUnder = allElementsFromPoint(e.clientX, e.clientY);
     const underTarget = allElUnder.filter(el => (el.className.indexOf('panel-container') > -1));
+    // console.log('under', allElUnder)
 
     if(underTarget && underTarget.length === 1){
-      const cleanId = underTarget[0].dataset.id;
 
-      this.setSpacerOnPanel(cleanId);
+      //- figure out if youre on the high or low end of the thing you're hovering
+      const box = underTarget[0].getBoundingClientRect();
+      let setBottom = false;
+      if(e.clientY > (box.bottom - (box.height / 2))){
+        setBottom = true;
+      }
+
+      const targetPanelId = underTarget[0].dataset.id;
+
+      this.setSpacerOnPanel(targetPanelId, setBottom);
+    }else{
+      try{
+        const underColumn = allElUnder.filter(el => (!!el.dataset.panelgroup));
+        const panelGroupId = underColumn[0].dataset.panelgroup;
+        if(this.props.panelPositions[panelGroupId].length === 0){
+          this.setSpacerOnEmptyPanel(panelGroupId);
+        }
+      }catch(e){
+        console.error('nothing is here!', e)
+      }
+
+      // this.setSpacerOnPanel(targetPanelId, setBottom);
     }
   }
 

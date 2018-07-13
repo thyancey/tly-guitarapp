@@ -52,9 +52,9 @@ const setCachedData = (key, value) => {
 
 const DEFAULT_SETTINGS = {
   layout:{
-    left: ['musicKey', 'scale'],
-    center: ['notedisplay', 'fret'],
-    right: ['chord', 'instrument', 'tools']
+    left: ['musicKey', 'scale', 'instrument'],
+    center: ['fret'],
+    right: ['tools', 'notedisplay', 'chorddisplay', 'chord']
   }
 }
 

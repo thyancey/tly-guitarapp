@@ -73,15 +73,17 @@ export default class Panel extends Component {
     }
 
     return (
-      <div className={className} 
-           ref={(ref) => (this.reffers = ref)} 
-           onMouseLeave={e => this.onMouseLeave(e)}
-           onMouseUp={e => this.onMouseUp(e)} 
-           data-id={this.props.id}>
+      <div  className={className} 
+            ref={(ref) => (this.reffers = ref)} 
+            onMouseLeave={e => this.onMouseLeave(e)}
+            onMouseUp={e => this.onMouseUp(e)} 
+            data-id={this.props.id}>
         <div className="panel-header" onMouseDown={e => this.onMouseDown(e)} >
           <h2>{this.props.title}</h2>
         </div>
-        {this.props.children}
+        <div className={'panel-body'} >
+          {this.props.children}
+        </div>
       </div>
     );
   }

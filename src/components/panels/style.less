@@ -1,5 +1,13 @@
 @import "~themes/variables.less";
 
+.panel-container{
+  background-color:@color-black;
+  border:@border-thickness solid @color-white;
+  border-radius: 1rem;
+  text-align:center;
+  margin:1rem;
+}
+
 
 .dragging{
   .panel-container{
@@ -12,37 +20,9 @@
 }
 
 .panel-container{
-  margin:1rem;
-  padding:1rem;
-  background-color:@color-black;
-  border:@border-thickness solid @color-white;
-  border-radius: 1rem;
-  text-align:center;
-  max-height:100%;
-
-  h2{
-    color: @color-white;
-    margin-bottom:1rem;
-  }
-
-  .panel-header{
-    background-color:black;
-    cursor: move; /* fallback if grab cursor is unsupported */
-    cursor: grab;
-    cursor: -moz-grab;
-    cursor: -webkit-grab;
-  }
-
-  .panel-header{
-    &:hover{
-      background-color:purple;
-    }
-  }
-
   &.holding{
     opacity:.2;
     transition: all .2s;
-
   }
 
   &.dragging{
@@ -50,14 +30,33 @@
   }
 }
 
+.panel-header{
+  padding:.5rem;
+  border-bottom:1px solid @color-white;
+
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+
+  &:hover{
+    background-color:purple;
+  }
+
+  h2{
+    color:@color-white;
+  }
+}
+
+
+
 .panel-spacer{
   width:100%;
   height:1rem;
-  background-color:@color-purple;
+  background-color:@color-red;
 }
 
 .panel-musickey{
-
   .store-button{
     display:inline-block;
     margin:0.25rem;
@@ -85,7 +84,6 @@
 
 
 .panel-tools{
-
   .selection-buttons{
     >*{
       display:inline-block;

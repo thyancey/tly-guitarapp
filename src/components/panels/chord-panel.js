@@ -41,10 +41,8 @@ class ChordPanel extends Component {
 
   render() {
     return (
-      <div>
-        <div className="chord-buttons">
-          {this.createChordButtons(this.props.instrument, this.props.musicKey, this.props.scale)}
-        </div>
+      <div className="chord-buttons">
+        {this.createChordButtons(this.props.instrument, this.props.musicKey, this.props.scale)}
       </div>
     );
   }

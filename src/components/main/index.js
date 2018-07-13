@@ -130,14 +130,20 @@ class Main extends Component {
                     heldPanelId={this.props.heldPanelId} 
                     panelPositions={this.props.panelPositions} 
                     setSpacerPosition={this.props.actions.setSpacerPosition} />
-        <div className="panelgroup-left">
+        <div className="panelgroup mod-left">
+          <div className="panelgroup-column">
           {this.renderPanelGroup('left', this.props.panelPositions.left, this.props.spacerPosition)}
+          </div>
         </div>
-        <div className="panelgroup-center">
+        <div className="panelgroup mod-center">
+          <div className="panelgroup-column">
           {this.renderPanelGroup('center', this.props.panelPositions.center, this.props.spacerPosition)}
+          </div>
         </div>
-        <div className="panelgroup-right">
+        <div className="panelgroup mod-right">
+          <div className="panelgroup-column">
           {this.renderPanelGroup('right', this.props.panelPositions.right, this.props.spacerPosition)}
+          </div>
         </div>
       </div>
     );

@@ -91,22 +91,20 @@ class Fretboard extends Component {
   render() {
 
     return (
-      <div>
-        <div className="fretboard">
-          <div className="fret-rows-container" >
-            { this.state.fretRows.map(fr => (<FretRow {...fr}/>)) }
-          </div>
-          <div className="fret-column-container" >
-            { this.state.fretColumns.map(fc => (fc)) }
-          </div>
-          <div className="string-container" >
-            { 
-              //- one string for each fret row.
-              this.state.fretColumns.map((fc,idx) => (
-                <div className="string" key={'s-' + idx} />
-              ))
-            }
-          </div>
+      <div className="fretboard">
+        <div className="fret-rows-container" >
+          { this.state.fretRows.map(fr => (<FretRow {...fr}/>)) }
+        </div>
+        <div className="fret-column-container" >
+          { this.state.fretColumns.map(fc => (fc)) }
+        </div>
+        <div className="string-container" >
+          { 
+            //- one string for each fret row.
+            this.state.fretColumns.map((fc,idx) => (
+              <div className="string" key={'s-' + idx} />
+            ))
+          }
         </div>
       </div>
     );

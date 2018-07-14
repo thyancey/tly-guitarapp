@@ -79,7 +79,7 @@ export default class Panel extends Component {
             onMouseUp={e => this.onMouseUp(e)} 
             data-id={this.props.id}>
         <div className="panel-header" onMouseDown={e => this.onMouseDown(e)} >
-          <h2>{this.props.title}</h2>
+          <h2>{'~ ' + this.props.title + ' ~'}</h2>
         </div>
         <div className={'panel-body'} >
           {this.props.children}

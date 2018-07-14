@@ -1,0 +1,48 @@
+@import "~themes/variables.less";
+
+.page-error{
+  position:fixed;
+  top:0;
+  left:0;
+  width:0;
+  height:0;
+  z-index:-1;
+
+  &.active{
+    width:100%;
+    height:100%;
+    background-color:@color-black;
+    color:white;
+
+    z-index:999999;
+  }
+
+  .error-blob{
+    position: absolute;
+    left: 20%;
+    width: 60%;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+
+    background-color: @color-purple-dark;
+    border-radius: 2rem;
+    padding: 2rem;
+
+    box-shadow: 0 0 2rem @color-purple;
+
+    p{
+      margin-top:1rem;
+    }
+  }
+
+  .link-group{
+    margin-top:1rem;
+    a{
+      color:@color-white;
+    }
+    a:visited{
+      color:@color-white;
+    }
+  }
+}

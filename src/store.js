@@ -80,7 +80,11 @@ const store = {
     panelChanges: 0
   },
   actions: {
-    setMusicKey: ({ musicKey, fretChanges }, newMusicKey) => ({ musicKey: newMusicKey, fretChanges: fretChanges+1 }),
+    setMusicKey: ({ musicKey, fretChanges }, newMusicKey) => ({ 
+      musicKey: newMusicKey, 
+      chord: null,
+      fretChanges: fretChanges+1 
+    }),
     setScale: ({ scale, fretChanges }, newScale) => ({ scale: newScale, fretChanges: fretChanges+1 }),
     setVolume: ({ volume }, newVolume) => ({ volume: newVolume }),
     setOctave: ({ octave, fretChanges }, newOctave) => ({ octave: newOctave, fretChanges: fretChanges+1 }),

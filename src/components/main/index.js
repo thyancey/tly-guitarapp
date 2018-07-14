@@ -14,6 +14,8 @@ import ScalePanel from 'src/components/panels/scale-panel';
 import ToolsPanel from 'src/components/panels/tools-panel';
 import Panel from 'src/components/panels/panel';
 
+import ErrorContainer from 'src/components/error-container';
+
 import DragCover from 'src/components/main/drag-cover';
 
 require('./style.less');
@@ -26,6 +28,7 @@ class Main extends Component {
     }
 
     this.state = {
+      activeError:null,
       panels:{
         musicKey:{
           panelClass: 'musickey',
@@ -124,6 +127,7 @@ class Main extends Component {
 
     return(
       <div className={mainClassName} >
+        <ErrorContainer activeError={this.state.activeError}/>
         <MusicBox ref="musicBox" scale={this.props.scale} midiInstrument={this.props.midiInstrument} volume={this.props.volume} />
         <DragCover  isDragging={this.props.isDragging} 
                     stopDrag={(e, hp) => this.onCoverStoppedDrag(e, hp)}

@@ -4,26 +4,34 @@
   cursor:pointer;
   background-color: @color-blue;
   color:@color-white;
-  border:@border-thickness solid @color-white;
+  border-radius:.5rem;
+  // border:@border-thickness solid @border-color;
 
   &:hover {
-    background:@color-blue-dark;
+    background-color:@color-blue-dark;
+    color:@color-blue-light;
+    box-shadow:0 0 2rem @color-purple;
+    transition:all .2s;
+  }
+
+  &:active{
+    background-color:@color-purple;
   }
 
   &.active-button{
     background-color: @color-purple;
 
     &:hover {
-      background:@color-purple-dark;
+      background-color:@color-purple-dark;
     }
   }
 
   &.disabled-button{
     cursor: not-allowed;
-    background: @color-black;
+    background-color: @color-black;
 
     &:hover {
-      background:@color-black;
+      background-color:@color-black;
     }
   }
 }
@@ -31,27 +39,34 @@
 
 
 .combo-button{
-  background: @color-blue; 
-  border: @border-thickness solid @color-white;
+  background-color: @color-blue; 
+  // border: .25rem solid @color-blue-dark;
+    box-shadow:0 0 2rem @color-purple-dark;
   border-radius:1rem;
   cursor:pointer;
   padding:.5rem;
 
   &:hover {
-    background:@color-blue-dark;
+    background-color:@color-blue-dark;
+    color:@color-blue-light;
+    box-shadow:0 0 2rem @color-purple;
+    transition:all .2s;
+  }
+
+  &:active{
+    background-color:@color-purple;
   }
 
   &.active-button{
-    background: @color-purple;
+    background-color: @color-purple;
 
     &:hover {
-      background:@color-purple-dark;
+      background-color:@color-purple-dark;
     }
   }
 
   .icon-container{
-    height:6rem;
-    // width:6rem;
+    height:5rem;
     padding:1rem;
   }
 

@@ -1,19 +1,26 @@
 @import "~themes/variables.less";
 
+@button-margins: .5rem;
+
 .panel-container{
   background-color:@color-black;
-  border:@border-thickness solid @color-white;
+  border:@border-thickness solid @border-color;
   border-radius: 1rem;
   text-align:center;
   margin:1rem;
+
+  box-shadow:0 0 2rem @color-blue;
 }
 
 
 .dragging{
+  .main{
+    
+  }
   .panel-container{
-    opacity:.75;
+    opacity:.5;
     border-style: dashed;
-    margin:2rem;
+    margin:1.5rem;
 
     transition: margin .2s, opacity .2s;
   }
@@ -32,7 +39,7 @@
 
 .panel-header{
   padding:.5rem;
-  border-bottom:1px solid @color-white;
+  border-bottom:1px solid @border-color;
 
   cursor: move; /* fallback if grab cursor is unsupported */
   cursor: grab;
@@ -41,10 +48,13 @@
 
   &:hover{
     background-color:purple;
+    box-shadow:0 0 2rem @color-purple;
+    transition: all .2s;
   }
 
   h2{
     color:@color-white;
+    text-shadow:0 0 2rem @color-purple;
   }
 }
 
@@ -56,12 +66,16 @@
 
   >div{
     position:absolute;
-    height:2rem;
-    top:-1rem;
+    height:1rem;
+    top:-.5rem;
     left:0;
-    width:100%;
+    width:80%;
+    left:10%;
 
-    background-color:@color-red;
+    border-radius:2rem;
+    // background-color:@color-purple-dark;
+    background-color:@color-purple;
+    box-shadow:0 0 2rem @color-purple;
   }
 }
 
@@ -69,9 +83,11 @@
 
   &.panel-musickey{
     .store-button{
+      padding:.25rem;
       display:inline-block;
-      margin:0.25rem;
+      margin:(@button-margins / 2);
       width:~"calc(25% - .5rem)";
+      // margin-bottom:@button-margins;
     }
   }
 
@@ -81,7 +97,7 @@
     .store-button{
       font-size:1.5rem;
       padding:.25rem;
-      margin:0.5rem;
+      margin:@button-margins;
     }
   }
 
@@ -111,8 +127,9 @@
 
     .volume-container{
       text-align:center;
-      color:@color-white;
+      color:@color-blue;
 
+      margin:1rem;
       input{
         cursor:pointer;
       }

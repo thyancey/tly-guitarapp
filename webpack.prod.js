@@ -1,11 +1,10 @@
 const webpack = require('webpack');
 const path = require('path');
+const merge = require('webpack-merge');
+const common = require('./webpack.common.js');
 
-module.exports = {
-  entry: [
-    'react-hot-loader/patch',
-    './src/index.js'
-  ],
+module.exports = merge(common, {
+  mode:'production',
   module: {
     rules: [
       {
@@ -22,7 +21,7 @@ module.exports = {
         use: ["style-loader", "css-loader", "less-loader"],
       },
       {
-        test: /\.(png|jpg)$/,
+        test: /\.(png|jpg|gif)$/,
         use: [
           {
             loader: "url-loader",
@@ -31,6 +30,10 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.svg$/,
+        use: ["react-svg-loader"]
       }
     ]
   },
@@ -42,15 +45,9 @@ module.exports = {
     }
   },
   output: {
-    path: __dirname + '/dist',
-    publicPath: '/',
-    filename: 'bundle.js'
+    publicPath: './'
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()
-  ],
-  devServer: {
-    contentBase: './dist',
-    hot: true
-  }
-};
+  ]
+});

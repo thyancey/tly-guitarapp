@@ -15,13 +15,6 @@ export default class Panel extends Component {
     this.setState({ holding: false });
 
     this.props.startDrag(this.props.id);
-
-    // this.props.startDrag({
-    //   id: this.props.id,
-    //   class: this.props.panelClass,
-    //   width: this.reffers.offsetWidth,
-    //   height: this.reffers.offsetHeight
-    // });
   }
 
   startHoldTimer(){
@@ -50,16 +43,42 @@ export default class Panel extends Component {
     }
   }
 
-  onMouseDown(mE){
+  onDragStart(touchOrMouseEvent){
     this.startHolding();
   }
 
-  onMouseLeave(mE){
+  onMouseDown(mouseEvent){
+    this.startHolding();
+  }
+
+  onMouseLeave(mouseEvent){
     this.stopHolding();
   }
 
-  onMouseUp(mE){
+  onMouseUp(mouseEvent){
     this.stopHolding();
+  }
+
+  //- touchmove and end must be communicated here through the store to the dragpanel
+  //- because touchevents are only heard on the element that received the touchstart
+  onTouchMove(touchEvent){
+    try{
+      let eventX = touchEvent.changedTouches[0].clientX;
+      let eventY = touchEvent.changedTouches[0].clientY;
+      this.props.setDraggingPosition(eventX, eventY, true);
+    }catch(err){
+      console.error('problem with onTouchMove:', err);
+    }
+  }
+
+  onTouchEnd(touchEvent){
+    // console.log('onTouchEnd')
+    try{
+      touchEvent.preventDefault();
+      this.props.setDraggingPosition(-1, -1);
+    }catch(err){
+      console.error('problem with onMouseOrTouchEnd:', err);
+    }
   }
 
   render() {
@@ -78,7 +97,11 @@ export default class Panel extends Component {
             onMouseLeave={e => this.onMouseLeave(e)}
             onMouseUp={e => this.onMouseUp(e)} 
             data-id={this.props.id}>
-        <div className="panel-header" onMouseDown={e => this.onMouseDown(e)} >
+        <div  className="panel-header" 
+              onMouseDown={e => this.onDragStart(e)} 
+              onTouchStart={e => this.onDragStart(e)} 
+              onTouchMove={e => this.onTouchMove(e)}
+              onTouchEnd={e => this.onTouchEnd(e)} >
           <h2>{'~ ' + this.props.title + ' ~'}</h2>
         </div>
         <div className={'panel-body'} >

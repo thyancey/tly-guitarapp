@@ -1,29 +1,23 @@
 import React, { Component } from 'react';
+import { connect } from 'src/store';
+
+import Tools from 'src/utils/tools';
 
 require('./style.less');
 
-//- from stack overflow 
-//- https://stackoverflow.com/questions/8813051/determine-which-element-the-mouse-pointer-is-on-top-of-in-javascript
-const allElementsFromPoint = (x, y) => {
-  var element, elements = [];
-  var old_visibility = [];
-  while (true) {
-    element = document.elementFromPoint(x, y);
-    if (!element || element === document.documentElement) {
-        break;
-    }
-    elements.push(element);
-    old_visibility.push(element.style.visibility);
-    element.style.visibility = 'hidden'; // Temporarily hide the element (without changing the layout)
-  }
-  for (var k = 0; k < elements.length; k++) {
-    elements[k].style.visibility = old_visibility[k];
-  }
-  elements.reverse();
-  return elements;
-}
 
-//- just loop through some nested key/object pairs to find a matching panelId
+/*
+ just loop through some nested key/object pairs to find a matching panelId
+
+ //- ex
+ panelPositions: {
+    left:[
+      'scales',
+      'chords',
+      'keys'
+    ]
+  }
+*/
 const getPanelPositionOfThis = (panelPositions, panelId) => {
   for(let position in panelPositions){
     const pArr = panelPositions[position];
@@ -38,8 +32,7 @@ const getPanelPositionOfThis = (panelPositions, panelId) => {
 }
 
 
-
-export default class DragCover extends Component {
+class DragCover extends Component {
   constructor(){
     super();
 
@@ -49,6 +42,25 @@ export default class DragCover extends Component {
   componentDidUpdate(prevProps){
     if(!prevProps.isDragging && this.props.isDragging){
       this.setSpacerOnPanel(this.props.heldPanelId)
+    }
+
+    if(this.props.dragX !== prevProps.dragX || this.props.dragY !== prevProps.dragY){
+      this.emulateDragging(this.props.dragX, this.props.dragY);
+    }
+
+    global.goober = this.refs.ello
+  }
+
+  /* 
+    this emulateDragging is because touchmove and touchend must listen to the element they started on.. 
+    which is a panel, somewhere else. To get touchmove to work on the drag container, 
+    must communicate touch positions through the store.
+  */
+  emulateDragging(x,y){
+    if(x === -1 && y === -1){
+      this.props.actions.dropPanel(this.props.heldPanelId);
+    }else{
+      this.identifyWhatsUnderThisPosition(x,y);
     }
   }
 
@@ -73,17 +85,17 @@ export default class DragCover extends Component {
     }
   }
 
-  onMouseMove(e){
-    const allElUnder = allElementsFromPoint(e.clientX, e.clientY);
+
+  identifyWhatsUnderThisPosition(x, y){
+    const allElUnder = Tools.allElementsFromPoint(x, y);
     const underTarget = allElUnder.filter(el => (el.className.indexOf('panel-container') > -1));
-    // console.log('under', allElUnder)
 
     if(underTarget && underTarget.length === 1){
 
       //- figure out if youre on the high or low end of the thing you're hovering
       const box = underTarget[0].getBoundingClientRect();
       let setBottom = false;
-      if(e.clientY > (box.bottom - (box.height / 2))){
+      if(y > (box.bottom - (box.height / 2))){
         setBottom = true;
       }
 
@@ -93,26 +105,33 @@ export default class DragCover extends Component {
     }else{
       try{
         const underColumn = allElUnder.filter(el => (!!el.dataset.panelgroup));
-        const panelGroupId = underColumn[0].dataset.panelgroup;
-        if(this.props.panelPositions[panelGroupId].length === 0){
-          this.setSpacerOnEmptyPanel(panelGroupId);
-        }
-      }catch(e){
-        console.error('nothing is here!', e)
-      }
 
-      // this.setSpacerOnPanel(targetPanelId, setBottom);
+        if(underColumn && underColumn.length === 1){
+          const panelGroupId = underColumn[0].dataset.panelgroup;
+          if(this.props.panelPositions[panelGroupId].length === 0){
+            this.setSpacerOnEmptyPanel(panelGroupId);
+          }
+        } else{
+          //- user is probably dragging outside of the window.
+        }
+      }catch(err){
+        console.error('Unexpeced error when looking for panel under drag position', err);
+      }
     }
   }
 
+  onMouseMove(e){
+    this.identifyWhatsUnderThisPosition(e.clientX, e.clientY);
+  }
+
   onMouseUp(e){
-    this.props.stopDrag(e, this.props.heldPanelId);
+    this.props.actions.dropPanel(this.props.heldPanelId);
   }
 
   render() {
     const className = this.props.isDragging ? 'dragging' : null;
     return(
-      <div  id="drag-cover" className={className} 
+      <div  id="drag-cover" className={className} ref={'ello'}
             onMouseUp={e => this.onMouseUp(e)}
             onMouseMove={e => this.onMouseMove(e)}>
       </div>
@@ -120,3 +139,9 @@ export default class DragCover extends Component {
   }
 }
 
+
+export default connect(state => ({
+  dragX: state.dragX,
+  dragY: state.dragY,
+  isDragging: state.isDragging
+}))(DragCover);

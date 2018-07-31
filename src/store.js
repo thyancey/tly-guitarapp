@@ -75,6 +75,8 @@ const store = {
     },
     panelPositions: getCachedData('panelPositions', DEFAULT_SETTINGS.layout),
     isDragging: false,
+    dragX:-1,
+    dragY:-1,
     spacerPosition:null,
     heldPanelId:null,
     panelChanges: 0
@@ -126,6 +128,12 @@ const store = {
         }
       }
     },
+    setDraggingPosition: ({dragX, dragY}, newDragX, newDragY) => {
+      return{
+        dragX: newDragX,
+        dragY: newDragY
+      }
+    },
 
     setDefaultSettings(){
       try{
@@ -146,6 +154,7 @@ const store = {
       }
       return {};
     }
+
   }
 };
  

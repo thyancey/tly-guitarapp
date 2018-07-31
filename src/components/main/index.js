@@ -78,7 +78,7 @@ class Main extends Component {
     this.props.actions.dragPanel(panelId);
   }
 
-  onCoverStoppedDrag(e, panelId){
+  onCoverStoppedDrag(panelId){
     this.props.actions.dropPanel(panelId);
   }
 
@@ -99,6 +99,7 @@ class Main extends Component {
                 panelClass={panel.panelClass} 
                 title={panel.title} 
                 children={panel.component} 
+                setDraggingPosition={(x,y,isDragging) => this.props.actions.setDraggingPosition(x,y,isDragging)}
                 startDrag={e => this.onPanelStartedDrag(e)} >
         </Panel>
       );
@@ -130,7 +131,6 @@ class Main extends Component {
         <ErrorContainer activeError={this.state.activeError}/>
         <MusicBox ref="musicBox" scale={this.props.scale} midiInstrument={this.props.midiInstrument} volume={this.props.volume} />
         <DragCover  isDragging={this.props.isDragging} 
-                    stopDrag={(e, hp) => this.onCoverStoppedDrag(e, hp)}
                     heldPanelId={this.props.heldPanelId} 
                     panelPositions={this.props.panelPositions} 
                     setSpacerPosition={this.props.actions.setSpacerPosition} />

@@ -52,9 +52,9 @@ const setCachedData = (key, value) => {
 
 const DEFAULT_SETTINGS = {
   layout:{
-    left: ['musicKey', 'scale', 'instrument'],
-    center: ['fret'],
-    right: ['tools', 'notedisplay', 'chorddisplay', 'chord']
+    GROUP_0: ['musicKey', 'scale', 'instrument'],
+    GROUP_1: ['fret'],
+    GROUP_2: ['tools', 'notedisplay', 'chorddisplay', 'chord']
   }
 }
 
@@ -108,6 +108,7 @@ const store = {
       heldPanelId: newPanelId
     }),
     dropPanel: ({ isDragging, spacerPosition, panelPositions, heldPanelId }, panelId) => { 
+      console.log('dropPanel', spacerPosition, panelPositions, panelId)
       if(spacerPosition){
         panelPositions = removePanel(panelId, panelPositions);
         panelPositions = insertPanel(panelId, panelPositions, spacerPosition.panel, spacerPosition.index);

@@ -36,5 +36,8 @@
 @panelgroup-center-width:40%;
 @panelgroup-right-width:30%;
 
-@panelgroup-top-height:30%;
-@panelgroup-bottom-height:70%;
+
+// @panelgroup-top-height:40%;
+// @panelgroup-bottom-height:60%;
+@panelgroup-top-height:@fretboard-width + 20rem;
+@panelgroup-bottom-height:~"calc(100% - @{panelgroup-top-height})";

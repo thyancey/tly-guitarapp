@@ -61,8 +61,16 @@ class PanelGroup extends Component {
     this.props.actions.dragPanel(panelId);
   }
 
-  renderPanelGroup(groupId, panelPositions, spacerPosition){
-    console.log('renderPanelGroup(' + groupId + ', ', panelPositions + ')');
+  renderSpacer(){
+    return (
+      <div key="spacer" className={'drag-spacer'}>
+        <div />
+      </div>
+    );
+  }
+
+  render() {
+    const { groupId, panelPositions, spacerPosition } = { ...this.props };
     const retVal = [];
     panelPositions.forEach((panelId, idx) => {
       const panel = MAP_PANELS[panelId];
@@ -94,18 +102,6 @@ class PanelGroup extends Component {
         {retVal}
       </div>
     )
-  }
-
-  renderSpacer(){
-    return (
-      <div key="spacer" className={'drag-spacer'}>
-        <div />
-      </div>
-    );
-  }
-
-  render() {
-    return this.renderPanelGroup(this.props.groupId, this.props.panelPositions, this.props.spacerPosition);
   }
 }
 

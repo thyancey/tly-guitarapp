@@ -10,8 +10,6 @@ class Workspace extends Component {
     const layoutId = this.props.layout;
     const layout = Maps.MAP_LAYOUTS[layoutId];
 
-    console.log('panelPositions:', this.props.panelPositions)
-
     return(
       <div id="workspace" className={`layout-${this.props.layout}`}>
         { layout.groups.map((groupId, i) => (

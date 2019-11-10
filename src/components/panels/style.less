@@ -13,6 +13,37 @@
 }
 
 
+.layout-horizontal{
+  .panel-container{
+    flex:1 0 20rem;
+
+    &.panel-fret{
+      flex:0 1 100%;
+
+      .panel-body{
+        position:relative;
+        width:100%;
+        height:100%;
+      }
+    }
+  }
+  // sideways panels
+  // .panel-container{
+  //   width:100%;
+  //   flex-direction:row;
+
+  //   .panel-header{
+  //     writing-mode: vertical-lr;
+  //     text-orientation: mixed;
+  //   }
+
+  //   .panel-body{
+  //     width:100%;
+  //     position:relative;
+  //   }
+  // }
+}
+
 .dragging{
   .main{
     

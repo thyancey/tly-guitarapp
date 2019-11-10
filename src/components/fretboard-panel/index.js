@@ -13,7 +13,8 @@ class Fretboard extends Component {
 
     this.state = {
       fretColumns: [],
-      fretRows: []
+      fretRows: [],
+      counter: 0
     }
   }
 
@@ -77,11 +78,13 @@ class Fretboard extends Component {
     this.setState({
       fretColumns: this.calcFretColumns(octaveNotes),
       fretRows: this.calcFretRows(octaveNotes),
+      counter: this.state.counter++
     });
   }
 
-  componentDidUpdate(prevProps){
-    if(prevProps.fretChanges !== this.props.fretChanges){
+  componentDidUpdate(prevProps, prevState){
+    if(prevProps.fretChanges !== this.props.fretChanges || prevProps.musicKey !== this.props.musicKey){
+      console.log('DADDY RECALC')
       this.recalcFrets();
     }
   }
@@ -114,6 +117,7 @@ class Fretboard extends Component {
 
 export default connect(state => ({ 
   musicKey: state.musicKey,
+  keyFinderNotes: state.keyFinderNotes,
   octave: state.octave,
   scale: state.scale,
   chord: state.chord,

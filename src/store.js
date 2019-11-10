@@ -157,6 +157,15 @@ const store = {
       }
     },
 
+    flipMajMinScale: ({ musicKey, scale }) => {
+      const flipped = MusicMan.getMajorMinorFlip(musicKey, scale);
+      
+      return {
+        musicKey: flipped.key,
+        scale: flipped.scale
+      }
+    },
+
     /* layout customization stuff */
     setSpacerPosition: ({ spacerPosition }, newSpacerPosition) => ({ spacerPosition: newSpacerPosition }),
     dragPanel: ({ isDragging, heldPanelId }, newPanelId) => ({ 

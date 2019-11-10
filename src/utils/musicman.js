@@ -62,6 +62,27 @@ class MusicMan{
 
 /* More intense music stuff methods */
 
+  /* major and minor scales are related, this is for helping with quick switching between the two */
+  static getMajorMinorFlip(key, scaleLabel){
+    const flippedScaleLabel = MDATA.majorMinorFlips[scaleLabel];
+    const noteDiff = flippedScaleLabel.indexOf('minor') > -1 ? -2 : 2;
+    const oldScale = this.getScale(key, scaleLabel);
+    const noteIdx = oldScale.indexOf(key);
+
+    let flippedKeyIdx = noteIdx + noteDiff;
+    if(flippedKeyIdx < 0){
+      flippedKeyIdx = oldScale.length - 1 + flippedKeyIdx;
+    }else if(flippedKeyIdx > oldScale.length - 1){
+      flippedKeyIdx = flippedKeyIdx - (oldScale.length - 1)
+    }
+    const flippedKeyLabel = oldScale[flippedKeyIdx];
+
+    return {
+      key: flippedKeyLabel,
+      scale: flippedScaleLabel
+    };
+  }
+
   //- from a list of notes, and a scale, find any matching keys
   static matchKeysFromNotes(notesToMatch, scaleLabel){
     let foundKeys = [];

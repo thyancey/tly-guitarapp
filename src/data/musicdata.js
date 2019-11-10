@@ -14,6 +14,13 @@ export default {
     "G",
     "G#"
   ],
+  "majorMinorFlips":{
+    "major":"natural-minor",
+    "pentatonic-major":"pentatonic-blues-minor",
+    "natural-minor":"major",
+    "harmonic-minor":"major",
+    "pentatonic-blues-minor":"pentatonic-major"
+  },
   "scales":{
     "major": {
       "title": "Major",

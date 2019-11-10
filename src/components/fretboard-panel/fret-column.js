@@ -120,7 +120,6 @@ class FretColumn extends Component {
     let retVal = [];
 
     const finalFrets = [];
-    const totalFrets = fretBounds[0] + frets.length;
 
     //- all spacers except the target fret
     for(let f = 0; f < fretBounds[0]; f++){
@@ -155,7 +154,7 @@ class FretColumn extends Component {
   //- TODO: I've tried to optimize the render/recalculation workflow a bit, but it's really the parent's (fret container) job to 
   //- tell this guy when to recalculate. It is, but it's all kinda janky and isn't easy to follow. needs a refactor.
   recalcFrets(){
-    this.setState({'savedFrets':this.calcFretsInColumn(this.props.stringIdx, this.props.frets, this.props.fretBounds, this.props.scaleNotes)});
+    this.setState({'savedFrets':this.calcFretsInColumn(this.props.stringIdx, this.props.frets, this.props.fretBounds, this.props.scaleNotes, this.props.musicKey)});
   }
 
   componentDidMount() {
@@ -163,10 +162,7 @@ class FretColumn extends Component {
   }
 
   componentDidUpdate(prevProps){
-    if(prevProps.fretChanges !== this.props.fretChanges){
-      this.recalcFrets();
-    }
-    if(prevProps.keyFinderNotes !== this.props.keyFinderNotes){
+    if((prevProps.fretChanges !== this.props.fretChanges) || (prevProps.keyFinderNotes !== this.props.keyFinderNotes) || (prevProps.notes !== this.props.notes)){
       this.recalcFrets();
     }
   }
@@ -200,5 +196,6 @@ export default connect(state => ({
   keyFinderMode: state.keyFinderMode,
   keyFinderNotes: state.keyFinderNotes,
   scale: state.scale,
-  octave: state.octave
+  octave: state.octave,
+  musicKey: state.musicKey
 }))(FretColumn);

@@ -144,7 +144,29 @@
     }
   }
 
+  &.panel-keyfinder{
+    .selection-buttons{
+      >*{
+        display:inline-block;
+        margin:.5rem;
+        width:8rem;
+      }
+      .icon-container{
+        min-height: 6rem;
+      }
+    }
 
+    .found-keys{
+      cursor: pointer;
+      .active{
+        color: @color-white;
+      }
+
+      span{
+        padding: 0rem .5rem;
+      }
+    }
+  }
 
   &.panel-tools{
     .selection-buttons{

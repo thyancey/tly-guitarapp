@@ -16,13 +16,21 @@ class FretColumn extends Component {
     }
   }
 
+  doubleClickNote(octaveNote, fIdx){
+    if(this.props.keyFinderMode === 'find'){
+      this.props.actions.toggleKeyFinderNote(note, true);
+    }
+  }
+
   selectNote(octaveNote, fIdx){
     let note = octaveNote.split('-')[0];
     let octave = octaveNote.split('-')[1];
 
-    if(this.props.selectionMode.noteClick){
+    if(this.props.keyFinderMode === 'set'){
       this.props.actions.setMusicKey(note);
       this.props.actions.setOctave(octave);
+    }else if(this.props.keyFinderMode === 'find'){
+      this.props.actions.toggleKeyFinderNote(note);
     }
 
     if(this.props.selectionMode.scaleMode){
@@ -97,6 +105,7 @@ class FretColumn extends Component {
       noteIdx: noteIdx,
       isChordFret: isChordFret,
       chord: this.props.chord,
+      isFound: this.props.keyFinderNotes.indexOf(note) > -1,
       octaveNote: octaveNote,
       note: note,
       octave: octave,
@@ -157,6 +166,9 @@ class FretColumn extends Component {
     if(prevProps.fretChanges !== this.props.fretChanges){
       this.recalcFrets();
     }
+    if(prevProps.keyFinderNotes !== this.props.keyFinderNotes){
+      this.recalcFrets();
+    }
   }
 
 
@@ -185,6 +197,8 @@ class FretColumn extends Component {
 export default connect(state => ({ 
   chord: state.chord,
   selectionMode: state.selectionMode,
+  keyFinderMode: state.keyFinderMode,
+  keyFinderNotes: state.keyFinderNotes,
   scale: state.scale,
   octave: state.octave
 }))(FretColumn);

@@ -7,6 +7,7 @@ import InstrumentPanel from 'src/components/panels/instrument-panel';
 import MusicKeyPanel from 'src/components/panels/musickey-panel';
 import NoteDisplayPanel from 'src/components/panels/notedisplay-panel';
 import ChordDisplayPanel from 'src/components/panels/chorddisplay-panel';
+import KeyFinderPanel from 'src/components/panels/keyfinder-panel';
 import ScalePanel from 'src/components/panels/scale-panel';
 import ToolsPanel from 'src/components/panels/tools-panel';
 import Panel from 'src/components/panels/panel';
@@ -53,7 +54,12 @@ const MAP_PANELS = {
     panelClass: 'tools',
     title: 'Settings',
     component: <ToolsPanel/>
-  }  
+  }, 
+  keyfinder:{
+    panelClass: 'keyfinder',
+    title: 'Key Finder',
+    component: <KeyFinderPanel/>
+  }
 }
 
 class PanelGroup extends Component {

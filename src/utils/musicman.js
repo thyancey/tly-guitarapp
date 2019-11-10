@@ -21,6 +21,14 @@ class MusicMan{
     return IDATA;
   }
 
+  static getScaleTitle(scaleLabel){
+    try{
+      return MDATA.scales[scaleLabel].title
+    }catch(e){
+      return 'Error'
+    }
+  }
+
   static getScaleTriadType(scaleLabel){
     try{
       return MDATA.scales[scaleLabel].triad;
@@ -53,6 +61,26 @@ class MusicMan{
 
 
 /* More intense music stuff methods */
+
+  //- from a list of notes, and a scale, find any matching keys
+  static matchKeysFromNotes(notesToMatch, scaleLabel){
+    let foundKeys = [];
+    if(notesToMatch.size === 0){
+      return foundKeys;
+    }
+
+    for(let n = 0; n < MDATA.notes.length; n++){
+      //- one note at a time
+      let scale = this.getScale(MDATA.notes[n], scaleLabel);
+
+      let foundNotes = notesToMatch.filter(note => scale.indexOf(note) > -1);
+      if(foundNotes.size === notesToMatch.size){
+        foundKeys.push(MDATA.notes[n]);
+      }
+    }
+
+    return foundKeys;
+  }
 
   //- octave is optional
   static getNoteAtIndex(noteIdx, octave){

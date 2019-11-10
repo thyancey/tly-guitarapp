@@ -19,6 +19,9 @@ export default class Fret extends Component {
         className += ' root-fret';
       }
     }
+    if(this.props.isFound){
+      className += ' found-fret';
+    }
 
     return (
       <div className={className} onClick={() => this.props.selectNote(this.props.octaveNote, this.props.fretIdx)}>

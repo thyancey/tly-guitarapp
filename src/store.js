@@ -1,5 +1,5 @@
 import { initStore } from 'react-waterfall';
-import {List} from 'immutable';
+import { List } from 'immutable';
 import MusicMan from 'src/utils/musicman';
 import { isObject } from 'util';
 
@@ -78,11 +78,11 @@ const DEFAULT_SETTINGS = {
     vertical:{
       left: ['musicKey', 'scale', 'instrument'],
       center: ['fret'],
-      right: ['tools', 'notedisplay', 'chorddisplay', 'chord']
+      right: ['tools', 'notedisplay', 'chorddisplay', 'chord', 'keyfinder']
     },
     horizontal:{
       top: ['fret', 'tools'],
-      bottom: ['musicKey', 'scale', 'instrument', 'notedisplay', 'chorddisplay', 'chord']
+      bottom: ['musicKey', 'scale', 'instrument', 'notedisplay', 'chorddisplay', 'chord', 'keyfinder']
     },
   }
 }
@@ -99,9 +99,10 @@ const store = {
     volume: .4,
     fretChanges: 0,
     selectionMode:{
-      noteClick:false,
       scaleMode:false
     },
+    keyFinderMode: 'off',
+    keyFinderNotes: new List(),
     currentLayout: getCachedData('currentLayout', DEFAULT_SETTINGS.currentLayout),
     layoutGroups: getCachedData('panelPositions', DEFAULT_SETTINGS.layoutGroups),
     isDragging: false,
@@ -121,13 +122,38 @@ const store = {
     setVolume: ({ volume }, newVolume) => ({ volume: newVolume }),
     setOctave: ({ octave, fretChanges }, newOctave) => ({ octave: newOctave, fretChanges: fretChanges+1 }),
     setChord: ({ chord, fretChanges }, newChord) => ({ chord: newChord, fretChanges: fretChanges+1 }),
-    setSelectionMode: ({ selectionMode }, newSelectionMode) => ({ selectionMode: newSelectionMode }),
+    setSelectionMode: ({}, newSelectionMode) => ({ selectionMode: newSelectionMode }),
+    setKeyFinderMode: ({}, newMode) => {
+      if(newMode !== 'find'){
+        return {
+          keyFinderNotes: new List(),
+          keyFinderMode: newMode
+        }
+      }else{
+        return {
+          keyFinderMode: newMode
+        }
+      }
+    },
     setInstrument: ({ instrument, midiInstrument, chord, fretChanges }, newInstrument) => {
       return { 
         instrument: newInstrument,
         midiInstrument: MusicMan.getInstrumentMidiId(newInstrument),
         chord: null,
         fretChanges: fretChanges+1
+      }
+    },
+
+    toggleKeyFinderNote: ({ keyFinderNotes }, note) => {
+      const foundIdx = keyFinderNotes.indexOf(note);
+      if(foundIdx > -1){
+        return {
+          keyFinderNotes: keyFinderNotes.filter(n => n !== note)
+        }
+      }else{
+        return {
+          keyFinderNotes: keyFinderNotes.push(note)
+        }
       }
     },
 

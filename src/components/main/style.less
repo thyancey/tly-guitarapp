@@ -74,7 +74,13 @@
       &.mod-bottom{
         top:@panelgroup-top-height;
         height:@panelgroup-bottom-height;
+        flex-direction:column;
         left:0;
+        flex-wrap: wrap;
+
+        .panel-container{
+          flex:1;
+        }
       }
     }
   }

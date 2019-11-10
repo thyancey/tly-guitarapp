@@ -5,12 +5,6 @@ require('./style.less');
 import ComboButton from 'src/components/shared/combo-button';
 
 class ToolsPanel extends Component {
-  onToggleWriteMode(mode){
-    let newSelectionMode = Object.assign({}, this.props.selectionMode);
-    newSelectionMode.noteClick = !mode;
-    this.props.actions.setSelectionMode(newSelectionMode);
-  }
-
   onToggleScaleMode(scaleMode){
     let newSelectionMode = Object.assign({}, this.props.selectionMode);
     newSelectionMode.scaleMode = !scaleMode;
@@ -21,11 +15,6 @@ class ToolsPanel extends Component {
     return(
       <div>
         <div className="selection-buttons">
-          <ComboButton  onClickMethod={(mode) => this.onToggleWriteMode(mode)}
-                        onClickParam={this.props.selectionMode.noteClick}
-                        isActive={this.props.selectionMode.noteClick}
-                        icon="icon-editnote" 
-                        title="Change key" />
 
           <ComboButton  onClickMethod={(scaleMode) => this.onToggleScaleMode(scaleMode)}
                         onClickParam={this.props.selectionMode.scaleMode}

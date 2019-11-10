@@ -73,7 +73,7 @@ const setCachedLayoutData = (layout, panelPositions) => {
 }
 
 const DEFAULT_SETTINGS = {
-  currentLayout: 'vertical',
+  currentLayout: 'horizontal',
   layoutGroups:{
     vertical:{
       left: ['musicKey', 'scale', 'instrument'],

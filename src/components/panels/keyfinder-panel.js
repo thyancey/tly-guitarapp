@@ -32,6 +32,8 @@ class KeyFinderPanel extends Component {
 
   render() {
     const foundKeys = MusicMan.matchKeysFromNotes(this.props.keyFinderNotes, this.props.scale);
+    const flipEnabled = this.props.scale.indexOf('major') > -1 || this.props.scale.indexOf('minor') > -1;
+    
     return (
       <div>
         <div className="selection-buttons">
@@ -46,10 +48,10 @@ class KeyFinderPanel extends Component {
             icon="icon-editnote" 
             title="Find Key" />
           <ComboButton  
-            onClickMethod={() => this.flipScale()}
-            isDisabled={this.props.scale.indexOf('major') > -1 || this.props.scale.indexOf('minor') > -1}
+            onClickMethod={() => flipEnabled && this.flipScale()}
+            isDisabled={!flipEnabled}
             isActive={false}
-            icon="icon-editnote" 
+            icon="icon-reset" 
             title="Flip Maj/Min" />
         </div>
         <p>{`${MusicMan.getScaleTitle(this.props.scale)}`}</p>

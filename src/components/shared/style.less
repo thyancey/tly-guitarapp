@@ -26,14 +26,6 @@
     }
   }
 
-  &.disabled-button{
-    cursor: not-allowed;
-    background-color: @color-black;
-
-    &:hover {
-      background-color:@color-black;
-    }
-  }
 }
 
 
@@ -51,6 +43,17 @@
     color:@color-blue-light;
     box-shadow:0 0 2rem @color-purple;
     transition:all .2s;
+  }
+
+  &.disabled-button{
+    cursor: not-allowed;
+    background-color: @color-black;
+    box-shadow: none;
+    opacity:.2;
+
+    &:hover {
+      background-color:@color-black;
+    }
   }
 
   &:active{

@@ -34,9 +34,9 @@ class Main extends Component {
         <MusicBox ref="musicBox" scale={this.props.scale} midiInstrument={this.props.midiInstrument} volume={this.props.volume} />
         <DragCover  isDragging={this.props.isDragging} 
                     heldPanelId={this.props.heldPanelId} 
-                    panelPositions={this.props.panelPositions} 
+                    panelPositions={this.props.layoutGroups[this.props.currentLayout]} 
                     setSpacerPosition={this.props.actions.setSpacerPosition} />
-        <Workspace layout={'vertical'} panels={this.state.panels} />
+        <Workspace layout={this.props.currentLayout} panels={this.state.panels} panelPositions={this.props.layoutGroups[this.props.currentLayout]} />
       </div>
     );
   }
@@ -47,8 +47,8 @@ export default connect(state => ({
   midiInstrument: state.midiInstrument,
   volume: state.volume,
   scale: state.scale,
-  panelPositions: state.panelPositions,
+  layoutGroups: state.layoutGroups,
   isDragging: state.isDragging,
   heldPanelId: state.heldPanelId,
-  layout: 'vertical'
+  currentLayout: state.currentLayout
 }))(Main);

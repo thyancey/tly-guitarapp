@@ -37,6 +37,11 @@ class ToolsPanel extends Component {
                         isActive={false}
                         icon="icon-reset" 
                         title="Reset Layout" />
+
+          <ComboButton  onClickMethod={this.props.actions.swapLayout}
+                        isActive={false}
+                        icon="icon-reset" 
+                        title="Swap Layout" />
         </div>
         <div className="volume-container">
           <p>{'volume'}</p>

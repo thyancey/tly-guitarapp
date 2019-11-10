@@ -1,6 +1,7 @@
 import { initStore } from 'react-waterfall';
 import {List} from 'immutable';
 import MusicMan from 'src/utils/musicman';
+import { isObject } from 'util';
 
 
 const removePanel = (panelId, panelPositions) => {
@@ -23,24 +24,45 @@ const insertPanel = (panelId, panelPositions, targetPanel, targetIndex) => {
   return panelPositions;
 }
 
-const getCachedData = (key, fallback) => {
+//- merge anything back into the store... must be in store format
+const setCachedData = (obj) => {
   try{
     const jsonString = global.localStorage.getItem('tly-guitarapp') || '{}';
     const cachedData = JSON.parse(jsonString);
 
-    return cachedData[key] || fallback;
+    global.localStorage.setItem('tly-guitarapp', JSON.stringify(Object.assign({}, cachedData, obj)));
+    return true;
+  }catch(e){
+    console.log('error when setting cachedData', e);
+    return false;
+  }
+}
+const getCachedData = (key, fallback) => {
+  try{
+    const jsonString = global.localStorage.getItem('tly-guitarapp') || '{}';
+    const cachedData = JSON.parse(jsonString);
+    const foundItem = cachedData[key];
+    
+    if(isObject(foundItem)){
+      return Object.assign({}, fallback, foundItem);
+    }else{
+      return foundItem || fallback;
+    }
   }catch(e){
     console.log('error when getting cachedData', e);
     return fallback;
   }
 }
 
-const setCachedData = (key, value) => {
-  // console.log('setCachedData', key, value);
+const setCachedLayoutData = (layout, panelPositions) => {
+  // console.log('setCachedLayoutData', layout, panelPositions);
   try{
     const jsonString = global.localStorage.getItem('tly-guitarapp') || '{}';
     const cachedData = JSON.parse(jsonString);
-    cachedData[key] = value;
+
+
+    cachedData.currentLayout = layout;
+    cachedData.panelPositions = Object.assign({}, cachedData.panelPositions, { [ layout ]: panelPositions });
 
     global.localStorage.setItem('tly-guitarapp', JSON.stringify(cachedData));
     return true;
@@ -51,10 +73,17 @@ const setCachedData = (key, value) => {
 }
 
 const DEFAULT_SETTINGS = {
-  layout:{
-    GROUP_0: ['musicKey', 'scale', 'instrument'],
-    GROUP_1: ['fret'],
-    GROUP_2: ['tools', 'notedisplay', 'chorddisplay', 'chord']
+  currentLayout: 'vertical',
+  layoutGroups:{
+    vertical:{
+      left: ['musicKey', 'scale', 'instrument'],
+      center: ['fret'],
+      right: ['tools', 'notedisplay', 'chorddisplay', 'chord']
+    },
+    horizontal:{
+      top: ['fret'],
+      bottom: ['musicKey', 'scale', 'instrument', 'tools', 'notedisplay', 'chorddisplay', 'chord']
+    },
   }
 }
 
@@ -73,7 +102,8 @@ const store = {
       noteClick:false,
       scaleMode:false
     },
-    panelPositions: getCachedData('panelPositions', DEFAULT_SETTINGS.layout),
+    currentLayout: getCachedData('currentLayout', DEFAULT_SETTINGS.currentLayout),
+    layoutGroups: getCachedData('panelPositions', DEFAULT_SETTINGS.layoutGroups),
     isDragging: false,
     dragX:-1,
     dragY:-1,
@@ -107,16 +137,19 @@ const store = {
       isDragging: true,
       heldPanelId: newPanelId
     }),
-    dropPanel: ({ isDragging, spacerPosition, panelPositions, heldPanelId }, panelId) => { 
+    dropPanel: ({ spacerPosition, layoutGroups, currentLayout }, panelId) => { 
+      let panelPositions = layoutGroups[currentLayout];
       console.log('dropPanel', spacerPosition, panelPositions, panelId)
       if(spacerPosition){
         panelPositions = removePanel(panelId, panelPositions);
         panelPositions = insertPanel(panelId, panelPositions, spacerPosition.panel, spacerPosition.index);
 
-        setCachedData('panelPositions', panelPositions);
+        const newPos = Object.assign({}, { [currentLayout]: panelPositions }, layoutGroups);
+
+        setCachedLayoutData(currentLayout, panelPositions);
 
         return{
-          panelPositions: panelPositions,
+          layoutGroups: newPos,
           spacerPosition:null,
           heldPanelId: null,
           isDragging: false 
@@ -144,6 +177,20 @@ const store = {
         global.location.reload();
       }
       return {};
+    },
+
+    swapLayout: ({currentLayout}) => {
+        if(currentLayout === 'vertical'){
+          setCachedData({ currentLayout: 'horizontal' });
+          return{
+            currentLayout:'horizontal'
+          }
+        }else{
+          setCachedData({ currentLayout: 'vertical' });
+          return{
+            currentLayout:'vertical'
+          }
+        }
     },
 
     //- todo, this probably isn't the most react way to do something, but it works just fine for now

@@ -26,6 +26,10 @@
         height:100%;
       }
     }
+
+    &.panel-tools{
+      min-width:30rem;
+    }
   }
   // sideways panels
   // .panel-container{
@@ -124,10 +128,28 @@
   &.panel-chord,
   &.panel-scale,
   &.panel-instrument{
+    min-height:20rem;
     .store-button{
       font-size:1.5rem;
       padding:.25rem;
       margin:@button-margins;
+    }
+
+    .instrument-groups{
+      height:100%;
+      overflow-y:none;
+      div.left,div.right{
+        display:inline-block;
+        vertical-align:top;
+        width:50%;
+        height:100%;
+        overflow-y:hidden;
+
+        >div{
+          overflow-y:auto;
+          height:~"calc(100% - 3.5rem)";
+        }
+      }
     }
   }
 

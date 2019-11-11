@@ -1,31 +1,9 @@
 import React, { Component } from 'react';
 
 import MIDISounds from 'midi-sounds-react';
+import MIDI_INSTRUMENT_DATA from 'src/data/mididata.js';
 
 require('./style.less');
-
-const DEFAULT_INSTRUMENT = 'electricGuitar';
-
-const INSTRUMENTS = {
-  nylonGuitar: {
-    id: 253
-  },
-  steelGuitar: {
-    id: 260
-  },
-  electricGuitar: {
-    id: 288
-  },
-  electricBass: {
-    id: 378
-  },
-  banjo: {
-    id: 1131
-  },
-  shamisen: {
-    id: 1139
-  }
-}
 
 const SCALE_SPEED = .25;
 const SUSTAIN_VALUES = {
@@ -44,21 +22,21 @@ export default class MusicBox extends Component {
     super();
 
     this.state = {
-      curInstrument: INSTRUMENTS[DEFAULT_INSTRUMENT]
+      curInstrument: this.findInstrument()
     };
   }
 
   getInstruments(){
     const instruments = [];
-    for(var key in INSTRUMENTS){
-      instruments.push(INSTRUMENTS[key].id);
+    for(var key in MIDI_INSTRUMENT_DATA.instruments){
+      instruments.push(MIDI_INSTRUMENT_DATA.instruments[key].midiId);
     }
     return instruments;
   }
 
   playScale(midiNotes) {
     for(let n = 0; n < midiNotes.length; n++){
-      this.midiSounds.playChordAt(this.midiSounds.contextTime() + SCALE_SPEED * n, this.state.curInstrument.id, [midiNotes[n]], SUSTAIN_VALUES.CHORD);
+      this.midiSounds.playChordAt(this.midiSounds.contextTime() + SCALE_SPEED * n, this.state.curInstrument.midiId, [midiNotes[n]], SUSTAIN_VALUES.CHORD);
     }
   }
 
@@ -69,7 +47,7 @@ export default class MusicBox extends Component {
 
   playNotes(midiNotes, type){
     switch(type){
-      case 'NOTE': this.midiSounds.playChordNow(this.state.curInstrument.id, midiNotes, SUSTAIN_VALUES.NOTE);
+      case 'NOTE': this.midiSounds.playChordNow(this.state.curInstrument.midiId, midiNotes, SUSTAIN_VALUES.NOTE);
         break;
       case 'SCALE': 
         this.midiSounds.cancelQueue();
@@ -79,27 +57,34 @@ export default class MusicBox extends Component {
         this.midiSounds.cancelQueue();
         this.playFullScale(midiNotes);
         break;
-      case 'CHORD': this.midiSounds.playChordNow(this.state.curInstrument.id, midiNotes, SUSTAIN_VALUES.CHORD);
+      case 'CHORD': this.midiSounds.playChordNow(this.state.curInstrument.midiId, midiNotes, SUSTAIN_VALUES.CHORD);
         break;
-      case 'STRUM_UP': this.midiSounds.playStrumUpNow(this.state.curInstrument.id, midiNotes, SUSTAIN_VALUES.STRUM_UP);
+      case 'STRUM_UP': this.midiSounds.playStrumUpNow(this.state.curInstrument.midiId, midiNotes, SUSTAIN_VALUES.STRUM_UP);
         break;
-      case 'STRUM_DOWN': this.midiSounds.playStrumDownNow(this.state.curInstrument.id, midiNotes, SUSTAIN_VALUES.STRUM_DOWN);
+      case 'STRUM_DOWN': this.midiSounds.playStrumDownNow(this.state.curInstrument.midiId, midiNotes, SUSTAIN_VALUES.STRUM_DOWN);
         break;
-      case 'SNAP': this.midiSounds.playSnapNow(this.state.curInstrument.id, midiNotes, SUSTAIN_VALUES.SNAP);
+      case 'SNAP': this.midiSounds.playSnapNow(this.state.curInstrument.midiId, midiNotes, SUSTAIN_VALUES.SNAP);
         break;
     }
   }
 
+  findInstrument(instrumentId){
+    if(!instrumentId){
+      instrumentId = MIDI_INSTRUMENT_DATA.defaultInstrument;
+    }
+    return MIDI_INSTRUMENT_DATA.instruments[instrumentId];
+  }
+
   setMidiInstrument(newId){
-    const foundInstrument = INSTRUMENTS[newId];
-    this.midiSounds.cacheInstrument(foundInstrument.id);
+    const foundInstrument = this.findInstrument(newId);
+    this.midiSounds.cacheInstrument(foundInstrument.midiId);
     this.setState({curInstrument: foundInstrument})
   }
 
   componentDidMount() {
     //- TODO, documentation said to do this to init it or something?
-    this.midiSounds.cacheInstrument(this.state.curInstrument.id);
-    this.setState(this.state);
+    this.midiSounds.cacheInstrument(this.state.curInstrument.midiId);
+    this.setState({curInstrument: this.state.curInstrument})
     this.setVolume(this.props.volume);
   }
 

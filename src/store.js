@@ -135,12 +135,17 @@ const store = {
         }
       }
     },
-    setInstrument: ({ instrument, midiInstrument, chord, fretChanges }, newInstrument) => {
+    setInstrument: ({ fretChanges }, newInstrument) => {
       return { 
         instrument: newInstrument,
         midiInstrument: MusicMan.getInstrumentMidiId(newInstrument),
         chord: null,
         fretChanges: fretChanges+1
+      }
+    },
+    setMidiInstrument: ({ fretChanges }, newInstrument) => {
+      return { 
+        midiInstrument: newInstrument
       }
     },
 
@@ -239,7 +244,7 @@ const store = {
     },
 
     dispatchEasyMusicEvent: ({ musicKey, octave, scale }, musicEvent) => {
-      
+
       if(!global.dispatchMusicEvent){
         console.error('dispatchMusicEvent method was not defined on window.');
       }else{

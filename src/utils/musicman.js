@@ -1,5 +1,6 @@
-import MDATA from 'src/data/musicdata.js';
-import IDATA from 'src/data/instrumentdata.js';
+import DATA_MUSIC from 'src/data/musicdata.js';
+import DATA_INSTRUMENT from 'src/data/instrumentdata.js';
+import DATA_MIDI from 'src/data/mididata.js';
 
 
 class MusicMan{
@@ -9,21 +10,24 @@ class MusicMan{
   }
 
   static getNotes(){
-    return MDATA.notes;
+    return DATA_MUSIC.notes;
   }
   static getNumFrets(){
-    return MDATA.numFrets;
+    return DATA_MUSIC.numFrets;
   }
   static getScales(){
-    return MDATA.scales;
+    return DATA_MUSIC.scales;
   }
   static getInstruments(){
-    return IDATA;
+    return DATA_INSTRUMENT;
+  }
+  static getMidiInstruments(){
+    return DATA_MIDI.instruments;
   }
 
   static getScaleTitle(scaleLabel){
     try{
-      return MDATA.scales[scaleLabel].title
+      return DATA_MUSIC.scales[scaleLabel].title
     }catch(e){
       return 'Error'
     }
@@ -31,7 +35,7 @@ class MusicMan{
 
   static getScaleTriadType(scaleLabel){
     try{
-      return MDATA.scales[scaleLabel].triad;
+      return DATA_MUSIC.scales[scaleLabel].triad;
     }catch(e){
       console.error(`could not find scale triad for scale with label ${scaleLabel}`, e);
       return null;
@@ -40,7 +44,7 @@ class MusicMan{
 
   static getScaleSequence(scaleLabel){
     try{
-      return MDATA.scales[scaleLabel].sequence;
+      return DATA_MUSIC.scales[scaleLabel].sequence;
     }catch(e){
       console.error(`could not find scale sequence for scale with label ${scaleLabel}`, e);
       return null;
@@ -49,8 +53,8 @@ class MusicMan{
 
   //- ex, convert 'g' to 2. -1 if none found
   static getNoteIndex(noteName){
-    for(var i = 0; i < MDATA.notes.length; i++){
-      if(MDATA.notes[i] === noteName){
+    for(var i = 0; i < DATA_MUSIC.notes.length; i++){
+      if(DATA_MUSIC.notes[i] === noteName){
         return i;
       }
     }
@@ -64,7 +68,7 @@ class MusicMan{
 
   /* major and minor scales are related, this is for helping with quick switching between the two */
   static getMajorMinorFlip(key, scaleLabel){
-    const flippedScaleLabel = MDATA.majorMinorFlips[scaleLabel];
+    const flippedScaleLabel = DATA_MUSIC.majorMinorFlips[scaleLabel];
     const noteDiff = flippedScaleLabel.indexOf('minor') > -1 ? -2 : 2;
     const oldScale = this.getScale(key, scaleLabel);
     const noteIdx = oldScale.indexOf(key);
@@ -90,13 +94,13 @@ class MusicMan{
       return foundKeys;
     }
 
-    for(let n = 0; n < MDATA.notes.length; n++){
+    for(let n = 0; n < DATA_MUSIC.notes.length; n++){
       //- one note at a time
-      let scale = this.getScale(MDATA.notes[n], scaleLabel);
+      let scale = this.getScale(DATA_MUSIC.notes[n], scaleLabel);
 
       let foundNotes = notesToMatch.filter(note => scale.indexOf(note) > -1);
       if(foundNotes.size === notesToMatch.size){
-        foundKeys.push(MDATA.notes[n]);
+        foundKeys.push(DATA_MUSIC.notes[n]);
       }
     }
 
@@ -105,12 +109,12 @@ class MusicMan{
 
   //- octave is optional
   static getNoteAtIndex(noteIdx, octave){
-    let calcIdx = noteIdx % MDATA.notes.length;
+    let calcIdx = noteIdx % DATA_MUSIC.notes.length;
     if(calcIdx < 0){
-      calcIdx = MDATA.notes.length + calcIdx;
+      calcIdx = DATA_MUSIC.notes.length + calcIdx;
     }
 
-    let noteName = MDATA.notes[calcIdx]
+    let noteName = DATA_MUSIC.notes[calcIdx]
 
     if(octave !== null){
       noteName = this.getNoteInOctaveFormat(noteName, noteIdx, octave);
@@ -124,7 +128,7 @@ class MusicMan{
   }
 
   static getOctaveOffsetForNote(noteIdx, curOctave){
-    return Math.floor(noteIdx / MDATA.notes.length) + parseInt(curOctave);
+    return Math.floor(noteIdx / DATA_MUSIC.notes.length) + parseInt(curOctave);
   }
 
   /* returns a full scale based on an octave note and a label (major)
@@ -157,7 +161,7 @@ class MusicMan{
 
   static getInstrumentMidiId(instrumentLabel){
     try{
-      return IDATA[instrumentLabel].midiId;
+      return DATA_INSTRUMENT[instrumentLabel].midiId;
     }catch(e){
       console.error(`could not find midiId for instrument ${instrumentLabel}`, e);
       return null;
@@ -166,7 +170,7 @@ class MusicMan{
 
   static getInstrumentChords(instrumentLabel){
     try{
-      return IDATA[instrumentLabel].chords;
+      return DATA_INSTRUMENT[instrumentLabel].chords;
     }catch(e){
       console.error(`could not find chords for instrument ${instrumentLabel}`, e);
       return null;
@@ -175,7 +179,7 @@ class MusicMan{
 
   static getInstrumentStrings(instrumentLabel){
     try{
-      return IDATA[instrumentLabel].strings;
+      return DATA_INSTRUMENT[instrumentLabel].strings;
     }catch(e){
       console.error(`could not find strings for instrument ${instrumentLabel}`, e);
       return null;
@@ -293,7 +297,7 @@ class MusicMan{
     }
 
     //- will get something like ["major", "minor", "minor", "etc"]
-    const triadLabels = MDATA.scaleTriads[triadType];
+    const triadLabels = DATA_MUSIC.scaleTriads[triadType];
     if(!triadLabels){
       return [];
     }

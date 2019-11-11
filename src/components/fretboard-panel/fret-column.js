@@ -16,17 +16,7 @@ class FretColumn extends Component {
     }
   }
 
-  doubleClickNote(octaveNote, fIdx){
-    if(this.props.keyFinderMode === 'find'){
-      this.props.actions.toggleKeyFinderNote(note, true);
-    }
-  }
-
   selectNote(octaveNote, fIdx, e){
-
-    console.log('selectNote', e.ctrlKey);
-
-
     let note = octaveNote.split('-')[0];
     let octave = octaveNote.split('-')[1];
 

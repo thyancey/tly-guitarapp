@@ -1,48 +1,83 @@
 import React, { Component } from 'react';
 import { connect } from 'src/store';
 
-require('./style.less');
+import MusicMan from 'src/utils/musicman';
 import ComboButton from 'src/components/shared/combo-button';
 
+require('./style.less');
+
 class ToolsPanel extends Component {
-  onToggleScaleMode(scaleMode){
-    let newSelectionMode = Object.assign({}, this.props.selectionMode);
-    newSelectionMode.scaleMode = !scaleMode;
-    this.props.actions.setSelectionMode(newSelectionMode);
+  constructor(){
+    super();
+
+    this.state = {
+      storedNotes: []
+    };
+  }
+
+  onToggleKeyMode(toggleType){
+    let keyFinderMode = this.props.keyFinderMode !== toggleType ? toggleType : 'off';
+
+    this.props.actions.setKeyFinderMode(keyFinderMode);
+  }
+
+  onSetKey(note){
+    this.props.actions.setKeyFinderMode('off');
+    this.props.actions.setMusicKey(note);
+  }
+
+  flipScale(){
+    this.props.actions.flipMajMinScale();
   }
 
   render() {
-    return(
+    const foundKeys = MusicMan.matchKeysFromNotes(this.props.keyFinderNotes, this.props.scale);
+    const flipEnabled = this.props.scale.indexOf('major') > -1 || this.props.scale.indexOf('minor') > -1;
+    
+    return (
       <div>
         <div className="selection-buttons">
-
-          <ComboButton  onClickMethod={(scaleMode) => this.onToggleScaleMode(scaleMode)}
-                        onClickParam={this.props.selectionMode.scaleMode}
-                        isActive={this.props.selectionMode.scaleMode}
-                        icon="icon-scalemode" 
-                        title="Play scales" />
-
-          <ComboButton  onClickMethod={this.props.actions.setDefaultSettings}
-                        isActive={false}
-                        icon="icon-reset" 
-                        title="Reset Layout" />
-
-          <ComboButton  onClickMethod={this.props.actions.swapLayout}
-                        isActive={false}
-                        icon="icon-reset" 
-                        title="Swap Layout" />
+          <ComboButton  
+            onClickMethod={() => this.onToggleKeyMode('off')}
+            isActive={this.props.keyFinderMode === 'off'}
+            icon="icon-scalemode" 
+            title="Play Note" />
+          <ComboButton  
+            onClickMethod={() => this.onToggleKeyMode('set')}
+            isActive={this.props.keyFinderMode === 'set'}
+            icon="icon-editnote" 
+            title="Set Key" />
+          <ComboButton  
+            onClickMethod={() => this.onToggleKeyMode('find')}
+            isActive={this.props.keyFinderMode === 'find'}
+            icon="icon-editnote" 
+            title="Find Key" />
+          <ComboButton  
+            onClickMethod={() => flipEnabled && this.flipScale()}
+            isDisabled={!flipEnabled}
+            isActive={false}
+            icon="icon-reset" 
+            title="Flip Triad" />
         </div>
-        <div className="volume-container">
-          <p>{'volume'}</p>
-          <input type='range' value={this.props.volume} min={0.0} max={1.0} step={0.05} onChange={e => this.props.actions.setVolume(e.target.value)} />
+        <div className="found-keys">
+          <h2>{`Matching keys`}</h2>
+          <span className="found-keys-scalelabel">{`${MusicMan.getScaleTitle(this.props.scale)}`}</span><span>{'scales only'}</span>
+          <div className="key-list">
+            {foundKeys.map((note, index) => (
+              <span key={'note-' + index} className={ note === this.props.musicKey ? 'active' : null } onClick={() => this.onSetKey(note)}>{note}</span>
+            ))}
+          </div>
         </div>
-
       </div>
     );
   }
+
 }
 
 export default connect(state => ({ 
   selectionMode: state.selectionMode,
-  volume: state.volume,
+  keyFinderMode: state.keyFinderMode,
+  keyFinderNotes: state.keyFinderNotes,
+  musicKey: state.musicKey,
+  scale: state.scale
 }))(ToolsPanel);

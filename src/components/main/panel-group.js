@@ -7,9 +7,10 @@ import InstrumentPanel from 'src/components/panels/instrument-panel';
 import MusicKeyPanel from 'src/components/panels/musickey-panel';
 import NoteDisplayPanel from 'src/components/panels/notedisplay-panel';
 import ChordDisplayPanel from 'src/components/panels/chorddisplay-panel';
-import KeyFinderPanel from 'src/components/panels/keyfinder-panel';
+// import KeyFinderPanel from 'src/components/panels/keyfinder-panel';
 import ScalePanel from 'src/components/panels/scale-panel';
 import ToolsPanel from 'src/components/panels/tools-panel';
+import SettingsPanel from 'src/components/panels/settings-panel';
 import Panel from 'src/components/panels/panel';
 
 require('./style.less');
@@ -50,15 +51,15 @@ const MAP_PANELS = {
     title: 'Instrument',
     component: <InstrumentPanel/>
   },
+  settings:{
+    panelClass: 'settings',
+    title: 'Settings',
+    component: <SettingsPanel/>
+  }, 
   tools:{
     panelClass: 'tools',
-    title: 'Settings',
+    title: 'Tools',
     component: <ToolsPanel/>
-  }, 
-  keyfinder:{
-    panelClass: 'keyfinder',
-    title: 'Key Finder',
-    component: <KeyFinderPanel/>
   }
 }
 

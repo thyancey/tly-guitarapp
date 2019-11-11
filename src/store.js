@@ -77,12 +77,12 @@ const DEFAULT_SETTINGS = {
   layoutGroups:{
     vertical:{
       left: ['musicKey', 'scale', 'instrument'],
-      center: ['fret'],
-      right: ['tools', 'notedisplay', 'chorddisplay', 'chord', 'keyfinder']
+      center: ['fret','chorddisplay'],
+      right: ['tools', 'notedisplay', 'chord', , 'settings']
     },
     horizontal:{
       top: ['fret', 'tools'],
-      bottom: ['musicKey', 'scale', 'instrument', 'notedisplay', 'chorddisplay', 'chord', 'keyfinder']
+      bottom: ['musicKey', 'scale', 'instrument', 'notedisplay', 'chorddisplay', 'chord', 'settings']
     },
   }
 }
@@ -124,7 +124,7 @@ const store = {
     setChord: ({ chord, fretChanges }, newChord) => ({ chord: newChord, fretChanges: fretChanges+1 }),
     setSelectionMode: ({}, newSelectionMode) => ({ selectionMode: newSelectionMode }),
     setKeyFinderMode: ({}, newMode) => {
-      if(newMode !== 'find'){
+      if(newMode === 'off'){
         return {
           keyFinderNotes: new List(),
           keyFinderMode: newMode
@@ -174,7 +174,7 @@ const store = {
     }),
     dropPanel: ({ spacerPosition, layoutGroups, currentLayout }, panelId) => { 
       let panelPositions = layoutGroups[currentLayout];
-      console.log('dropPanel', spacerPosition, panelPositions, panelId)
+
       if(spacerPosition){
         panelPositions = removePanel(panelId, panelPositions);
         panelPositions = insertPanel(panelId, panelPositions, spacerPosition.panel, spacerPosition.index);
@@ -234,6 +234,25 @@ const store = {
         console.error('dispatchMusicEvent method was not defined on window.');
       }else{
         global.dispatchMusicEvent(musicEvent);
+      }
+      return {};
+    },
+
+    dispatchEasyMusicEvent: ({ musicKey, octave, scale }, musicEvent) => {
+      
+      if(!global.dispatchMusicEvent){
+        console.error('dispatchMusicEvent method was not defined on window.');
+      }else{
+        if(musicEvent.notes){
+          global.dispatchMusicEvent(musicEvent);
+        }else{
+          const octaveNote = `${musicEvent.musicKey || musicKey}-${musicEvent.octave || octave}`;
+          const scaleNotes = MusicMan.getScale(octaveNote, musicEvent.scale || scale);
+          musicEvent.notes = MusicMan.getMidiScale(scaleNotes);
+
+          global.dispatchMusicEvent(musicEvent);
+        }
+
       }
       return {};
     }

@@ -22,14 +22,20 @@ class FretColumn extends Component {
     }
   }
 
-  selectNote(octaveNote, fIdx){
+  selectNote(octaveNote, fIdx, e){
+
+    console.log('selectNote', e.ctrlKey);
+
+
     let note = octaveNote.split('-')[0];
     let octave = octaveNote.split('-')[1];
 
     if(this.props.keyFinderMode === 'set'){
       this.props.actions.setMusicKey(note);
       this.props.actions.setOctave(octave);
-    }else if(this.props.keyFinderMode === 'find'){
+    }
+
+    if(e.ctrlKey || this.props.keyFinderMode === 'find'){
       this.props.actions.toggleKeyFinderNote(note);
     }
 
@@ -109,7 +115,7 @@ class FretColumn extends Component {
       octaveNote: octaveNote,
       note: note,
       octave: octave,
-      selectNote:  (octaveNote, fIdx) => this.selectNote(octaveNote, fIdx)
+      selectNote:  (octaveNote, fIdx, e) => this.selectNote(octaveNote, fIdx, e)
     });
   }
 

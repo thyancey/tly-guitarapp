@@ -11,15 +11,12 @@ class ScalePanel extends Component {
     this.props.actions.setScale(scaleLabel);
     this.props.actions.setChord(null);
 
-    const octaveNote = `${this.props.musicKey}-${this.props.octave}`;
-    const scaleNotes = MusicMan.getScale(octaveNote, scaleLabel);
-    const midiNotes = MusicMan.getMidiScale(scaleNotes);
-
     if(this.props.playScales){
-      this.props.actions.dispatchMusicEvent({
-        type: 'SCALE_FULL',
-        notes: midiNotes
-      });
+      global.setTimeout(() => {
+        this.props.actions.dispatchEasyMusicEvent({
+          type: 'SCALE_FULL'
+        });
+      }, 0);
     }
   }
 
@@ -48,8 +45,6 @@ class ScalePanel extends Component {
 }
 
 export default connect(state => ({ 
-  musicKey: state.musicKey,
   scale: state.scale,
-  octave: state.octave,
   playScales: state.selectionMode.scaleMode
 }))(ScalePanel);

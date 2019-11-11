@@ -82,9 +82,8 @@ class Fretboard extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState){
+  componentDidUpdate(prevProps){
     if(prevProps.fretChanges !== this.props.fretChanges || prevProps.musicKey !== this.props.musicKey){
-      console.log('DADDY RECALC')
       this.recalcFrets();
     }
   }

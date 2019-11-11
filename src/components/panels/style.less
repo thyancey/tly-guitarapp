@@ -15,7 +15,7 @@
 
 .layout-horizontal{
   .panel-container{
-    flex:1 0 20rem;
+    flex:1 0 24rem;
 
     &.panel-fret{
       flex:0 1 100%;
@@ -142,9 +142,17 @@
       display:inline-block;
       padding:.5rem;
     }
+
+    .panel-body{
+      overflow-y: hidden;
+    }
   }
 
-  &.panel-keyfinder{
+  &.panel-tools{
+    min-height:24rem;
+    color:@color-blue;
+    text-shadow:0 0 1rem @color-blue;
+
     .selection-buttons{
       >*{
         display:inline-block;
@@ -154,21 +162,44 @@
       .icon-container{
         min-height: 6rem;
       }
+
+      padding-bottom:.5rem;
     }
 
     .found-keys{
+      padding-top:.25rem;
+
+      border-top: 1px solid @color-blue;
+      transition: color .5s;
+
       cursor: pointer;
       .active{
-        color: @color-white;
+        color: @color-red;
+        text-shadow:0 0 1rem @color-red;
+        transition: color .5s;
+      }
+      .key-list span{
+        &:hover{
+          color: @color-white;
+          text-shadow:0 0 1rem @color-white;
+          transition: color .5s;
+        }
       }
 
       span{
         padding: 0rem .5rem;
       }
+
+      .found-keys-scalelabel{
+        padding: 0rem;
+        color: @color-purple;
+        text-shadow:0 0 1rem @color-purple;
+      }
+
     }
   }
 
-  &.panel-tools{
+  &.panel-tools,&.panel-settings{
     .selection-buttons{
       >*{
         display:inline-block;

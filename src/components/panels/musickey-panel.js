@@ -7,9 +7,21 @@ import MusicMan from 'src/utils/musicman';
 require('./style.less');
 
 class MusicKeyPanel extends Component {
+  onMusicKeyClick(musicKey){
+    this.props.actions.setMusicKey(musicKey);
+    
+    if(this.props.playScales){
+      global.setTimeout(() => {
+        this.props.actions.dispatchEasyMusicEvent({
+          type: 'SCALE_FULL'
+        });
+      }, 0);
+    }
+  }
+
   createNoteButtons(){
     return MusicMan.getNotes().map((note, index) => (
-            <StoreButton  actionMethod={this.props.actions.setMusicKey} 
+            <StoreButton  actionMethod={(param) => this.onMusicKeyClick(param)} 
                           actionParam={note} 
                           isActive={(note === this.props.musicKey)} 
                           title={note}
@@ -28,5 +40,6 @@ class MusicKeyPanel extends Component {
 }
 
 export default connect(state => ({ 
-  musicKey: state.musicKey
+  musicKey: state.musicKey,
+  playScales: state.selectionMode.scaleMode
 }))(MusicKeyPanel);

@@ -24,7 +24,7 @@ export default class Fret extends Component {
     }
 
     return (
-      <div className={className} onClick={() => this.props.selectNote(this.props.octaveNote, this.props.fretIdx)}>
+      <div className={className} onClick={(e) => this.props.selectNote(this.props.octaveNote, this.props.fretIdx, e)}>
         <div className="round-fret fret-note">
           <div className="round-fret-circle">
             <span>{this.props.note}</span>

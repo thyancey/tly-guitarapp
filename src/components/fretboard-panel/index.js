@@ -42,6 +42,7 @@ class Fretboard extends Component {
                     chordFretIdx={chordFretIdxs[sIdx]}
                     notes={simpleNotes}
                     stringIdx={sIdx}
+                    stringHeight={(100 / strings.length) - 1 + '%'}
                     frets={strings[sIdx]}
                     isAlternate={IS_ALTERNATE}
                     fretBounds={fretBounds[sIdx]}
@@ -53,10 +54,9 @@ class Fretboard extends Component {
     return retVal;
   }
 
-  calcFretboardRows(octaveNotes){
+  calcFretboardRows(octaveNotes, numFrets){
     let retVal = [];
-    let numFrets = MusicMan.getNumFrets();
-
+    
     let simpleNotes = [];
     for(let n = 0; n < octaveNotes.length; n++){
       simpleNotes.push(octaveNotes[n].split('-')[0]);
@@ -79,9 +79,10 @@ class Fretboard extends Component {
 
   recalcFrets(){
     const octaveNotes = MusicMan.getScale(this.props.musicKey, this.props.scale, this.props.octave);
+    const maxFrets = MusicMan.getInstrumentNumFrets(this.props.instrument);
     this.setState({
-      fretboardStrings: this.calcFretboardStrings(octaveNotes),
-      fretboardRows: this.calcFretboardRows(octaveNotes),
+      fretboardStrings: this.calcFretboardStrings(octaveNotes, maxFrets),
+      fretboardRows: this.calcFretboardRows(octaveNotes, maxFrets),
       counter: this.state.counter++
     });
   }

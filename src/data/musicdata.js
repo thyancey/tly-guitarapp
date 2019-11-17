@@ -41,6 +41,10 @@ export default {
       "title": "Pentatonic (Major)",
       "sequence":[0,2,4,7,9,12]
     },
+    "pentatonic-minor":{
+      "title": "Pentatonic (Minor)",
+      "sequence":[0,3,5,7,10,12]
+    },
     "pentatonic-blues-minor": {
       "title": "Pentatonic (Blues Minor)",
       "sequence":[0,3,5,6,7,10,12]

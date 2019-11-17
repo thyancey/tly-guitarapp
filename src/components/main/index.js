@@ -3,6 +3,7 @@ import { connect } from 'src/store';
 
 import MusicBox from 'src/components/musicbox';
 import ErrorContainer from 'src/components/error-container';
+import MusicMan from 'src/utils/musicman';
 
 import DragCover from 'src/components/main/drag-cover';
 import Workspace from './workspace';
@@ -12,6 +13,7 @@ require('./style.less');
 class Main extends Component {
   constructor(){
     super();
+    global.MusicMan = MusicMan;
     global.dispatchMusicEvent = (musicEvent) => {
       this.refs.musicBox.onMusicEvent(musicEvent);
     }

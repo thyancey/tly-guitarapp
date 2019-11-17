@@ -81,8 +81,8 @@ const DEFAULT_SETTINGS = {
       right: ['tools', 'notedisplay', 'chord', , 'settings']
     },
     horizontal:{
-      top: ['fret', 'tools'],
-      bottom: ['musicKey', 'scale', 'instrument', 'notedisplay', 'chorddisplay', 'chord', 'settings']
+      top: ['fret'],
+      bottom: ['tools','settings','musicKey', 'scale', 'instrument', 'notedisplay', 'chorddisplay', 'chord']
     },
   }
 }

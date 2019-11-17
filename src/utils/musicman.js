@@ -185,6 +185,22 @@ class MusicMan{
       return null;
     }
   }
+  
+  static getInstrumentNumFrets(instrumentLabel){
+    try{
+      let maxFrets = 0;
+      const instrumentStrings = DATA_INSTRUMENT[instrumentLabel].strings;
+      for(let i = 0; i < instrumentStrings.length; i++){
+        if(instrumentStrings[i].frets && instrumentStrings[i].frets[1] > maxFrets){
+          maxFrets = instrumentStrings[i].frets[1];
+        }
+      }
+      return maxFrets;
+    }catch(e){
+      console.error(`could not find num frets for instrument ${instrumentLabel}`, e);
+      return 0;
+    }
+  }
 
   static getInstrumentNotesFromLabel(instrumentLabel){
     const instrumentStrings = MusicMan.getInstrumentStrings(instrumentLabel);

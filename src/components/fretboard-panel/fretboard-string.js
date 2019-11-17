@@ -10,7 +10,7 @@ export default class FretboardString extends Component {
       switch(f.type){
         case 'fret': retVal.push(<Fret {...f}/>);
           break;
-        default: retVal.push(<div {...f}/>);
+        default: !this.props.isAlternate && retVal.push(<div {...f}/>);
       }
     });
 
@@ -19,7 +19,7 @@ export default class FretboardString extends Component {
 
   render() {
     return (
-      <div className="fretboard-string" >
+      <div className="fretboard-string" style={{ height: this.props.stringHeight }}>
         {this.renderFrets(this.props.frets)}
       </div>
     );

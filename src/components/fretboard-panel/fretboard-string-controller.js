@@ -165,7 +165,7 @@ class FreboardStringController extends Component {
 
   render() {
     return (
-      <FretboardString frets={this.state.savedFrets} />
+      <FretboardString isAlternate={this.props.isAlternate} stringHeight={this.props.stringHeight} frets={this.state.savedFrets} />
     );
   }
 }

@@ -21,7 +21,7 @@ class Fretboard extends Component {
     }
   }
 
-  calcFretboardStrings(octaveNotes){
+  calcFretboardStrings(octaveNotes, maxFrets){
     var retVal = [];
 
     let simpleNotes = [];

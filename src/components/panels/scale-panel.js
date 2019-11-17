@@ -9,7 +9,7 @@ require('./style.less');
 class ScalePanel extends Component {
   onScaleClick(scaleLabel){
     this.props.actions.setScale(scaleLabel);
-    this.props.actions.setChord(null);
+    // this.props.actions.setChord(null);
 
     if(this.props.playScales){
       global.setTimeout(() => {

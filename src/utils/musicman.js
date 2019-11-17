@@ -1,6 +1,7 @@
 import DATA_MUSIC from 'src/data/musicdata.js';
 import DATA_INSTRUMENT from 'src/data/instrumentdata.js';
 import DATA_MIDI from 'src/data/mididata.js';
+import { Map, List } from 'immutable';
 
 
 class MusicMan{
@@ -23,6 +24,52 @@ class MusicMan{
   }
   static getMidiInstruments(){
     return DATA_MIDI.instruments;
+  }
+  static convertToSimpleNote(octaveNote){
+    return octaveNote.split('-')[0];
+  }
+
+  static convertToStringsMatrix(strings, notes, fretBounds){
+    const result = [];
+    for(let i = 0; i < strings.length; i++){
+      result.push(new Map({
+        fretBounds: fretBounds[i],
+        frets: MusicMan.convertToNotesMatrix(strings[i], notes, fretBounds[i])
+      }));
+    }
+    return new List(result);
+  }
+
+  static convertToNotesMatrix(string, notes, fretBounds){
+    const retNotes = [];
+
+    for(let i = 0; i < string.length; i++){
+      const octaveNote = string[i];
+
+      const simpleNote = MusicMan.convertToSimpleNote(octaveNote);
+      const noteIdx = notes.indexOf(simpleNote);
+      retNotes.push(new Map({
+        isInKey: noteIdx > -1,
+        isInChord: false,
+        isFound: false,
+        fretIdx: i + fretBounds[0],
+        noteIdx: noteIdx,
+        octaveNote: octaveNote,
+        simpleNote: simpleNote,
+      }));
+    }
+
+    return new List(retNotes);
+  }
+
+  static filterFretMatrixForChords(fretMatrix, chordFretIdxs){
+    return fretMatrix.map((fms, stringIdx) => (fms.map((fret, fretIdx) => {
+      if(fretIdx === chordFretIdxs[stringIdx]){
+        return fret.set('isInChord', true);
+      }else{
+        return fret.set('isInChord', false);
+      }
+    })));
   }
 
   static getScaleTitle(scaleLabel){

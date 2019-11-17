@@ -1,7 +1,34 @@
 import { initStore } from 'react-waterfall';
-import { List } from 'immutable';
+import { Map, List } from 'immutable';
 import MusicMan from 'src/utils/musicman';
 import { isObject } from 'util';
+
+const getFretMatrix = (musicKey, scale, chord, instrumentLabel, fretMatrix) => {
+  // console.log('getFretMatrix', musicKey, scale, chord, instrumentLabel)
+  const notes = MusicMan.getScale(musicKey, scale);
+  const maxFrets = MusicMan.getInstrumentNumFrets(instrumentLabel);
+  
+  const chordFretIdxs = MusicMan.getChordFretIdxs(chord, instrumentLabel);
+  const instrumentObj = MusicMan.getInstrumentNotesFromLabel(instrumentLabel);
+  const strings = instrumentObj.strings;
+  const fretBounds = instrumentObj.fretBounds;
+
+  // console.log('maxFrets:' , maxFrets);
+  // console.log('fretBounds:' , fretBounds);
+  // console.log('strings:' , strings);
+  // console.log('notes:' , notes);
+  // console.log('chordFretIdxs:' , chordFretIdxs);
+
+  const stringsMatrix = MusicMan.convertToStringsMatrix(strings, notes, fretBounds);
+  // console.log('fretMatrix is ', stringsMatrix.toJS());
+  if(chordFretIdxs.length > 0){
+    const finalStringsMatrix = MusicMan.filterFretMatrixForChords(stringsMatrix, chordFretIdxs)
+    // console.log('finalStringsMatrix is ', finalStringsMatrix.toJS());
+    return finalStringsMatrix;
+  }else{
+    return stringsMatrix;
+  }
+}
 
 
 const removePanel = (panelId, panelPositions) => {
@@ -110,18 +137,45 @@ const store = {
     dragY:-1,
     spacerPosition:null,
     heldPanelId:null,
-    panelChanges: 0
+    panelChanges: 0,
+    fretMatrix: new Map({
+      fretBounds:[],
+      strings: new List()
+    })
   },
   actions: {
-    setMusicKey: ({ musicKey, fretChanges }, newMusicKey) => ({ 
-      musicKey: newMusicKey, 
-      chord: null,
-      fretChanges: fretChanges+1 
-    }),
-    setScale: ({ scale, fretChanges }, newScale) => ({ scale: newScale, fretChanges: fretChanges+1 }),
+    setMusicKey: ({ fretChanges, scale, chord, instrument, fretMatrix }, newMusicKey) => {
+      // console.log('-> setMusicKey', newMusicKey);
+
+      return { 
+        fretMatrix: getFretMatrix(newMusicKey, scale, chord, instrument, fretMatrix),
+        musicKey: newMusicKey, 
+        chord: null,
+        fretChanges: fretChanges+1 
+      };
+    },
+    setScale: ({ musicKey, fretChanges, chord, instrument, fretMatrix }, newScale) => {
+      // console.log('-> setScale', newScale);
+      const newChord = null;
+
+      return { 
+        chord: newChord, 
+        fretMatrix: getFretMatrix(musicKey, newScale, newChord, instrument, fretMatrix),
+        scale: newScale, 
+        fretChanges: fretChanges+1 
+      };
+    },
     setVolume: ({ volume }, newVolume) => ({ volume: newVolume }),
     setOctave: ({ octave, fretChanges }, newOctave) => ({ octave: newOctave, fretChanges: fretChanges+1 }),
-    setChord: ({ chord, fretChanges }, newChord) => ({ chord: newChord, fretChanges: fretChanges+1 }),
+    setChord: ({ fretChanges, musicKey, scale, instrument, fretMatrix }, newChord) => {
+      // console.log('-> setChord', newChord);
+
+      return { 
+        fretMatrix: getFretMatrix(musicKey, scale, newChord, instrument, fretMatrix),
+        chord: newChord, 
+        fretChanges: fretChanges+1 
+      };
+    },
     setSelectionMode: ({}, newSelectionMode) => ({ selectionMode: newSelectionMode }),
     setKeyFinderMode: ({}, newMode) => {
       if(newMode === 'off'){
@@ -135,10 +189,14 @@ const store = {
         }
       }
     },
-    setInstrument: ({ fretChanges }, newInstrument) => {
+    setInstrument: ({ fretChanges, musicKey, scale, chord, fretMatrix }, newInstrument) => {
+      const midiInstrument = MusicMan.getInstrumentMidiId(newInstrument);
+      // console.log('-> setInstrument', newInstrument);
+
       return { 
+        fretMatrix: getFretMatrix(musicKey, scale, chord, newInstrument, fretMatrix),
         instrument: newInstrument,
-        midiInstrument: MusicMan.getInstrumentMidiId(newInstrument),
+        midiInstrument: midiInstrument,
         chord: null,
         fretChanges: fretChanges+1
       }
@@ -162,10 +220,12 @@ const store = {
       }
     },
 
-    flipMajMinScale: ({ musicKey, scale }) => {
+    flipMajMinScale: ({ musicKey, scale, chord, instrument, fretMatrix }) => {
       const flipped = MusicMan.getMajorMinorFlip(musicKey, scale);
-      
+      // console.log('-> flipMajMinScale', flipped.scale);
+ 
       return {
+        fretMatrix: getFretMatrix(flipped.key, flipped.scale, chord, instrument, fretMatrix),
         musicKey: flipped.key,
         scale: flipped.scale
       }

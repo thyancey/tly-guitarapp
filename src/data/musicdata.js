@@ -16,10 +16,10 @@ export default {
   ],
   "majorMinorFlips":{
     "major":"natural-minor",
-    "pentatonic-major":"pentatonic-blues-minor",
+    "pentatonic-major":"pentatonic-minor",
     "natural-minor":"major",
     "harmonic-minor":"major",
-    "pentatonic-blues-minor":"pentatonic-major"
+    "pentatonic-minor":"pentatonic-major"
   },
   "scales":{
     "major": {

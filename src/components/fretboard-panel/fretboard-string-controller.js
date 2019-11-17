@@ -4,10 +4,9 @@ import { connect } from 'src/store';
 import { PLAY_TYPES } from 'src/components/musicbox';
 
 import MusicMan from 'src/utils/musicman';
+import FretboardString from './fretboard-string';
 
-import Fret from'./fret';
-
-class FretColumn extends Component {
+class FreboardStringController extends Component {
   constructor(){
     super();
 
@@ -147,7 +146,7 @@ class FretColumn extends Component {
     return retVal;
   }
 
-  //- TODO: I've tried to optimize the render/recalculation workflow a bit, but it's really the parent's (fret container) job to 
+  //- TODO: I've tried to optimize the render/recalculation workflow a bit, but it's really the store's job to 
   //- tell this guy when to recalculate. It is, but it's all kinda janky and isn't easy to follow. needs a refactor.
   recalcFrets(){
     this.setState({'savedFrets':this.calcFretsInColumn(this.props.stringIdx, this.props.frets, this.props.fretBounds, this.props.scaleNotes, this.props.musicKey)});
@@ -163,25 +162,9 @@ class FretColumn extends Component {
     }
   }
 
-
-  renderFrets(frets){
-    const retVal = [];
-    frets.forEach((f, idx) => {
-      switch(f.type){
-        case 'fret': retVal.push(<Fret {...f}/>);
-          break;
-        default: retVal.push(<div {...f}/>);
-      }
-    });
-
-    return retVal;
-  }
-
   render() {
     return (
-      <div className="fret-column" >
-        {this.renderFrets(this.state.savedFrets)}
-      </div>
+      <FretboardString frets={this.state.savedFrets} />
     );
   }
 }
@@ -194,4 +177,4 @@ export default connect(state => ({
   scale: state.scale,
   octave: state.octave,
   musicKey: state.musicKey
-}))(FretColumn);
+}))(FreboardStringController);

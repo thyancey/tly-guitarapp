@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'src/store';
 
 import MusicMan from 'src/utils/musicman';
-import FretRow from './fret-row';
-import FretColumn from './fret-column';
+import FretboardRow from './fretboard-row';
+import FreboardStringController from './fretboard-string-controller';
 
 require('./style.less');
 
@@ -12,13 +12,13 @@ class Fretboard extends Component {
     super();
 
     this.state = {
-      fretColumns: [],
-      fretRows: [],
+      fretboardStrings: [],
+      fretboardRows: [],
       counter: 0
     }
   }
 
-  calcFretColumns(octaveNotes){
+  calcFretboardStrings(octaveNotes){
     var retVal = [];
 
     let simpleNotes = [];
@@ -34,7 +34,7 @@ class Fretboard extends Component {
 
     for(var sIdx = 0; sIdx < strings.length; sIdx++){
       retVal.push(
-        <FretColumn key={'fc-' + sIdx}
+        <FreboardStringController key={'fc-' + sIdx}
                     scaleNotes={octaveNotes}
                     chordFretIdx={chordFretIdxs[sIdx]}
                     notes={simpleNotes}
@@ -49,7 +49,7 @@ class Fretboard extends Component {
     return retVal;
   }
 
-  calcFretRows(octaveNotes){
+  calcFretboardRows(octaveNotes){
     let retVal = [];
     let numFrets = MusicMan.getNumFrets();
 
@@ -76,8 +76,8 @@ class Fretboard extends Component {
   recalcFrets(){
     const octaveNotes = MusicMan.getScale(this.props.musicKey, this.props.scale, this.props.octave);
     this.setState({
-      fretColumns: this.calcFretColumns(octaveNotes),
-      fretRows: this.calcFretRows(octaveNotes),
+      fretboardStrings: this.calcFretboardStrings(octaveNotes),
+      fretboardRows: this.calcFretboardRows(octaveNotes),
       counter: this.state.counter++
     });
   }
@@ -95,16 +95,16 @@ class Fretboard extends Component {
     return (
       <div className="fretboard">
         <div className="fret-rows-container" >
-          { this.state.fretRows.map(fr => (<FretRow {...fr}/>)) }
+          { this.state.fretboardRows.map(fr => (<FretboardRow {...fr}/>)) }
         </div>
-        <div className="fret-column-container" >
-          { this.state.fretColumns.map(fc => (fc)) }
+        <div className="fretboard-strings-container" >
+          { this.state.fretboardStrings.map(fc => (fc)) }
         </div>
-        <div className="string-container" >
+        <div className="fretboard-stringgraphic-container" >
           { 
             //- one string for each fret row.
-            this.state.fretColumns.map((fc,idx) => (
-              <div className="string" key={'s-' + idx} />
+            this.state.fretboardStrings.map((fc,idx) => (
+              <div className="stringgraphic" key={'s-' + idx} />
             ))
           }
         </div>

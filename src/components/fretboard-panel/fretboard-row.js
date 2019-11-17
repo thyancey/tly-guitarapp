@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class FretRow extends Component {
+export default class FretboardRow extends Component {
 
   getOtherFretStuff(f){
     let retVal = [];

@@ -6,6 +6,9 @@ import FretboardRow from './fretboard-row';
 import FreboardStringController from './fretboard-string-controller';
 
 require('./style.less');
+require('./alternate.less');
+
+const IS_ALTERNATE = true;
 
 class Fretboard extends Component {
   constructor(){
@@ -32,7 +35,7 @@ class Fretboard extends Component {
     var strings = instrumentResult.strings;
     var fretBounds = instrumentResult.fretBounds;
 
-    for(var sIdx = 0; sIdx < strings.length; sIdx++){
+    for(var sIdx =  strings.length - 1; sIdx >= 0; sIdx--){
       retVal.push(
         <FreboardStringController key={'fc-' + sIdx}
                     scaleNotes={octaveNotes}
@@ -40,6 +43,7 @@ class Fretboard extends Component {
                     notes={simpleNotes}
                     stringIdx={sIdx}
                     frets={strings[sIdx]}
+                    isAlternate={IS_ALTERNATE}
                     fretBounds={fretBounds[sIdx]}
                     fretChanges={this.props.fretChanges}
                     dispatchMusicEvent={this.props.actions.dispatchMusicEvent} />
@@ -92,24 +96,39 @@ class Fretboard extends Component {
   //- save pretty much everything you want to give to the components in state, then just pass it in on render.
   render() {
 
-    return (
-      <div className="fretboard">
-        <div className="fret-rows-container" >
-          { this.state.fretboardRows.map(fr => (<FretboardRow {...fr}/>)) }
+    if(IS_ALTERNATE){
+      return (
+        <div className="fretboard fretboard-alternate">
+          <div className="fret-rows-container" >
+            { this.state.fretboardRows.map(fr => (<FretboardRow isAlternate={true} {...fr}/>)) }
+          </div>
+          <div className="fretboard-strings-container" >
+            { this.state.fretboardStrings.map(fc => (fc)) }
+          </div>
         </div>
-        <div className="fretboard-strings-container" >
-          { this.state.fretboardStrings.map(fc => (fc)) }
+      );
+    }else{
+      return (
+        <div className="fretboard">
+          <div className="fret-rows-container" >
+            { this.state.fretboardRows.map(fr => (<FretboardRow {...fr}/>)) }
+          </div>
+          <div className="fretboard-strings-container" >
+            { this.state.fretboardStrings.map(fc => (fc)) }
+          </div>
+          <div className="fretboard-stringgraphic-container" >
+            { 
+              //- one string for each fret row.
+              this.state.fretboardStrings.map((fc,idx) => (
+                <div className="stringgraphic" key={'s-' + idx} />
+              ))
+            }
+          </div>
         </div>
-        <div className="fretboard-stringgraphic-container" >
-          { 
-            //- one string for each fret row.
-            this.state.fretboardStrings.map((fc,idx) => (
-              <div className="stringgraphic" key={'s-' + idx} />
-            ))
-          }
-        </div>
-      </div>
-    );
+      );
+    }
+
+
   }
 }
 

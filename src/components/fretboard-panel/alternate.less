@@ -1,0 +1,130 @@
+@import "~themes/variables.less";
+
+@jankywidth: @altfret-width * 30;
+.layout-horizontal{
+  .fretboard.fretboard-alternate{
+    position:relative;
+    transform:none;
+    top:auto;
+    left:auto;
+  }
+}
+
+
+.fretboard.fretboard-alternate{
+  text-align:left;
+  width:100%;
+  height:100%;
+
+  .fret-rows-container{
+    height:100%;
+    width: @jankywidth;
+    
+    .fret-row{
+      display:inline-block;
+      vertical-align:top;
+      height:100%;
+      width:@altfret-width;
+      text-align:center;
+      background-color:#000000;
+
+      &:nth-child(odd){
+        .fret-bg-alt{
+          // background-color:#333333;
+        }
+      }
+
+    }
+  }
+  .fret-bg-alt{
+    // height:~"calc(100% - @{altfret-height})";
+    height:100%;
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    opacity:.5;
+    // margin: 1rem 0rem;
+
+
+    &.one-dot{
+      background-color:#333333;
+    }
+    &.two-dot{
+      background-color:#666666;
+    }
+    &.nut{
+      background-color:#666666;
+    }
+  }
+  .fret-index-alt{
+    text-align:center;
+    color: @color-white;
+    height: @altfret-height;
+    position:absolute;
+    bottom:0;
+    width:100%;
+
+    >*{
+      height: 50%;
+    }
+  }
+
+  .fretboard-strings-container{
+    width:@jankywidth;
+    height:100%;
+
+    .fretboard-string{
+      display:block;
+      >div{
+        display:inline-block;
+        vertical-align:middle;
+      }
+
+      .altfret{
+        width: @altfret-width;
+        height: @altfret-height;
+        text-align:center;
+        color: @color-white;
+        padding:.5rem 1rem;
+
+        cursor:pointer;
+
+        .altfret-label{
+          border-radius: 1rem;
+          opacity: .3;
+          height:100%;
+          padding-top:.4rem;
+          border: .5rem solid #777777;
+        }
+        &.active-fret{
+          .altfret-label{
+            opacity: 1;
+            border: .5rem solid #ffffff;
+            box-shadow:0 0 .5rem @color-white;
+            color:white;
+            text-shadow:0 0 1rem @color-white;
+          }
+        }
+        &.root-fret{
+          .altfret-label{
+            opacity: 1;
+            border-color:@color-red;
+            box-shadow:0 0 2rem @color-red;
+            color:@color-white;
+            text-shadow:0 0 1rem @color-white;
+          }
+        }
+        &.found-fret{
+          .altfret-label{
+            opacity: 1;
+            border-color:@color-purple;
+            box-shadow:0 0 2rem @color-purple;
+            color:@color-white;
+            text-shadow:0 0 1rem @color-white;
+          }
+        }
+      }
+    }
+  }
+}

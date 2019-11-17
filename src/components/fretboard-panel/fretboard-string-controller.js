@@ -98,6 +98,7 @@ class FreboardStringController extends Component {
       fretIdx: fretIdx,
       scalePosition: scalePosition,
       noteIdx: noteIdx,
+      isAlternate: this.props.isAlternate,
       isChordFret: isChordFret,
       chord: this.props.chord,
       isFound: this.props.keyFinderNotes.indexOf(note) > -1,

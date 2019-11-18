@@ -33,29 +33,30 @@ class MusicMan{
     }
   }
 
-  static convertToStringsMatrix(strings, notes, fretBounds){
+  static convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes){
     const result = [];
     for(let i = 0; i < strings.length; i++){
       result.push({
         fretBounds: fretBounds[i],
-        frets: MusicMan.convertToNotesMatrix(strings[i], notes, fretBounds[i])
+        frets: MusicMan.convertToNotesMatrix(strings[i], notes, keyFinderNotes, fretBounds[i])
       });
     }
     return new List(result);
   }
 
-  static convertToNotesMatrix(string, notes, fretBounds){
+  static convertToNotesMatrix(string, notes, keyFinderNotes, fretBounds){
     const retNotes = [];
-
     for(let i = 0; i < string.length; i++){
       const octaveNote = string[i];
 
       const octaveNoteObj = MusicMan.splitOctaveNote(octaveNote);
       const noteIdx = notes.indexOf(octaveNoteObj.simpleNote);
+      const isFound = keyFinderNotes && keyFinderNotes.indexOf(octaveNoteObj.simpleNote) > -1 || false;
+
       retNotes.push({
         isInKey: noteIdx > -1,
         isInChord: false,
-        isInFound: false,
+        isInFound: isFound,
         fretIdx: i + fretBounds[0],
         noteIdx: noteIdx,
         octaveNote: octaveNote,
@@ -68,7 +69,10 @@ class MusicMan{
   }
 
   static filterFretMatrixForChords(fretMatrix, chordFretIdxs){
-    return fretMatrix.map((fms, stringIdx) => (fms.map((fret, fretIdx) => {
+    if(!chordFretIdxs || chordFretIdxs.size === 0){
+      return fretMatrix.fromJS().map(f => f);
+    }
+    return fretMatrix.fromJS().map((fms, stringIdx) => (fms.map((fret, fretIdx) => {
       if(fretIdx === chordFretIdxs[stringIdx]){
         return fret.set('isInChord', true);
       }else{
@@ -95,9 +99,8 @@ class MusicMan{
   }
 
   static getScaleSequence(scaleLabel){
-    console.log('getScaleSequence', scaleLabel)
+    // console.log('getScaleSequence', scaleLabel);
     try{
-      console.log('found ', DATA_MUSIC.scales[scaleLabel])
       return DATA_MUSIC.scales[scaleLabel].sequence;
     }catch(e){
       console.error(`could not find scale sequence for scale with label ${scaleLabel}`, e);
@@ -193,7 +196,7 @@ class MusicMan{
     //- C-2, D-2, E-2, F-2, G-2, A-3, B-3, C-3
   */
   static getScale(octaveNote, scaleLabel){
-    console.log('getScale', octaveNote, scaleLabel)
+    // console.log('getScale', octaveNote, scaleLabel);
     if(octaveNote.indexOf('-') === -1){
       octaveNote += '-';
     }
@@ -259,8 +262,6 @@ class MusicMan{
 
   static getInstrumentNotesFromLabel(instrumentLabel){
     const instrumentStrings = MusicMan.getInstrumentStrings(instrumentLabel);
-    // console.log('1');
-    // console.log(instrumentStrings);
     return {
       'strings': MusicMan.getInstrumentNotes(instrumentStrings),
       'fretBounds': MusicMan.getFretBoundsArray(instrumentStrings)

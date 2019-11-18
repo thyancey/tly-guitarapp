@@ -5,11 +5,19 @@ import Fret from'./fret';
 export default class FretboardString extends Component {
 
   render() {
-    console.log('render a string ', this.props.stringIdx)
     return (
       <div className="fretboard-string" style={{ height: this.props.stringHeight }}>
         { this.props.frets.map((f, idx) => (
-          <Fret key={idx} isAlternate={this.props.isAlternate} {...f} />
+          <Fret 
+            key={idx} 
+            simpleNote={f.simpleNote}
+            octave={f.octave}
+            octaveNote={f.octaveNote}
+            chord={f.chord}
+            isInChord={f.isInChord}
+            isInFound={f.isInFound}
+            noteIdx={f.noteIdx}
+            fretData={f} />
         )) }
       </div>
     );

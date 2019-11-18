@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'src/store';
 
-import MusicMan from 'src/utils/musicman';
 import FretboardRow from './fretboard-row';
 import FretboardString from './fretboard-string';
 
@@ -22,9 +21,6 @@ class Fretboard extends Component {
     
     return retVal;
   }
-
-  //- I don't usually like spreads, but it makes sense here. Only calculate fret stuff when you have to.
-  //- save pretty much everything you want to give to the components in state, then just pass it in on render.
 
   //- remember to reverse the order of the strings, cause im a dummy and defined them bottom to top
   render() {

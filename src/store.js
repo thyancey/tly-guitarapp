@@ -37,16 +37,9 @@ const getFretMatrix = (musicKey, scale, chord, instrumentLabel, keyFinderNotes) 
   const strings = instrumentObj.strings;
   const fretBounds = instrumentObj.fretBounds;
 
-  const stringsMatrix = MusicMan.convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes);
-  // console.log('fretMatrix is ', stringsMatrix.toJS());
-  if(chordFretIdxs.length > 0){
-    const finalStringsMatrix = MusicMan.filterFretMatrixForChords(stringsMatrix, chordFretIdxs)
-    // console.log('finalStringsMatrix is ', finalStringsMatrix.toJS());
-    return finalStringsMatrix;
-  }else{
-    // console.log('getFretMatrix returning:', stringsMatrix.toJS()[0].frets.toJS());
-    return stringsMatrix;
-  }
+  const stringsMatrix = MusicMan.convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes, chordFretIdxs);
+
+  return stringsMatrix;
 }
 
 
@@ -104,71 +97,60 @@ const getCachedData = (key, fallback) => {
 //- and didnt have time to figure out how to chain actions with this
 //- more or less are helping to change multiple things in the store at once
 //- used later on by merging multiple results of these calls together
-const prepareForNewMusicKey = (newMusicKey, fretMatrix, fretChanges) => {
+const prepareForNewMusicKey = (newMusicKey) => {
   return { 
     musicKey: newMusicKey, 
     chord: null,
-    fretMatrix: fretMatrix,
-    fretChanges: fretChanges+1 
+    keyFinderNotes: []
   };
 }
 
-const prepareForSetOctave = (newOctave, fretChanges) => {
+const prepareForSetOctave = (newOctave) => {
   return { 
-    octave: newOctave, 
-    fretChanges: fretChanges+1 
+    octave: newOctave
   }
 }
 
-const prepareForSetFoundNote = (note, keyFinderNotes, fretChanges) => {
+const prepareForSetFoundNote = (note, keyFinderNotes) => {
   const foundIdx = keyFinderNotes.indexOf(note);
   if(foundIdx > -1){
     return {
-      keyFinderNotes: keyFinderNotes.filter(n => n !== note),
-      fretChanges: fretChanges+1 
+      keyFinderNotes: keyFinderNotes.filter(n => n !== note)
     }
   }else{
+    keyFinderNotes.push(note);
     return {
-      keyFinderNotes: keyFinderNotes.push(note),
-      fretChanges: fretChanges+1 
+      keyFinderNotes: keyFinderNotes
     }
   }
 }
 
-const prepareForSetScale = (scale, fretMatrix, fretChanges) => {
+const prepareForSetScale = (scale) => {
   return { 
     chord: null, 
-    scale: scale, 
-    fretMatrix: fretMatrix,
-    fretChanges: fretChanges+1 
+    scale: scale
   };
 }
 
-const prepareForSetChord = (newChord, fretMatrix, fretChanges) => {
+const prepareForSetChord = (newChord) => {
   return { 
-    chord: newChord, 
-    fretMatrix: fretMatrix,
-    fretChanges: fretChanges+1 
+    chord: newChord
   }
 }
 
-const prepareForSetInstrument = (newInstrument, newMidiInstrument, fretMatrix, fretChanges) => {
+const prepareForSetInstrument = (newInstrument, newMidiInstrument) => {
   return { 
     instrument: newInstrument,
     midiInstrument: newMidiInstrument,
-    fretMatrix: fretMatrix,
     chord: null,
-    maxFrets: MusicMan.getInstrumentNumFrets(newInstrument),
-    fretChanges: fretChanges+1
+    maxFrets: MusicMan.getInstrumentNumFrets(newInstrument)
   }
 }
 
-const prepareForFlipWesternScale = (newKey, newScale, fretMatrix, fretChanges) => {
+const prepareForFlipWesternScale = (newKey, newScale) => {
   return {
     musicKey: newKey,
-    scale: newScale,
-    fretMatrix: fretMatrix,
-    fretChanges: fretChanges+1
+    scale: newScale
   }
 }
 
@@ -221,7 +203,7 @@ const store = {
     fretChanges: 0,
     playMode: 'note',
     keyFinderMode: 'off',
-    keyFinderNotes: new List(),
+    keyFinderNotes: [],
     currentLayout: getCachedData('currentLayout', DEFAULT_SETTINGS.currentLayout),
     layoutGroups: getCachedData('panelPositions', DEFAULT_SETTINGS.layoutGroups),
     isDragging: false,
@@ -238,40 +220,62 @@ const store = {
         fretMatrix: getFretMatrix(musicKey, scale, chord, instrument, keyFinderNotes)
       };
     },
-    setMusicKey: ({ fretChanges, scale, chord, instrument, keyFinderNotes }, newMusicKey) => {
-      console.log('-> setMusicKey', newMusicKey);
-      const fretMatrix = getFretMatrix(newMusicKey, scale, chord, instrument, keyFinderNotes);
-      return prepareForNewMusicKey(newMusicKey, fretMatrix, fretChanges);
+    setMusicKey: ({ fretChanges, scale, chord, instrument }, newMusicKey) => {
+      const fretMatrix = getFretMatrix(newMusicKey, scale, chord, instrument, []);
+
+      return Object.assign({ 
+        fretMatrix: fretMatrix, 
+        fretChanges: fretChanges+1
+      }, prepareForNewMusicKey(newMusicKey));
     },
     setScale: ({ musicKey, fretChanges, instrument, keyFinderNotes }, newScale) => {
       // console.log('-> setScale', newScale);
       const fretMatrix = getFretMatrix(musicKey, newScale, null, instrument, keyFinderNotes);
-      return prepareForSetScale(newScale, fretMatrix, fretChanges)
+
+      return Object.assign({ 
+        fretMatrix: fretMatrix, 
+        fretChanges: fretChanges+1
+      }, prepareForSetScale(newScale));
     },
     setChord: ({ fretChanges, musicKey, scale, instrument, keyFinderNotes }, newChord) => {
       // console.log('-> setChord', newChord);
       const fretMatrix = getFretMatrix(musicKey, scale, newChord, instrument, keyFinderNotes);
-      return prepareForSetChord(newChord, fretMatrix, fretChanges)
+      
+      return Object.assign({ 
+        fretMatrix: fretMatrix, 
+        fretChanges: fretChanges+1
+      }, prepareForSetChord(newChord));
     },
     setInstrument: ({ fretChanges, musicKey, scale, chord , keyFinderNotes}, newInstrument) => {
       const fretMatrix = getFretMatrix(musicKey, scale, chord, newInstrument, keyFinderNotes);
       const midiInstrument = MusicMan.getInstrumentMidiId(newInstrument);
-      // console.log('-> setInstrument', newInstrument);
-      return prepareForSetInstrument(newInstrument, midiInstrument, fretMatrix, fretChanges);
+
+      return Object.assign({ 
+        fretMatrix: fretMatrix, 
+        fretChanges: fretChanges+1
+      }, prepareForSetInstrument(newInstrument, midiInstrument));
     },
     setOctave: ({ fretChanges }, newOctave) => {
-      // console.log('-> setOctave', newOctave);
-      return prepareForSetOctave(newOctave, fretChanges);
+
+      return Object.assign({ 
+        fretChanges: fretChanges+1
+      }, prepareForSetOctave(newOctave));
     },
     setFoundNote: ({ keyFinderNotes, fretChanges }, note) => {
-      return prepareForSetFoundNote(note, keyFinderNotes, fretChanges);
+      console.log('-> setFoundNote')
+      return Object.assign({ 
+        fretChanges: fretChanges+1
+      }, prepareForSetFoundNote(note, keyFinderNotes));
     },
     flipWesternScale: ({ musicKey, scale, chord, instrument, fretChanges, keyFinderNotes }) => {
       // console.log('-> flipWesternScale', flipped.scale);
       const flipped = MusicMan.getMajorMinorFlip(musicKey, scale);
       const fretMatrix = getFretMatrix(flipped.key, flipped.scale, chord, instrument, keyFinderNotes);
 
-      return prepareForFlipWesternScale(flipped.key, flipped.scale, fretMatrix, fretChanges);
+      return Object.assign({ 
+        fretMatrix: fretMatrix, 
+        fretChanges: fretChanges+1
+      }, prepareForFlipWesternScale(flipped.key, flipped.scale));
     },
     setPlayMode: ({}, newPlayMode) => { 
       console.log('----> set play mode', newPlayMode)
@@ -292,7 +296,7 @@ const store = {
       }
     },
     setVolume: ({ volume }, newVolume) => ({ volume: newVolume }),
-    setMidiInstrument: ({ fretChanges }, newInstrument) => {
+    setMidiInstrument: ({ }, newInstrument) => {
       return { 
         midiInstrument: newInstrument
       }
@@ -379,23 +383,28 @@ const store = {
     onFretSelected: ({ keyFinderMode, musicKey, fretChanges, playMode, scale, keyFinderNotes, instrument, chord }, noteObj) => {
       let results = {};
       let fretMatrix;
+      let wasModified = false;
 
       if(noteObj.isFindModifierPressed || keyFinderMode === 'find'){
-        results = Object.assign({}, results, prepareForSetFoundNote(noteObj.simpleNote, keyFinderNotes, fretChanges));
+        wasModified = true;
+        results = Object.assign({}, results, prepareForSetFoundNote(noteObj.simpleNote, keyFinderNotes));
 
         //- since results changed, recalc and save fretMatrix
-        fretMatrix = getFretMatrix(noteObj.simpleNote, scale, chord, instrument, results.keyFinderNotes);
+        fretMatrix = getFretMatrix(musicKey, scale, chord, instrument, results.keyFinderNotes);
         results = Object.assign({}, results, { fretMatrix: fretMatrix });
       }
 
       if(noteObj.isSetModifierPressed || keyFinderMode === 'set'){
+        wasModified = true;
         //- perferably use altered fretmatrix
-        fretMatrix = results.fretMatrix || getFretMatrix(musicKey, scale, chord, instrument, keyFinderNotes);
+        fretMatrix = results.fretMatrix || getFretMatrix(musicKey, scale, chord, instrument, []);
 
-        results = Object.assign({}, results, prepareForNewMusicKey(noteObj.simpleNote, fretMatrix, results.fretChanges));
-        results = Object.assign({}, results, prepareForSetOctave(noteObj.octave, results.fretChanges));
+        results = Object.assign({}, results, prepareForNewMusicKey(noteObj.simpleNote));
+
+        results = Object.assign({}, results, prepareForSetOctave(noteObj.octave));
         
         results.fretMatrix = getFretMatrix(results.musicKey, scale, chord, instrument, results.keyFinderNotes);
+        // results.keyFinderNotes = [];
       }
   
       if(playMode === 'scale'){
@@ -404,6 +413,9 @@ const store = {
         triggerSound('NOTE', noteObj.octaveNote, scale);
       }
 
+      if(wasModified){
+        results.fretChanges = fretChanges+1;
+      }
       return results;
     }
   }

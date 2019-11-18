@@ -14,28 +14,26 @@ class Fret extends Component {
   }
 
   render() {
-    let className = '';
-    if(this.props.chord){
-      if(this.props.isInChord){
-        className += ' active-fret';
+    let classNames = [ 'altfret' ];
 
-        if(this.props.noteIdx === 0){
-          className += ' root-fret';
-        }
-      }
-    }else if(this.props.noteIdx > -1){
-      className += ' active-fret';
-      if(this.props.noteIdx === 0){
-        className += ' root-fret';
-      }
+    if(this.props.isInChord){
+      classNames.push('chord-fret');
     }
+
+    if(this.props.noteIdx === 0){
+      classNames.push('root-fret');
+    }
+    
+    if(this.props.noteIdx > -1){
+      classNames.push('active-fret');
+    }
+
     if(this.props.isInFound){
-      className += ' found-fret';
+      classNames.push('found-fret');
     }
 
-    className = 'altfret ' + className;
     return (
-      <div className={className} onClick={(e) => this.selectNote(e)}>
+      <div className={classNames.join(' ')} onClick={(e) => this.selectNote(e)}>
         <div className="altfret-label">
           <span>{this.props.simpleNote}</span>
         </div>

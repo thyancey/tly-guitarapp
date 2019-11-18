@@ -78,6 +78,7 @@ export default connect(state => ({
   playMode: state.playMode,
   keyFinderMode: state.keyFinderMode,
   keyFinderNotes: state.keyFinderNotes,
+  fretChanges: state.fretChanges,
   musicKey: state.musicKey,
   scale: state.scale
 }))(ToolsPanel);

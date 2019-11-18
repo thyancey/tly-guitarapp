@@ -33,31 +33,32 @@ class MusicMan{
     }
   }
 
-  static convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes){
+  static convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes, chordFretIdxs){
     const result = [];
     for(let i = 0; i < strings.length; i++){
       result.push({
         fretBounds: fretBounds[i],
-        frets: MusicMan.convertToNotesMatrix(strings[i], notes, keyFinderNotes, fretBounds[i])
+        frets: MusicMan.convertToNotesMatrix(strings[i], notes, keyFinderNotes, chordFretIdxs[i], fretBounds[i])
       });
     }
     return new List(result);
   }
 
-  static convertToNotesMatrix(string, notes, keyFinderNotes, fretBounds){
+  static convertToNotesMatrix(string, notes, keyFinderNotes, chordFret, fretBounds){
+    // console.log('keyfinder notes: ', keyFinderNotes);
     const retNotes = [];
     for(let i = 0; i < string.length; i++){
       const octaveNote = string[i];
-
+      const fretIdx = i + fretBounds[0];
       const octaveNoteObj = MusicMan.splitOctaveNote(octaveNote);
       const noteIdx = notes.indexOf(octaveNoteObj.simpleNote);
       const isFound = keyFinderNotes && keyFinderNotes.indexOf(octaveNoteObj.simpleNote) > -1 || false;
 
       retNotes.push({
         isInKey: noteIdx > -1,
-        isInChord: false,
+        isInChord: chordFret === fretIdx,
         isInFound: isFound,
-        fretIdx: i + fretBounds[0],
+        fretIdx: fretIdx,
         noteIdx: noteIdx,
         octaveNote: octaveNote,
         octave: octaveNoteObj.octave,
@@ -69,16 +70,38 @@ class MusicMan{
   }
 
   static filterFretMatrixForChords(fretMatrix, chordFretIdxs){
-    if(!chordFretIdxs || chordFretIdxs.size === 0){
-      return fretMatrix.fromJS().map(f => f);
+    if(!chordFretIdxs || chordFretIdxs.length === 0){
+      return fretMatrix.map(f => f);
     }
-    return fretMatrix.fromJS().map((fms, stringIdx) => (fms.map((fret, fretIdx) => {
+
+    let retVal = [];
+    for(let i = 0; i < fretMatrix.size; i++){
+      const chordFretIdx = chordFretIdxs[i];
+      global.fm = fretMatrix;
+      console.log('ok ', fretMatrix.get(i))
+      const fretList = fretMatrix.get(i).frets.map((fret, idx) => {
+        if(idx === chordFretIdx){
+          return Object.assign({}, fret, { isInChord: true });
+        }else{
+          return Object.assign({}, fret, { isInChord: false });
+        }
+      });
+
+      retVal.push({
+        fretBounds: fretMatrix.get(i).fretBounds,
+        frets: fretList
+      });
+    }
+
+    return new List(retVal);
+    /*
+    return fretMatrix.map((fms, stringIdx) => (fms.frets.map((fret, fretIdx) => {
       if(fretIdx === chordFretIdxs[stringIdx]){
-        return fret.set('isInChord', true);
+        return Object.assign({}, fret, { isInChord: true });
       }else{
-        return fret.set('isInChord', false);
+        return Object.assign({}, fret, { isInChord: false });
       }
-    })));
+    })));*/
   }
 
   static getScaleTitle(scaleLabel){
@@ -147,7 +170,7 @@ class MusicMan{
   //- from a list of notes, and a scale, find any matching keys
   static matchKeysFromNotes(notesToMatch, scaleLabel){
     let foundKeys = [];
-    if(notesToMatch.size === 0){
+    if(notesToMatch.length === 0){
       return foundKeys;
     }
 
@@ -156,7 +179,7 @@ class MusicMan{
       let scale = this.getScale(DATA_MUSIC.notes[n], scaleLabel);
 
       let foundNotes = notesToMatch.filter(note => scale.indexOf(note) > -1);
-      if(foundNotes.size === notesToMatch.size){
+      if(foundNotes.length === notesToMatch.length){
         foundKeys.push(DATA_MUSIC.notes[n]);
       }
     }

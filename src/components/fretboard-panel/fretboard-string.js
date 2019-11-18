@@ -13,7 +13,6 @@ export default class FretboardString extends Component {
             simpleNote={f.simpleNote}
             octave={f.octave}
             octaveNote={f.octaveNote}
-            chord={f.chord}
             isInChord={f.isInChord}
             isInFound={f.isInFound}
             noteIdx={f.noteIdx}

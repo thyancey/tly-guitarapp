@@ -184,7 +184,7 @@ const DEFAULT_SETTINGS = {
     },
     horizontal:{
       top: ['fret'],
-      bottom: ['tools','settings','musicKey', 'scale', 'instrument', 'notedisplay', 'chorddisplay', 'chord']
+      bottom: ['instrument', 'scale', 'musicKey', 'notedisplay', 'chorddisplay', 'chord', 'tools', 'settings',]
     },
   }
 }

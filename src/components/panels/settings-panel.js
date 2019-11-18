@@ -15,7 +15,7 @@ class SettingsPanel extends Component {
     return(
       <div>
         <div className="selection-buttons">
-
+        {/*
           <ComboButton  onClickMethod={(e) => this.onToggleScaleMode(e)}
                         onClickParam={this.props.playMode}
                         isActive={this.props.playMode}
@@ -26,6 +26,7 @@ class SettingsPanel extends Component {
                         isActive={false}
                         icon="icon-reset" 
                         title="Reset Layout" />
+        */}
         </div>
         <div className="volume-container">
           <p>{'volume'}</p>

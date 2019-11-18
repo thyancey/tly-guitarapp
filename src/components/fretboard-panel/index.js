@@ -9,7 +9,9 @@ require('./style.less');
 
 class Fretboard extends Component {
   componentDidMount(){
-    this.props.actions.refreshFretMatrix();
+    global.setTimeout(() => {
+      this.props.actions.seemsLikeThisIsUnecessaryButWhateverJustStartTheStoreCorrectly();
+    }, 0);
   }
 
   renderFretRows(numFrets){
@@ -33,6 +35,8 @@ class Fretboard extends Component {
             <FretboardString 
               key={i} 
               frets={stringObj.frets}
+              fretBounds={stringObj.fretBounds}
+              maxFrets={this.props.maxFrets}
               stringHeight={(100 / this.props.fretMatrix.size) - 1 + '%'} />
           )) }
         </div>

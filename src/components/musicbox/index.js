@@ -20,7 +20,7 @@ export const PLAY_TYPES = [ 'NOTE', 'SCALE', 'SCALE_FULL', 'CHORD', 'STRUM_UP', 
 export default class MusicBox extends Component {
   constructor(){
     super();
-
+    this.mounted = false;
     this.state = {
       curInstrument: this.findInstrument()
     };
@@ -82,10 +82,13 @@ export default class MusicBox extends Component {
   }
 
   componentDidMount() {
-    //- TODO, documentation said to do this to init it or something?
-    this.midiSounds.cacheInstrument(this.state.curInstrument.midiId);
-    this.setState({curInstrument: this.state.curInstrument})
-    this.setVolume(this.props.volume);
+    if(!this.mounted){
+      this.mounted = true;
+      //- TODO, documentation said to do this to init it or something?
+      this.midiSounds.cacheInstrument(this.state.curInstrument.midiId);
+      this.setState({curInstrument: this.state.curInstrument})
+      this.setVolume(this.props.volume);
+    }
   }
 
   componentDidUpdate(prevProps){

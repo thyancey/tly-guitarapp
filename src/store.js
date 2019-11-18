@@ -215,10 +215,12 @@ const store = {
     fretMatrix: new List([])
   },
   actions: {
-    refreshFretMatrix: ({ musicKey, scale, chord, instrument, keyFinderNotes }) => {
+    seemsLikeThisIsUnecessaryButWhateverJustStartTheStoreCorrectly: ({ musicKey, scale, chord, instrument, midiInstrument, keyFinderNotes }) => {
       return {
         maxFrets: MusicMan.getInstrumentNumFrets(instrument),
-        fretMatrix: getFretMatrix(musicKey, scale, chord, instrument, keyFinderNotes)
+        fretMatrix: getFretMatrix(musicKey, scale, chord, instrument, keyFinderNotes),
+        instrument: instrument,
+        midiInstrument: midiInstrument,
       };
     },
     setMusicKey: ({ fretChanges, scale, chord, instrument }, newMusicKey) => {
@@ -297,10 +299,11 @@ const store = {
       }
     },
     setVolume: ({ volume }, newVolume) => ({ volume: newVolume }),
-    setMidiInstrument: ({ }, newInstrument) => {
-      return { 
-        midiInstrument: newInstrument
-      }
+    setMidiInstrument: ({ fretChanges, instrument }, newMidiInstrument) => {
+
+      return Object.assign({ 
+        fretChanges: fretChanges+1
+      }, prepareForSetInstrument(instrument, newMidiInstrument));
     },
 
     /* layout customization stuff */

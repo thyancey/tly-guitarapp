@@ -12,6 +12,7 @@ require('./style.less');
 
 class Main extends Component {
   constructor(){
+    console.log('constructed')
     super();
     global.MusicMan = MusicMan;
     global.dispatchMusicEvent = (musicEvent) => {

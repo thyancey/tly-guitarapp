@@ -4,7 +4,7 @@ import FretboardIndex from './fretboard-index';
 export default class FretboardRow extends Component {
   getOtherFretStuff(f){
     let retVal = [];
-    let bgClassname = 'fret-bg-alt';
+    let bgClassname = 'fret-bg';
     let dotLabel = '0';
 
     if(f === 0){

@@ -5,7 +5,7 @@ export default class FretboardIndex extends Component {
   render() {
     if(this.props.isTop){
       return (
-        <div className="fret-index-alt" >
+        <div className="fret-index" >
           <p className={ 'fret-dotlabel-text'}>{this.props.label}</p>
           <div className={ `fret-dotlabel-graphic` }>
             <div className={ `dotlabel-${this.props.dotLabel}` } />
@@ -14,7 +14,7 @@ export default class FretboardIndex extends Component {
       );
     }else{
       return (
-        <div className="fret-index-alt" >
+        <div className="fret-index" >
           <div className={ `fret-dotlabel-graphic` }>
             <div className={ `dotlabel-${this.props.dotLabel}` } />
           </div>

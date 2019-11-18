@@ -5,7 +5,6 @@ import FretboardRow from './fretboard-row';
 import FretboardString from './fretboard-string';
 
 require('./style.less');
-require('./alternate.less');
 
 
 class Fretboard extends Component {
@@ -25,7 +24,7 @@ class Fretboard extends Component {
   //- remember to reverse the order of the strings, cause im a dummy and defined them bottom to top
   render() {
     return (
-      <div className="fretboard fretboard-alternate">
+      <div className="fretboard">
         <div className="fret-rows-container" >
           { this.renderFretRows( this.props.maxFrets) }
         </div>

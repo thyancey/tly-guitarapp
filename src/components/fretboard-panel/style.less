@@ -1,277 +1,160 @@
 @import "~themes/variables.less";
 
-.fretboard{
-  display:inline-block;
-  width:@fretboard-width;
-  position:relative;
-  z-index:1;
+.mod-top{
+  .panel-body{
+    overflow-y:hidden;
+  }
 }
 
-.fretboard-stringgraphic-container{
-  position:absolute;
-  top:0px;
-  left:@string-shift;
+.fretboard{
+  text-align:left;
   width:100%;
   height:100%;
-  z-index:-1;
-  text-align:left;
 
-  .stringgraphic{
-    opacity:.5;
-    display:inline-block;
-    width:@string-width;
+  .fret-rows-container{
     height:100%;
-    margin-left:@string-separation;
-    background-color:@color-string;
-  }
-}
-
-
-.layout-horizontal{
-  .fretboard{
     position:absolute;
-    transform: rotate(-90deg);
-    transform-origin: top center;
-    top:50%;
-    left:0 - (@fretboard-width / 2);
-  }
-}
-
-.fretboard-strings-container{
-  position:absolute;
-  top:0px;
-  left:0px;
-
-
-  .fretboard-string{
-    display:inline-block;
-    vertical-align:top;
-  }
-
-  .fret-spacer{
-    display:block;
-
-    &.fret-spacer-nut{
-      height:8px;
-    }
-    &.fret-spacer-fret{
-      height:3px;
-    }
-  }
-
-  .fret{
-    color:#4a361b;
-    display:block;
-
-    &.active-fret{
-      color:#d0ab7b;
-
-      &.root-fret{
-        color:@color-white;
-      }
-    }
-
-    &.found-fret{
-      .round-fret-circle {
-        opacity:1;
-        box-shadow: 0px 0px 5px 10px @color-purple-dark;
-      }
-
-      &.root-fret{
-        .round-fret-circle{
-          box-shadow: 0px 0px 5px 10px @color-purple-dark;
-        }
-      }
-    }
-
-    line-height:@fret-height;
-    height:@fret-height;
-    width:@fret-width;
-    /*border:1px solid white;*/
-    cursor:pointer;
-    .fret-note{
+    white-space:nowrap;
+    
+    .fret-row{
       display:inline-block;
-    }
-    .fret-idx{
-      display:none;
-    }
-    .fret-octave{
-      display:none;
-    }
-
-    &:hover{
-      // background-color:red;
-
-      .fret-note{
-        // display:none;
-      }
-      .fret-idx{
-        display:none;
-      }
-      // .fret-octave{
-      //   display:inline-block;
-      // }
+      vertical-align:top;
+      height:100%;
+      width:@fret-width;
+      text-align:center;
+      background-color:#000000;
     }
   }
-}
-
-
-
-.fret-rows-container{
-  .fret-index{
-    position:absolute;
-    top:0px;
-    width:30px;
-    left:-35px;
-    color:@color-blue-light;
-    height:@fret-height;
-    line-height:@fret-height;
-    text-align:right;
-  }
-}
-
-.fret-row{
-  position:relative;
-
-  .fret-row-bg{
-    position:absolute;
-    top:0px;
-    height:@fret-height;
-    background-image:url("~images/fret-row-blank.png");
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
+  .fret-bg{
+    height:80%;
+    left:0;
+    top:0;
     width:100%;
-    opacity:.2;
-    z-index:-1;
+    opacity:.5;
 
     &.one-dot{
-      background-image:url("~images/fret-row-single.png");
+      background-color:#333333;
     }
-
     &.two-dot{
-      background-image:url("~images/fret-row-double.png");
+      background-color:#666666;
     }
-
     &.nut{
-      background-image:url("~images/nut.png");
+      background-color:#666666;
+    }
+  }
+  .fret-index{
+    text-align:center;
+    color: @color-white;
+    height: @fret-height;
+    // position:absolute;
+    bottom:0;
+    width:100%;
+    height:10%;
+
+    >*{
+      height: 50%;
     }
 
-  }
+    .fret-dotlabel-graphic{
+      width:100%;
+      padding:2.5% 0;
 
-  .fret-bar-nut{
-    background-color:silver;
-    height:8px;
-  }
-
-  .fret-bar{
-    opacity:.5;
-    background-image:url("~images/fret.png");
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    height:3px;
-  }
-
-  .fret-area{
-    display:block;
-    height:@fret-height;
-    width:@fret-width;
-  }
-}
-
-
-
-@fret-circle-radius: (.7 * @fret-width);
-
-.active-fret{
-
-  &.root-fret{
-    .round-fret{
-      .round-fret-circle {
-        background-color: @color-red;
-        span{
-          // color:white;
+      >div{
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width:100%;
+        height:100%;
+  
+        &.dotlabel--1{
+          background-image:url("~images/fretlabel-nut.png");
+  
+        }
+        &.dotlabel-0{
+  
+        }
+        &.dotlabel-1{
+          background-image:url("~images/fretlabel-one.png");
+        }
+        &.dotlabel-2{
+          background-image:url("~images/fretlabel-two.png");
         }
       }
     }
   }
 
-  .round-fret{
-    .round-fret-circle {
-      opacity:1;
-      box-shadow: 0px 0px 10px @color-red;
-      span{
-        font-weight:600;
+  .fretboard-strings-container{
+    position:absolute;
+    white-space:nowrap;
+
+    top:10%;
+    height:80%;
+
+    .fretboard-string{
+      display:block;
+      >div{
+        display:inline-block;
+        vertical-align:middle;
       }
-    }
-  }
 
-  &:hover{
-    .round-fret{
-      .round-fret-circle {
-        background-color:@color-purple-dark;
-        transition: all .2s;
-      }
-    }
-  }
-}
+      .fret{
+        width: @fret-width;
+        height:100%;
+        text-align:center;
+        color: @color-white;
+        padding:.5rem 1rem;
 
-.round-fret {
-  color:#4a361b;
-  display:inline-block;
-  cursor:pointer;
+        cursor:pointer;
 
-  vertical-align:middle;
-  line-height:@fret-circle-radius;
-  height:@fret-circle-radius;
-  width:@fret-circle-radius;
-
-  &:hover{
-  }
-
-
-  span {
-    color:black;
-
-    display:block;
-    float:left;
-    width:100%;
-    padding-top:50%;
-    padding-bottom:50%;
-    line-height:1rem;
-    margin-top:-0.4rem;
-
-    text-align:center;
-    font-size:1.5rem;
-    text-decoration:none;
-
-    font-family:arial;
-  }
-
-  .round-fret-circle {
-    opacity:.2;
-    background-color: @color-blue-light; 
-    transition: background-color .5s;
-
-    width: 100%;
-    height:0;
-    padding-bottom: 100%;
-    border-radius: 50%;
-    cursor:pointer;
-    overflow:hidden;
-    font-weight:600;
-  }
-}
-
-.fret{
-  &:hover {
-    .round-fret-circle {
-      opacity:1;
-      background-color:@color-black;
-      box-shadow: 0px 0px 25px @color-white;
-      transition: all .2s;
-      span{
-        color:@color-white;
-        transition: color .2s;
+        .fret-label{
+          position:relative;
+          border-radius: 1rem;
+          opacity: .3;
+          height:100%;
+          padding-top:.4rem;
+          border: .5rem solid #777777;
+          >span{
+            position:absolute;
+            top:50%;
+            transform:translateY(-50%);
+            width:100%;
+            left:0;
+          }
+        }
+        &.active-fret{
+          .fret-label{
+            opacity: 1;
+            border: .5rem solid #ffffff;
+            box-shadow:0 0 .5rem @color-white;
+            color:white;
+            text-shadow:0 0 1rem @color-white;
+          }
+        }
+        &.root-fret{
+          .fret-label{
+            opacity: 1;
+            border-color:@color-red;
+            box-shadow:0 0 2rem @color-red;
+            color:@color-white;
+            text-shadow:0 0 1rem @color-white;
+          }
+        }
+        &.found-fret{
+          .fret-label{
+            opacity: 1;
+            // border-color:@color-purple;
+            box-shadow:0 0 2rem @color-purple;
+            background-color: @color-purple;
+            color:@color-white;
+            text-shadow:0 0 1rem @color-white;
+          }
+        }
+        &.chord-fret{
+          .fret-label{
+            border-color:@color-blue;
+            box-shadow:0 0 2rem @color-blue;
+          }
+        }
       }
     }
   }

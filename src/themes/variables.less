@@ -1,19 +1,7 @@
 @header-height:2rem;
 
-@fret-height: 6rem;
-@fret-width: 4rem;
-@fretboard-width: (6 * @fret-width);
-
-@string-width:.2rem;
-@string-separation: (@fret-width - @string-width);
-@string-shift: (-.5 * @string-separation);
-
-@altfret-height: 5rem;
-@altfret-width: 8rem;
-
-// @panelgroup-left-width:30rem;
-// @panelgroup-center-width:30rem;
-// @panelgroup-right-width:30rem;
+@fret-height: 5rem;
+@fret-width: 8rem;
 
 @color-purple:#a246bd;
 @color-purple-dark:#6e308e;
@@ -34,15 +22,7 @@
 @border-thickness: .2rem;
 @border-color:@color-blue-dark;
 
-
-@panelgroup-left-width:30%;
-@panelgroup-center-width:40%;
-@panelgroup-right-width:30%;
-
-
-// @panelgroup-top-height:40%;
-// @panelgroup-bottom-height:60%;
 @panelgroup-top-height:60%;
-@panelgroup-bottom-height:~"calc(100% - @{panelgroup-top-height})";
+@panelgroup-bottom-height:100% - @panelgroup-top-height;
 
 

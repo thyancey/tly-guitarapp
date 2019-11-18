@@ -217,6 +217,7 @@ const store = {
   actions: {
     refreshFretMatrix: ({ musicKey, scale, chord, instrument, keyFinderNotes }) => {
       return {
+        maxFrets: MusicMan.getInstrumentNumFrets(instrument),
         fretMatrix: getFretMatrix(musicKey, scale, chord, instrument, keyFinderNotes)
       };
     },

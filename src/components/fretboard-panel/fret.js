@@ -14,7 +14,7 @@ class Fret extends Component {
   }
 
   render() {
-    let classNames = [ 'altfret' ];
+    let classNames = [ 'fret' ];
 
     if(this.props.isInChord){
       classNames.push('chord-fret');
@@ -34,7 +34,7 @@ class Fret extends Component {
 
     return (
       <div className={classNames.join(' ')} onClick={(e) => this.selectNote(e)}>
-        <div className="altfret-label">
+        <div className="fret-label">
           <span>{this.props.simpleNote}</span>
         </div>
       </div>

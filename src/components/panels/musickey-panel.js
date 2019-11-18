@@ -41,5 +41,5 @@ class MusicKeyPanel extends Component {
 
 export default connect(state => ({ 
   musicKey: state.musicKey,
-  playScales: state.selectionMode.scaleMode
+  playScales: state.playMode === 'scale'
 }))(MusicKeyPanel);

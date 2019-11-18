@@ -27,7 +27,7 @@ class ToolsPanel extends Component {
   }
 
   flipScale(){
-    this.props.actions.flipMajMinScale();
+    this.props.actions.flipWesternScale();
   }
 
   render() {
@@ -40,7 +40,7 @@ class ToolsPanel extends Component {
           <ComboButton  
             onClickMethod={() => this.onToggleKeyMode('off')}
             isActive={this.props.keyFinderMode === 'off'}
-            icon="icon-scalemode" 
+            icon="icon-tools-playnote" 
             title="Play Note" />
           <ComboButton  
             onClickMethod={() => this.onToggleKeyMode('set')}
@@ -75,7 +75,7 @@ class ToolsPanel extends Component {
 }
 
 export default connect(state => ({ 
-  selectionMode: state.selectionMode,
+  playMode: state.playMode,
   keyFinderMode: state.keyFinderMode,
   keyFinderNotes: state.keyFinderNotes,
   musicKey: state.musicKey,

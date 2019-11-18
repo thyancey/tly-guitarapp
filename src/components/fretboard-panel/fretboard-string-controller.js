@@ -25,10 +25,10 @@ class FreboardStringController extends Component {
     }
 
     if(e.ctrlKey || this.props.keyFinderMode === 'find'){
-      this.props.actions.toggleKeyFinderNote(note);
+      this.props.actions.setKeyFinderNote(note);
     }
 
-    if(this.props.selectionMode.scaleMode){
+    if(this.props.playMode === 'scale'){
       this.triggerSound('SCALE_FULL', octaveNote);
     }else{
       this.triggerSound('NOTE', octaveNote);
@@ -172,7 +172,7 @@ class FreboardStringController extends Component {
 
 export default connect(state => ({ 
   chord: state.chord,
-  selectionMode: state.selectionMode,
+  playMode: state.playMode,
   keyFinderMode: state.keyFinderMode,
   keyFinderNotes: state.keyFinderNotes,
   scale: state.scale,

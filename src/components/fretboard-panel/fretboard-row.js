@@ -56,7 +56,6 @@ export default class FretboardRow extends Component {
 
   render() {
     const f = this.props.fretIdx;
-
     return (
       <div className="fret-row" >
         {this.getOtherFretStuff(f, this.props.isAlternate)}

@@ -25,17 +25,21 @@ class MusicMan{
   static getMidiInstruments(){
     return DATA_MIDI.instruments;
   }
-  static convertToSimpleNote(octaveNote){
-    return octaveNote.split('-')[0];
+  static splitOctaveNote(octaveNote){
+    const split = octaveNote.split('-');
+    return {
+      simpleNote: split[0],
+      octave: split[1]
+    }
   }
 
   static convertToStringsMatrix(strings, notes, fretBounds){
     const result = [];
     for(let i = 0; i < strings.length; i++){
-      result.push(new Map({
+      result.push({
         fretBounds: fretBounds[i],
         frets: MusicMan.convertToNotesMatrix(strings[i], notes, fretBounds[i])
-      }));
+      });
     }
     return new List(result);
   }
@@ -46,17 +50,18 @@ class MusicMan{
     for(let i = 0; i < string.length; i++){
       const octaveNote = string[i];
 
-      const simpleNote = MusicMan.convertToSimpleNote(octaveNote);
-      const noteIdx = notes.indexOf(simpleNote);
-      retNotes.push(new Map({
+      const octaveNoteObj = MusicMan.splitOctaveNote(octaveNote);
+      const noteIdx = notes.indexOf(octaveNoteObj.simpleNote);
+      retNotes.push({
         isInKey: noteIdx > -1,
         isInChord: false,
-        isFound: false,
+        isInFound: false,
         fretIdx: i + fretBounds[0],
         noteIdx: noteIdx,
         octaveNote: octaveNote,
-        simpleNote: simpleNote,
-      }));
+        octave: octaveNoteObj.octave,
+        simpleNote: octaveNoteObj.simpleNote,
+      });
     }
 
     return new List(retNotes);
@@ -90,7 +95,9 @@ class MusicMan{
   }
 
   static getScaleSequence(scaleLabel){
+    console.log('getScaleSequence', scaleLabel)
     try{
+      console.log('found ', DATA_MUSIC.scales[scaleLabel])
       return DATA_MUSIC.scales[scaleLabel].sequence;
     }catch(e){
       console.error(`could not find scale sequence for scale with label ${scaleLabel}`, e);
@@ -186,13 +193,14 @@ class MusicMan{
     //- C-2, D-2, E-2, F-2, G-2, A-3, B-3, C-3
   */
   static getScale(octaveNote, scaleLabel){
+    console.log('getScale', octaveNote, scaleLabel)
     if(octaveNote.indexOf('-') === -1){
       octaveNote += '-';
     }
     const note = octaveNote.split('-')[0];
     const octave = octaveNote.split('-')[1] || null;
 
-    const sequence = this.getScaleSequence(scaleLabel);
+    const sequence = MusicMan.getScaleSequence(scaleLabel);
     let scale = [];
 
     let curIdx = MusicMan.getNoteIndex(note);

@@ -46,5 +46,5 @@ class ScalePanel extends Component {
 
 export default connect(state => ({ 
   scale: state.scale,
-  playScales: state.selectionMode.scaleMode
+  playScales: state.playMode === 'scale'
 }))(ScalePanel);

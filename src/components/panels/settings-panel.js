@@ -5,10 +5,10 @@ require('./style.less');
 import ComboButton from 'src/components/shared/combo-button';
 
 class SettingsPanel extends Component {
-  onToggleScaleMode(scaleMode){
-    let newSelectionMode = Object.assign({}, this.props.selectionMode);
-    newSelectionMode.scaleMode = !scaleMode;
-    this.props.actions.setSelectionMode(newSelectionMode);
+  onToggleScaleMode(){
+    const newPlayMode = this.props.playMode === 'note' ? 'scale' : 'note';
+    console.log('new mode:', newPlayMode)
+    this.props.actions.setPlayMode(newPlayMode);
   }
 
   render() {
@@ -16,21 +16,16 @@ class SettingsPanel extends Component {
       <div>
         <div className="selection-buttons">
 
-          <ComboButton  onClickMethod={(scaleMode) => this.onToggleScaleMode(scaleMode)}
-                        onClickParam={this.props.selectionMode.scaleMode}
-                        isActive={this.props.selectionMode.scaleMode}
+          <ComboButton  onClickMethod={(e) => this.onToggleScaleMode(e)}
+                        onClickParam={this.props.playMode}
+                        isActive={this.props.playMode}
                         icon="icon-scalemode" 
-                        title="Play scales" />
+                        title={`Playback: ${this.props.playMode}`} />
 
           <ComboButton  onClickMethod={this.props.actions.setDefaultSettings}
                         isActive={false}
                         icon="icon-reset" 
                         title="Reset Layout" />
-
-          <ComboButton  onClickMethod={this.props.actions.swapLayout}
-                        isActive={false}
-                        icon="icon-reset" 
-                        title="Swap Layout" />
         </div>
         <div className="volume-container">
           <p>{'volume'}</p>
@@ -43,6 +38,6 @@ class SettingsPanel extends Component {
 }
 
 export default connect(state => ({ 
-  selectionMode: state.selectionMode,
+  playMode: state.playMode,
   volume: state.volume,
 }))(SettingsPanel);

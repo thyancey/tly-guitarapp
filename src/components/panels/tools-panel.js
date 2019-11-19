@@ -21,9 +21,14 @@ class ToolsPanel extends Component {
     this.props.actions.setKeyFinderMode(keyFinderMode);
   }
 
-  onSetKey(note){
+  onSetScaleKey(musicKey, scaleLabel){
     this.props.actions.setKeyFinderMode('off');
-    this.props.actions.setMusicKey(note);
+    this.props.actions.setKeyAndScale(musicKey, scaleLabel);
+  }
+
+  onSetKey(musicKey){
+    this.props.actions.setKeyFinderMode('off');
+    this.props.actions.setMusicKey(musicKey);
   }
 
   flipScale(){
@@ -32,7 +37,8 @@ class ToolsPanel extends Component {
 
   render() {
     const foundKeys = MusicMan.matchKeysFromNotes(this.props.keyFinderNotes, this.props.scale);
-    const flipEnabled = this.props.scale.indexOf('major') > -1 || this.props.scale.indexOf('minor') > -1;
+    const foundObjs = MusicMan.matchObjsFromNotes(this.props.keyFinderNotes, this.props.scale);
+    const flipEnabled = this.props.scaleRegion === 'western';
     
     return (
       <div>
@@ -58,13 +64,35 @@ class ToolsPanel extends Component {
             isActive={false}
             icon="icon-reset" 
             title="Flip Triad" />
+          <ComboButton  onClickMethod={this.props.actions.setDefaultSettings}
+                      isActive={false}
+                      icon="icon-reset" 
+                      title="Reset" />
         </div>
         <div className="found-keys">
-          <h2>{`Matching keys`}</h2>
+          <h2>{`Matching Keys`}</h2>
           <span className="found-keys-scalelabel">{`${MusicMan.getScaleTitle(this.props.scale)}`}</span><span>{'scales only'}</span>
           <div className="key-list">
+              <span/>
             {foundKeys.map((note, index) => (
-              <span key={'note-' + index} className={ note === this.props.musicKey ? 'active' : null } onClick={() => this.onSetKey(note)}>{note}</span>
+              <span 
+                key={'note-' + index} 
+                className={ note === this.props.musicKey ? 'active' : null } 
+                onClick={() => this.onSetKey(note)}>
+                {note}
+              </span>
+            ))}
+          </div>
+          <hr/>
+          <h2>{`Matching Scales & Keys`}</h2>
+          <div className="scale-list">
+            {foundObjs.map((foundObj, index) => (
+              <p 
+                key={'note-' + index} 
+                className={ (foundObj.key === this.props.musicKey && foundObj.scale === this.props.scale) ? 'active' : null } 
+                onClick={() => this.onSetScaleKey(foundObj.key, foundObj.scale)}>
+                {foundObj.scale + ': ' + foundObj.key}
+              </p>
             ))}
           </div>
         </div>
@@ -80,5 +108,6 @@ export default connect(state => ({
   keyFinderNotes: state.keyFinderNotes,
   fretChanges: state.fretChanges,
   musicKey: state.musicKey,
-  scale: state.scale
+  scale: state.scale,
+  scaleRegion: state.scaleRegion
 }))(ToolsPanel);

@@ -163,6 +163,10 @@
     color:@color-blue;
     text-shadow:0 0 1rem @color-blue;
 
+    hr{
+      border-color:@color-blue;
+    }
+
     .selection-buttons{
       >*{
         display:inline-block;
@@ -189,6 +193,13 @@
         transition: color .5s;
       }
       .key-list span{
+        &:hover{
+          color: @color-white;
+          text-shadow:0 0 1rem @color-white;
+          transition: color .5s;
+        }
+      }
+      .scale-list p{
         &:hover{
           color: @color-white;
           text-shadow:0 0 1rem @color-white;

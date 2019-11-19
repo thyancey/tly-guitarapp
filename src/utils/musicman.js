@@ -130,6 +130,16 @@ class MusicMan{
       return null;
     }
   }
+  
+  static getScaleRegion(scaleLabel){
+    // console.log('getScaleSequence', scaleLabel);
+    try{
+      return DATA_MUSIC.scales[scaleLabel].region;
+    }catch(e){
+      console.error(`could not find scale region for scale with label ${scaleLabel}`, e);
+      return null;
+    }
+  }
 
   //- ex, convert 'g' to 2. -1 if none found
   static getNoteIndex(noteName){
@@ -170,6 +180,7 @@ class MusicMan{
   }
 
   //- from a list of notes, and a scale, find any matching keys
+  //- discard any scales that dont contain a note in your set
   static matchKeysFromNotes(notesToMatch, scaleLabel){
     let foundKeys = [];
     if(notesToMatch.length === 0){
@@ -187,6 +198,33 @@ class MusicMan{
     }
 
     return foundKeys;
+  }
+
+  static matchObjsFromNotes(notesToMatch, scaleLabel){
+    let foundObjs = [];
+    if(notesToMatch.length === 0){
+      return foundObjs;
+    }
+
+    for(let newScaleLabel in DATA_MUSIC.scales){
+      //- for each scale, check each note
+      for(let n = 0; n < DATA_MUSIC.notes.length; n++){
+        //- one note at a time
+        let scaleNotes = this.getScale(DATA_MUSIC.notes[n], newScaleLabel);
+        //- now that you have notes in the scale, make sure notesToMatch doesnt have any weirdos
+        let foundNotes = notesToMatch.filter(note => scaleNotes.indexOf(note) > -1);
+
+        if(foundNotes.length === notesToMatch.length){
+          foundObjs.push({
+            key: DATA_MUSIC.notes[n],
+            scale: newScaleLabel,
+            isCurrent: newScaleLabel === scaleLabel
+          });
+        }
+      }
+    }
+
+    return foundObjs;
   }
 
   //- octave is optional

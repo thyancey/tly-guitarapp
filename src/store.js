@@ -271,14 +271,18 @@ const store = {
       }, prepareForSetFoundNote(note, keyFinderNotes));
     },
     flipWesternScale: ({ musicKey, scale, chord, instrument, fretChanges, keyFinderNotes }) => {
-      // console.log('-> flipWesternScale', flipped.scale);
-      const flipped = MusicMan.getMajorMinorFlip(musicKey, scale);
-      const fretMatrix = getFretMatrix(flipped.key, flipped.scale, chord, instrument, keyFinderNotes);
+      const flipped = MusicMan.getWesternFlip(musicKey, scale);
 
-      return Object.assign({ 
-        fretMatrix: fretMatrix, 
-        fretChanges: fretChanges+1
-      }, prepareForFlipWesternScale(flipped.key, flipped.scale));
+      if(!flipped){
+        return {};
+      }else{
+        const fretMatrix = getFretMatrix(flipped.key, flipped.scale, chord, instrument, keyFinderNotes);
+
+        return Object.assign({ 
+          fretMatrix: fretMatrix, 
+          fretChanges: fretChanges+1
+        }, prepareForFlipWesternScale(flipped.key, flipped.scale));
+      }
     },
     setPlayMode: ({}, newPlayMode) => { 
       console.log('----> set play mode', newPlayMode)

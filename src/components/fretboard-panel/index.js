@@ -37,7 +37,7 @@ class Fretboard extends Component {
               frets={stringObj.frets}
               fretBounds={stringObj.fretBounds}
               maxFrets={this.props.maxFrets}
-              stringHeight={(100 / this.props.fretMatrix.size) - 1 + '%'} />
+              stringHeight={(100 / this.props.fretMatrix.size) + '%'} />
           )) }
         </div>
       </div>

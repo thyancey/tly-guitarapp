@@ -14,12 +14,23 @@ export default {
     "G",
     "G#"
   ],
-  "majorMinorFlips":{
-    "major":"natural-minor",
-    "pentatonic-major":"pentatonic-minor",
-    "natural-minor":"major",
-    "harmonic-minor":"major",
-    "pentatonic-minor":"pentatonic-major"
+  "westernScaleFlips":{
+    "major":{
+      scale: "natural-minor",
+      diff: -2
+    },
+    "pentatonic-major":{
+      scale: "pentatonic-minor",
+      diff: -1
+    },
+    "natural-minor":{
+      scale: "major",
+      diff: 2
+    },
+    "pentatonic-minor":{
+      scale: "pentatonic-major",
+      diff: 1
+    }
   },
   "scales":{
     "major": {

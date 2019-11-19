@@ -200,26 +200,69 @@ class MusicMan{
     return foundKeys;
   }
 
-  static matchObjsFromNotes(notesToMatch, scaleLabel){
+  /* based on an array of notes, find any scales and keys that contain those values */
+  static predictScalesFromNotes(notesToMatch, scaleLabel){
     let foundObjs = [];
     if(notesToMatch.length === 0){
-      return foundObjs;
+      return [];
     }
 
-    for(let newScaleLabel in DATA_MUSIC.scales){
+    for(let referenceScale in DATA_MUSIC.scales){
       //- for each scale, check each note
+      if(DATA_MUSIC.scales[referenceScale].type !== 'scale'){
+        continue;
+      }
+      
       for(let n = 0; n < DATA_MUSIC.notes.length; n++){
         //- one note at a time
-        let scaleNotes = this.getScale(DATA_MUSIC.notes[n], newScaleLabel);
+        let scaleNotes = this.getScale(DATA_MUSIC.notes[n], referenceScale);
         //- now that you have notes in the scale, make sure notesToMatch doesnt have any weirdos
         let foundNotes = notesToMatch.filter(note => scaleNotes.indexOf(note) > -1);
 
         if(foundNotes.length === notesToMatch.length){
           foundObjs.push({
             key: DATA_MUSIC.notes[n],
-            scale: newScaleLabel,
-            isCurrent: newScaleLabel === scaleLabel
+            scale: referenceScale,
+            isCurrent: referenceScale === scaleLabel
           });
+        }
+      }
+    }
+
+    return foundObjs;
+  }
+
+  /* based on an array of notes, find any scales and keys that contain a full set of those values */
+  static filterScalesFromNotes(notesToMatch, scaleLabel){
+    let foundObjs = [];
+    if(notesToMatch.length === 0){
+      return [];
+    }
+
+    for(let referenceScale in DATA_MUSIC.scales){
+      //- for each scale, check in each key for notes that were given
+      //- if a scale contains ALL notes in notesToMatch, return it
+      if(DATA_MUSIC.scales[referenceScale].type !== 'scale'){
+        continue;
+      }
+      for(let n = 0; n < DATA_MUSIC.notes.length; n++){
+        //- one note at a time
+        const referenceKey = DATA_MUSIC.notes[n];
+        let foundNotes = this.getScale(referenceKey, referenceScale);
+
+        if(foundNotes.length - 1 > notesToMatch.length){
+          //- if more notes than given, the referenceScale is not contained within, quit
+          //- -1 is because foundNodes repeat both start and end note (ex, A, B, C, D, A )
+        }else{
+          const filtered = foundNotes.filter((k,i) => notesToMatch.indexOf(k) === -1);
+          if(filtered.length === 0){
+            //- referenceScale is contained in notesToMatch, so its a match!
+            foundObjs.push({
+              key: referenceKey,
+              scale: referenceScale,
+              isCurrent: referenceScale === scaleLabel
+            });
+          }
         }
       }
     }

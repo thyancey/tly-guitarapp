@@ -37,7 +37,8 @@ class ToolsPanel extends Component {
 
   render() {
     const foundKeys = MusicMan.matchKeysFromNotes(this.props.keyFinderNotes, this.props.scale);
-    const foundObjs = MusicMan.matchObjsFromNotes(this.props.keyFinderNotes, this.props.scale);
+    const predictedObjs = MusicMan.predictScalesFromNotes(this.props.keyFinderNotes, this.props.scale);
+    const filteredObjs = MusicMan.filterScalesFromNotes(this.props.keyFinderNotes, this.props.scale);
     const flipEnabled = this.props.scaleRegion === 'western';
     
     return (
@@ -84,11 +85,23 @@ class ToolsPanel extends Component {
             ))}
           </div>
           <hr/>
-          <h2>{`Matching Scales & Keys`}</h2>
+          <h2>{`Predicted Scales & Keys`}</h2>
           <div className="scale-list">
-            {foundObjs.map((foundObj, index) => (
+            {predictedObjs.map((foundObj, index) => (
               <p 
-                key={'note-' + index} 
+                key={'notep-' + index} 
+                className={ (foundObj.key === this.props.musicKey && foundObj.scale === this.props.scale) ? 'active' : null } 
+                onClick={() => this.onSetScaleKey(foundObj.key, foundObj.scale)}>
+                {foundObj.scale + ': ' + foundObj.key}
+              </p>
+            ))}
+          </div>
+          <hr/>
+          <h2>{`Filtered Scales & Keys`}</h2>
+          <div className="scale-list">
+            {filteredObjs.map((foundObj, index) => (
+              <p 
+                key={'notef-' + index} 
                 className={ (foundObj.key === this.props.musicKey && foundObj.scale === this.props.scale) ? 'active' : null } 
                 onClick={() => this.onSetScaleKey(foundObj.key, foundObj.scale)}>
                 {foundObj.scale + ': ' + foundObj.key}

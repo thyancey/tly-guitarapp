@@ -33,18 +33,79 @@ class MusicMan{
     }
   }
 
-  static convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes, chordFretIdxs){
-    const result = [];
-    for(let i = 0; i < strings.length; i++){
-      result.push({
-        fretBounds: fretBounds[i],
-        frets: MusicMan.convertToNotesMatrix(strings[i], notes, keyFinderNotes, chordFretIdxs[i], fretBounds[i])
-      });
+  static findPatternRanges(patternObj, strings, notes, fretBounds){
+    const ranges = [];
+    const foundString = strings[patternObj.refString];
+    const stringFretBounds = fretBounds[patternObj.refString];
+
+    let foundFretIndexes = [];
+
+    for(var n = 0; n < foundString.length; n++){
+      const pattern = patternObj.offsets[patternObj.refString];
+      const octaveNote = foundString[n];
+      const fretIdx = n + stringFretBounds[0];
+      const octaveNoteObj = MusicMan.splitOctaveNote(octaveNote);
+
+      if(octaveNoteObj.simpleNote === notes[0]){
+        let minFret = fretIdx + pattern[0];
+        let maxFret = fretIdx + pattern[1];
+
+        if(minFret >= stringFretBounds[0] && maxFret <= stringFretBounds[1]){
+          foundFretIndexes.push(fretIdx);
+        }
+      }
     }
-    return new List(result);
+
+    strings.forEach((string, stringIdx) => {
+      const stringRangeArray = [];
+      foundFretIndexes.forEach((fretIdx) => {
+        stringRangeArray.push([
+          fretIdx + patternObj.offsets[stringIdx][0],
+          fretIdx + patternObj.offsets[stringIdx][1]
+        ])
+      })
+
+      ranges.push(stringRangeArray);
+    });
+
+    return ranges;
   }
 
-  static convertToNotesMatrix(string, notes, keyFinderNotes, chordFret, fretBounds){
+  static isFretIndexInPatternRanges(index, patternRanges){
+    if(!patternRanges){
+      return false;
+    }
+
+    let found = false;
+    patternRanges.forEach(pr => {
+      if(index >= pr[0] && index <= pr[1]){
+        found = true;
+      }
+    });
+
+    return found;
+  }
+
+  static convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes, chordFretIdxs){
+    const stringResults = [];
+
+    // const pattern = DATA_MUSIC.scalePatterns[0].patterns[4];
+    const pattern = null;
+    const patternRanges = pattern ? MusicMan.findPatternRanges(pattern, strings, notes, fretBounds) : [];
+
+    for(let i = 0; i < strings.length; i++){
+      const stringPatternRanges = patternRanges[i];
+
+      const resultObj = {
+        fretBounds: fretBounds[i],
+        frets: MusicMan.convertToNotesMatrix(strings[i], notes, keyFinderNotes, chordFretIdxs[i], fretBounds[i], stringPatternRanges)
+      };
+      stringResults.push(resultObj);
+    }
+    return new List(stringResults);
+  }
+
+  static convertToNotesMatrix(string, notes, keyFinderNotes, chordFret, fretBounds, patternRanges){
     // console.log('keyfinder notes: ', keyFinderNotes);
     const retNotes = [];
     for(let i = 0; i < string.length; i++){
@@ -58,6 +119,7 @@ class MusicMan{
         isInKey: noteIdx > -1,
         isInChord: chordFret === fretIdx,
         isInFound: isFound,
+        isInPattern: MusicMan.isFretIndexInPatternRanges(fretIdx, patternRanges),
         fretIdx: fretIdx,
         noteIdx: noteIdx,
         octaveNote: octaveNote,
@@ -603,6 +665,7 @@ class MusicMan{
 
     return midiNotes;
   }
+  
 }
 
 export default MusicMan;

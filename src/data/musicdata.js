@@ -161,11 +161,84 @@ export default {
   "scaleTriads":{
     "major":["major","minor","minor","major","major","minor","diminished", "major"],
     "minor":["minor","diminished","major","minor","minor","major","major", "minor"]
-  }
+  },
   // "barreChords":{
   //   "e":{
   //     "title": "Major (6th String)",
   //     "fingering": [0,2,2,1,0,0]
   //   },
   // }
+  "scalePatterns":[
+    {
+      "title": "Guitar patterns",
+      "instruments": [ "guitar-standard" ],
+      "patterns":[
+        {
+          "title": "Major Scale Pattern 1",
+          "scales": [ 'major' ],
+          "refString": 0,
+          "offsets": [
+            [ -1, 2 ],
+            [ -1, 2 ],
+            [ -1, 2 ],
+            [ -1, 2 ],
+            [ 0, 2 ],
+            [ -1, 2 ]
+          ]
+        },
+        {
+          "title": "Major Scale Pattern 2",
+          "scales": [ 'major' ],
+          "refString": 2,
+          "offsets": [
+            [ 0, 3 ],
+            [ 0, 2 ],
+            [ -1, 2 ],
+            [ -1, 2 ],
+            [ 0, 3 ],
+            [ 0, 3 ]
+          ]
+        },
+        {
+          "title": "Major Scale Pattern 3",
+          "scales": [ 'major' ],
+          "refString": 1,
+          "offsets": [
+            [ -3, 0 ],
+            [ -3, 0 ],
+            [ -3, 0 ],
+            [ -3, -1 ],
+            [ -3, 0 ],
+            [ -3, 0 ]
+          ]
+        },
+        {
+          "title": "Major Scale Pattern 4",
+          "scales": [ 'major' ],
+          "refString": 1,
+          "offsets": [
+            [ -2, 2 ],
+            [ -1, 2 ],
+            [ -1, 2 ],
+            [ -1, 2 ],
+            [ 0, 3 ],
+            [ 0, 2 ]
+          ]
+        },
+        {
+          "title": "Major Scale Pattern 5",
+          "scales": [ 'major' ],
+          "refString": 0,
+          "offsets": [
+            [ -3, 0 ],
+            [ -3, 0 ],
+            [ -3, -1 ],
+            [ -4, -1 ],
+            [ -3, 0 ],
+            [ -3, 0 ]
+          ]
+        }
+      ]
+    }
+  ]
 };

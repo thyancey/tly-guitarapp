@@ -31,6 +31,10 @@ class Fret extends Component {
     if(this.props.isInFound){
       classNames.push('found-fret');
     }
+    
+    if(this.props.isInPattern){
+      classNames.push('pattern-fret');
+    }
 
     return (
       <div className={classNames.join(' ')} onClick={(e) => this.selectNote(e)}>

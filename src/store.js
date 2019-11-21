@@ -186,11 +186,11 @@ const DEFAULT_SETTINGS = {
     vertical:{
       left: ['musicKey', 'scale', 'instrument'],
       center: ['fret','chorddisplay'],
-      right: ['tools', 'notedisplay', 'chord', , 'settings']
+      right: ['tools', 'notedisplay', 'chord', 'settings']
     },
     horizontal:{
       top: ['fret'],
-      bottom: ['instrument', 'scale', 'musicKey', 'notedisplay', 'chorddisplay', 'chord', 'tools', 'settings',]
+      bottom: ['instrument', 'scale', 'musicKey', 'tools']
     },
   }
 }
@@ -257,7 +257,7 @@ const store = {
       }, prepareForNewMusicKey(newMusicKey), prepareForSetScale(newScale));
     },
     setChord: ({ fretChanges, musicKey, scale, instrument, keyFinderNotes }, newChord) => {
-      // console.log('-> setChord', newChord);
+      console.log('-> setChord', newChord);
       const fretMatrix = getFretMatrix(musicKey, scale, newChord, instrument, keyFinderNotes);
       
       return Object.assign({ 

@@ -19,6 +19,21 @@ class MusicKeyPanel extends Component {
     }
   }
 
+  onChordClick(chordLabel){
+    if(this.props.chord === chordLabel){
+      chordLabel = null;
+    }
+    this.props.actions.setChord(chordLabel);
+
+    const chordNotes = MusicMan.getChordNotes(chordLabel, this.props.instrument);
+    const midiNotes = MusicMan.getMidiScale(chordNotes);
+    
+    this.props.actions.dispatchMusicEvent({
+      type: 'STRUM_DOWN',
+      notes: midiNotes
+    });
+  }
+
   createNoteButtons(){
     return MusicMan.getNotes().map((note, index) => (
             <StoreButton  actionMethod={(param) => this.onMusicKeyClick(param)} 
@@ -29,10 +44,46 @@ class MusicKeyPanel extends Component {
     ));
   }
 
+  createChordButtons(instrument, musicKey, scale){
+    const chordsArray = MusicMan.getChordDefinitions(instrument, musicKey, scale)
+    let retArray = []
+
+    retArray = chordsArray.map((chord, index) => (
+      <StoreButton  actionMethod={(chord) => this.onChordClick(chord)}
+                    actionParam={chord.id}
+                    isActive={(chord.id === this.props.chord) && !chord.disabled} 
+                    isDisabled={chord.disabled} 
+                    title={chord.title}
+                    key={'chord-' + index}/>
+    ));
+
+    return retArray;
+  }
+
   render() {
+    const simpleNotes = MusicMan.getScale(this.props.musicKey, this.props.scale);
+
     return (
       <div>
-        {this.createNoteButtons()}
+        <div className="subpanel">
+          {this.createNoteButtons()}
+        </div>
+        <hr/>
+        <div className="subpanel">
+          <h2>{'Notes in Key'}</h2>
+          <div className="active-notes">
+            {simpleNotes.map((note, index) => (
+              <span key={'note-' + index}>{note}</span>
+            ))}
+          </div>
+        </div>
+        <hr/>
+        <div className="subpanel">
+          <h2>{'Chords in Key'}</h2>
+          <div className="chord-buttons">
+            {this.createChordButtons(this.props.instrument, this.props.musicKey, this.props.scale)}
+          </div>
+        </div>
       </div>
     );
   }
@@ -41,5 +92,8 @@ class MusicKeyPanel extends Component {
 
 export default connect(state => ({ 
   musicKey: state.musicKey,
-  playScales: state.playMode === 'scale'
+  scale: state.scale,
+  playScales: state.playMode === 'scale',
+  instrument: state.instrument,
+  chord: state.chord
 }))(MusicKeyPanel);

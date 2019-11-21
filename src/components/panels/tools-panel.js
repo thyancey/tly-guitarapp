@@ -65,10 +65,6 @@ class ToolsPanel extends Component {
             isActive={false}
             icon="icon-reset" 
             title="Flip Triad" />
-          <ComboButton  onClickMethod={this.props.actions.setDefaultSettings}
-                      isActive={false}
-                      icon="icon-reset" 
-                      title="Reset" />
         </div>
         <div className="found-keys">
           <h2>{`Matching Keys`}</h2>

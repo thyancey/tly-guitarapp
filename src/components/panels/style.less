@@ -10,6 +10,19 @@
   margin:1rem;
 
   box-shadow:0 0 2rem @color-blue;
+
+  h2{
+    color:@color-white;
+    text-shadow:0 0 2rem @color-purple;
+  }
+
+  .panel-body{
+    hr{
+      margin-bottom:.25rem;
+      border-color: @color-blue;
+      border-width: 1px;
+    }
+  }
 }
 
 
@@ -70,11 +83,6 @@
     box-shadow:0 0 2rem @color-purple;
     transition: all .2s;
   }
-
-  h2{
-    color:@color-white;
-    text-shadow:0 0 2rem @color-purple;
-  }
 }
 
 
@@ -97,15 +105,54 @@
   }
 }
 
+/* TODO, remove this need for specificity */
+#workspace .panelgroup.mod-bottom .panel-container.panel-musickey{
+  flex-basis: 18rem;
+}
+
 .panel-container{
 
   &.panel-musickey{
+    .subpanel{
+      padding: .25rem;
+    }
+
     .store-button{
       padding:.25rem;
       display:inline-block;
       margin:(@button-margins / 2);
       width:~"calc(25% - .5rem)";
-      // margin-bottom:@button-margins;
+    }
+
+    .chord-buttons{
+      display: flex;
+      flex-direction: row;
+      .store-button{
+        flex: 1;
+        height: 8rem;
+        position: relative;
+
+        span{
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform-origin: left center;
+          transform: rotate(90deg);
+        }
+      }
+    }
+    
+    h2{
+      color: @color-white;
+      text-shadow:0 0 2rem @color-purple;
+    }
+
+    .active-notes{
+      span{
+        display:inline-block;
+        padding:.25rem .75rem;
+        color: @color-purple;
+      }
     }
   }
 
@@ -137,21 +184,40 @@
     }
   }
 
-  &.panel-notedisplay,
-  &.panel-chorddisplay{
-    min-height:8rem;
+  &.panel-keydetails{
+    min-height:16rem;
     .store-button{
       margin:0.5rem;
     }
 
-    span{
-      display:inline-block;
-      padding:.5rem;
+    hr{
+      border-color: @color-blue;
+      border-width: 1px;
     }
 
-    .panel-body{
-      overflow-y: hidden;
+    h2{
+      color: @color-blue;
+      text-shadow:0 0 1rem @color-blue;
     }
+
+    span{
+      display:inline-block;
+      padding:.25rem;
+      color: @color-purple;
+
+      cursor: pointer;
+
+      &:hover{
+        color: @color-blue;
+        text-shadow:0 0 1rem @color-blue;
+      }
+
+      &.active{
+        color: @color-white;
+        text-shadow:0 0 1rem @color-white;
+      }
+    }
+
   }
 
   &.panel-settings{

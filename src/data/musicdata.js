@@ -170,12 +170,12 @@ export default {
   // }
   "scalePatterns":[
     {
-      "title": "Guitar patterns",
-      "instruments": [ "guitar-standard" ],
+      "description": "guitar and bass major scales",
+      "instruments": [ "guitar-standard", "bass-standard" ],
+      "scales": [ "major", "pentatonic-major" ],
       "patterns":[
         {
-          "title": "Major Scale Pattern 1",
-          "scales": [ 'major' ],
+          "title": "",
           "refString": 0,
           "offsets": [
             [ -1, 2 ],
@@ -187,8 +187,7 @@ export default {
           ]
         },
         {
-          "title": "Major Scale Pattern 2",
-          "scales": [ 'major' ],
+          "title": "",
           "refString": 2,
           "offsets": [
             [ 0, 3 ],
@@ -200,7 +199,7 @@ export default {
           ]
         },
         {
-          "title": "Major Scale Pattern 3",
+          "title": "",
           "scales": [ 'major' ],
           "refString": 1,
           "offsets": [
@@ -213,7 +212,7 @@ export default {
           ]
         },
         {
-          "title": "Major Scale Pattern 4",
+          "title": "",
           "scales": [ 'major' ],
           "refString": 1,
           "offsets": [
@@ -226,7 +225,7 @@ export default {
           ]
         },
         {
-          "title": "Major Scale Pattern 5",
+          "title": "",
           "scales": [ 'major' ],
           "refString": 0,
           "offsets": [
@@ -237,7 +236,74 @@ export default {
             [ -3, 0 ],
             [ -3, 0 ]
           ]
-        }
+        },
+      ]
+    },
+    {
+      "description": "guitar and bass minor scales",
+      "instruments": [ "guitar-standard", "bass-standard" ],
+      "scales": [ "natural-minor", "pentatonic-minor" ],
+      "patterns":[
+        {
+          "title": "",
+          "refString": 0,
+          "offsets": [
+            [ 0, 3 ],
+            [ 0, 3 ],
+            [ 0, 2 ],
+            [ -1, 2 ],
+            [ 0, 3 ],
+            [ 0, 3 ]
+          ]
+        },
+        {
+          "title": "",
+          "refString": 2,
+          "offsets": [
+            [ 0, 3 ],
+            [ 0, 3 ],
+            [ 0, 3 ],
+            [ 0, 3 ],
+            [ 1, 3 ],
+            [ 0, 3 ]
+          ]
+        },
+        {
+          "title": "",
+          "refString": 1,
+          "offsets": [
+            [ -2, 1 ],
+            [ -2, 0 ],
+            [ -3, 0 ],
+            [ -3, 0 ],
+            [ -2, 1 ],
+            [ -2, 1 ]
+          ]
+        },
+        {
+          "title": "",
+          "refString": 1,
+          "offsets": [
+            [ 0, 3 ],
+            [ 0, 3 ],
+            [ 0, 3 ],
+            [ 0, 2 ],
+            [ 0, 3 ],
+            [ 0, 3 ]
+          ]
+        },
+        {
+          "title": "",
+          "refString": 0,
+          "offsets": [
+            [ -2, 0 ],
+            [ -3, 0 ],
+            [ -3, 0 ],
+            [ -3, 0 ],
+            [ -2, 1 ],
+            [ -2, 0 ]
+          ]
+        },
       ]
     }
   ]

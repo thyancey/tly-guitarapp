@@ -22,6 +22,28 @@
       border-color: @color-blue;
       border-width: 1px;
     }
+
+    .sidebuttons{
+      display: flex;
+      flex-direction: row;
+      .store-button{
+        flex: 1;
+        min-height: 8rem;
+        position: relative;
+        
+        padding:.25rem;
+        display:inline-block;
+        margin:(@button-margins / 2);
+
+        span{
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform-origin: left center;
+          transform: rotate(90deg);
+        }
+      }
+    }
   }
 }
 
@@ -123,24 +145,6 @@
       margin:(@button-margins / 2);
       width:~"calc(25% - .5rem)";
     }
-
-    .chord-buttons{
-      display: flex;
-      flex-direction: row;
-      .store-button{
-        flex: 1;
-        height: 8rem;
-        position: relative;
-
-        span{
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform-origin: left center;
-          transform: rotate(90deg);
-        }
-      }
-    }
     
     h2{
       color: @color-white;
@@ -218,6 +222,26 @@
       }
     }
 
+    .sidebuttons{
+      .store-button{
+        min-height: 8rem;
+      }
+    }
+  }
+
+  &.panel-pattern{
+    .sidebuttons{
+      .store-button{
+        white-space:nowrap;
+        min-height: 8rem;
+
+        &.active-button{
+          background-color: @color-green;
+          color: @color-black;
+          box-shadow:0 0 2rem @color-green;
+        }
+      }
+    }
   }
 
   &.panel-settings{

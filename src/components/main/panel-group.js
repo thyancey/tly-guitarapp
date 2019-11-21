@@ -9,6 +9,7 @@ import NoteDisplayPanel from 'src/components/panels/notedisplay-panel';
 import ChordDisplayPanel from 'src/components/panels/chorddisplay-panel';
 import ScalePanel from 'src/components/panels/scale-panel';
 import ToolsPanel from 'src/components/panels/tools-panel';
+import PatternPanel from 'src/components/panels/pattern-panel';
 import SettingsPanel from 'src/components/panels/settings-panel';
 import Panel from 'src/components/panels/panel';
 
@@ -34,6 +35,11 @@ const MAP_PANELS = {
     panelClass: 'chorddisplay',
     title: 'Chords',
     component: <ChordDisplayPanel/>
+  },
+  pattern:{
+    panelClass: 'pattern',
+    title: 'Patterns',
+    component: <PatternPanel/>
   },
   fret:{
     panelClass: 'fret',

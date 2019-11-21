@@ -33,6 +33,33 @@ class MusicMan{
     }
   }
 
+  static getPattern(patternId){
+    if(!patternId) return null;
+
+    const patternObj = DATA_MUSIC.scalePatterns.find((sp, idx) => idx == patternId.split('-')[0]);
+    if(patternObj){
+      return patternObj.patterns[patternId.split('-')[1]] || null;
+    }
+
+    return null;
+  }
+
+  static getPatterns(instrumentLabel, scaleLabel){
+    const patterns = [];
+    for(let sp = 0; sp < DATA_MUSIC.scalePatterns.length; sp++){
+      const scalePattern = DATA_MUSIC.scalePatterns[sp];
+      if(scalePattern.instruments.indexOf(instrumentLabel) > -1 && scalePattern.scales.indexOf(scaleLabel) > -1){
+        
+        return scalePattern.patterns.map((p,i) => {
+          p.id = `${sp}-${i}`;
+          return p;
+        });
+      }
+    }
+
+    return patterns;
+  }
+
   static findPatternRanges(patternObj, strings, notes, fretBounds){
     const ranges = [];
     const foundString = strings[patternObj.refString];
@@ -86,12 +113,12 @@ class MusicMan{
     return found;
   }
 
-  static convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes, chordFretIdxs){
+  static convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes, chordFretIdxs, patternObj){
     const stringResults = [];
 
     // const pattern = DATA_MUSIC.scalePatterns[0].patterns[4];
     const pattern = null;
-    const patternRanges = pattern ? MusicMan.findPatternRanges(pattern, strings, notes, fretBounds) : [];
+    const patternRanges = patternObj ? MusicMan.findPatternRanges(patternObj, strings, notes, fretBounds) : [];
 
     for(let i = 0; i < strings.length; i++){
       const stringPatternRanges = patternRanges[i];
@@ -139,8 +166,6 @@ class MusicMan{
     let retVal = [];
     for(let i = 0; i < fretMatrix.size; i++){
       const chordFretIdx = chordFretIdxs[i];
-      global.fm = fretMatrix;
-      console.log('ok ', fretMatrix.get(i))
       const fretList = fretMatrix.get(i).frets.map((fret, idx) => {
         if(idx === chordFretIdx){
           return Object.assign({}, fret, { isInChord: true });

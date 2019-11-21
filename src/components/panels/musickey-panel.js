@@ -80,7 +80,7 @@ class MusicKeyPanel extends Component {
         <hr/>
         <div className="subpanel">
           <h2>{'Chords in Key'}</h2>
-          <div className="chord-buttons">
+          <div className="sidebuttons">
             {this.createChordButtons(this.props.instrument, this.props.musicKey, this.props.scale)}
           </div>
         </div>

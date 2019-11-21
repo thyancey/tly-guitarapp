@@ -27,17 +27,18 @@ const triggerSound = (type, octaveNote, scale, dispatchMusicEvent) => {
 
 }
 
-const getFretMatrix = (musicKey, scale, chord, instrumentLabel, keyFinderNotes) => {
+const getFretMatrix = (musicKey, scale, chord, instrumentLabel, keyFinderNotes, pattern) => {
   // console.log('getFretMatrix', musicKey, scale, chord, instrumentLabel)
   const notes = MusicMan.getScale(musicKey, scale);
   // const maxFrets = MusicMan.getInstrumentNumFrets(instrumentLabel);
   
   const chordFretIdxs = MusicMan.getChordFretIdxs(chord, instrumentLabel);
   const instrumentObj = MusicMan.getInstrumentNotesFromLabel(instrumentLabel);
+  const patternObj = MusicMan.getPattern(pattern);
   const strings = instrumentObj.strings;
   const fretBounds = instrumentObj.fretBounds;
 
-  const stringsMatrix = MusicMan.convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes, chordFretIdxs);
+  const stringsMatrix = MusicMan.convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes, chordFretIdxs, patternObj);
 
   return stringsMatrix;
 }
@@ -105,6 +106,14 @@ const prepareForNewMusicKey = (newMusicKey) => {
   };
 }
 
+const prepareForNewPattern = (newPattern) => {
+  return { 
+    pattern: newPattern, 
+    chord: null,
+    keyFinderNotes: []
+  };
+}
+
 const prepareForSetOctave = (newOctave) => {
   return { 
     octave: newOctave
@@ -115,11 +124,13 @@ const prepareForSetFoundNote = (note, keyFinderNotes) => {
   const foundIdx = keyFinderNotes.indexOf(note);
   if(foundIdx > -1){
     return {
+      pattern: null,
       keyFinderNotes: keyFinderNotes.filter(n => n !== note)
     }
   }else{
     keyFinderNotes.push(note);
     return {
+      pattern: null,
       keyFinderNotes: keyFinderNotes
     }
   }
@@ -132,6 +143,7 @@ const prepareForSetScale = (scale) => {
     chord: null, 
     scale: scale,
     scaleRegion: scaleRegion,
+    pattern: null,
     keyFinderNotes: []
   };
 }
@@ -190,7 +202,7 @@ const DEFAULT_SETTINGS = {
     },
     horizontal:{
       top: ['fret'],
-      bottom: ['instrument', 'scale', 'musicKey', 'tools']
+      bottom: ['instrument', 'scale', 'pattern', 'musicKey', 'tools']
     },
   }
 }
@@ -205,6 +217,7 @@ const store = {
     maxFrets: 20,
     midiInstrument: 'electricGuitar',
     octave: 2,
+    pattern: null,
     chord: null,
     volume: .4,
     fretChanges: 0,
@@ -230,48 +243,60 @@ const store = {
         midiInstrument: midiInstrument,
       };
     },
-    setMusicKey: ({ fretChanges, scale, chord, instrument, keyFinderNotes }, newMusicKey) => {
+    setMusicKey: ({ fretChanges, scale, chord, instrument, pattern }, newMusicKey) => {
       console.log('setMusicKey', newMusicKey)
-      const fretMatrix = getFretMatrix(newMusicKey, scale, chord, instrument, []);
+      const fretMatrix = getFretMatrix(newMusicKey, scale, chord, instrument, [], pattern);
 
       return Object.assign({ 
         fretMatrix: fretMatrix, 
         fretChanges: fretChanges+1
       }, prepareForNewMusicKey(newMusicKey));
     },
-    setScale: ({ musicKey, fretChanges, instrument, keyFinderNotes }, newScale) => {
+    setPattern: ({ musicKey, fretChanges, scale, instrument }, newPattern) => {
+      // console.log('setPattern', newPattern);
+      const fretMatrix = getFretMatrix(musicKey, scale, null, instrument, [], newPattern);
+
+      return Object.assign({ 
+        fretMatrix: fretMatrix, 
+        fretChanges: fretChanges+1
+      }, prepareForNewPattern(newPattern));
+    },
+    setScale: ({ musicKey, fretChanges, instrument }, newScale) => {
       console.log('-> setScale', newScale);
-      const fretMatrix = getFretMatrix(musicKey, newScale, null, instrument, []);
+      const fretMatrix = getFretMatrix(musicKey, newScale, null, instrument, [], null);
 
       return Object.assign({ 
         fretMatrix: fretMatrix, 
         fretChanges: fretChanges+1
       }, prepareForSetScale(newScale));
     },
-    setKeyAndScale: ({ fretChanges, musicKey, scale, chord, instrument, keyFinderNotes }, newMusicKey, newScale) => {
-      const fretMatrix = getFretMatrix(newMusicKey, newScale, chord, instrument, []);
+    setKeyAndScale: ({ fretChanges, chord, instrument }, newMusicKey, newScale) => {
+      const fretMatrix = getFretMatrix(newMusicKey, newScale, chord, instrument, [], null);
 
       return Object.assign({ 
         fretMatrix: fretMatrix, 
-        fretChanges: fretChanges+1
+        fretChanges: fretChanges+1,
+        pattern: null,
       }, prepareForNewMusicKey(newMusicKey), prepareForSetScale(newScale));
     },
     setChord: ({ fretChanges, musicKey, scale, instrument, keyFinderNotes }, newChord) => {
       console.log('-> setChord', newChord);
-      const fretMatrix = getFretMatrix(musicKey, scale, newChord, instrument, keyFinderNotes);
+      const fretMatrix = getFretMatrix(musicKey, scale, newChord, instrument, keyFinderNotes, null);
       
       return Object.assign({ 
         fretMatrix: fretMatrix, 
-        fretChanges: fretChanges+1
+        fretChanges: fretChanges+1,
+        pattern: null
       }, prepareForSetChord(newChord));
     },
-    setInstrument: ({ fretChanges, musicKey, scale, chord , keyFinderNotes}, newInstrument) => {
-      const fretMatrix = getFretMatrix(musicKey, scale, chord, newInstrument, keyFinderNotes);
+    setInstrument: ({ fretChanges, musicKey, scale, chord, keyFinderNotes}, newInstrument) => {
+      const fretMatrix = getFretMatrix(musicKey, scale, chord, newInstrument, keyFinderNotes, null);
       const midiInstrument = MusicMan.getInstrumentMidiId(newInstrument);
 
       return Object.assign({ 
         fretMatrix: fretMatrix, 
-        fretChanges: fretChanges+1
+        fretChanges: fretChanges+1,
+        pattern: null
       }, prepareForSetInstrument(newInstrument, midiInstrument));
     },
     setOctave: ({ fretChanges }, newOctave) => {
@@ -418,6 +443,7 @@ const store = {
       let results = {};
       let fretMatrix;
       let wasModified = false;
+      //- just kill the pattern if its there, too tough to figure this out
 
       if(noteObj.isFindModifierPressed || keyFinderMode === 'find'){
         wasModified = true;
@@ -445,6 +471,7 @@ const store = {
 
       if(wasModified){
         results.fretChanges = fretChanges+1;
+        results.pattern = null;
       }
       return results;
     }

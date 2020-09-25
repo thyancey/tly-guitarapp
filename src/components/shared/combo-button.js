@@ -5,7 +5,10 @@ require('./style.less');
 export default class ComboButton extends Component {
   render() {
     let className = 'combo-button';
-    if(this.props.isActive){
+    
+    if(this.props.isDisabled){
+      className += ' disabled-button';
+    }else if(this.props.isActive){
       className += ' active-button';
     }
 

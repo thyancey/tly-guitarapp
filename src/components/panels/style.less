@@ -10,6 +10,60 @@
   margin:1rem;
 
   box-shadow:0 0 2rem @color-blue;
+
+  h2{
+    color:@color-white;
+    text-shadow:0 0 2rem @color-purple;
+  }
+
+  .panel-body{
+    hr{
+      margin-bottom:.25rem;
+      border-color: @color-blue;
+      border-width: 1px;
+    }
+
+    .sidebuttons{
+      display: flex;
+      flex-direction: row;
+      .store-button{
+        flex: 1;
+        min-height: 8rem;
+        position: relative;
+        
+        padding:.25rem;
+        display:inline-block;
+        margin:(@button-margins / 2);
+
+        span{
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform-origin: left center;
+          transform: rotate(90deg);
+        }
+      }
+    }
+  }
+}
+
+
+.panel-container{
+  flex:1 0 24rem;
+
+  &.panel-fret{
+    flex:0 1 100%;
+
+    .panel-body{
+      position:relative;
+      width:100%;
+      height:100%;
+    }
+  }
+
+  &.panel-tools{
+    min-width:30rem;
+  }
 }
 
 
@@ -51,15 +105,10 @@
     box-shadow:0 0 2rem @color-purple;
     transition: all .2s;
   }
-
-  h2{
-    color:@color-white;
-    text-shadow:0 0 2rem @color-purple;
-  }
 }
 
 
-.panel-spacer{
+.drag-spacer{
   position:relative;
   width:100%;
   height:0rem;
@@ -73,50 +122,195 @@
     left:10%;
 
     border-radius:2rem;
-    // background-color:@color-purple-dark;
     background-color:@color-purple;
     box-shadow:0 0 2rem @color-purple;
   }
 }
 
+/* TODO, remove this need for specificity */
+#workspace .panelgroup.mod-bottom .panel-container.panel-musickey{
+  flex-basis: 18rem;
+}
+
 .panel-container{
 
   &.panel-musickey{
+    .subpanel{
+      padding: .25rem;
+    }
+
     .store-button{
       padding:.25rem;
       display:inline-block;
       margin:(@button-margins / 2);
       width:~"calc(25% - .5rem)";
-      // margin-bottom:@button-margins;
+    }
+    
+    h2{
+      color: @color-white;
+      text-shadow:0 0 2rem @color-purple;
+    }
+
+    .active-notes{
+      span{
+        display:inline-block;
+        padding:.25rem .75rem;
+        color: @color-purple;
+      }
     }
   }
 
   &.panel-chord,
   &.panel-scale,
   &.panel-instrument{
+    min-height:20rem;
     .store-button{
       font-size:1.5rem;
       padding:.25rem;
       margin:@button-margins;
     }
+
+    .instrument-groups{
+      height:100%;
+      overflow-y:none;
+      div.left,div.right{
+        display:inline-block;
+        vertical-align:top;
+        width:50%;
+        height:100%;
+        overflow-y:hidden;
+
+        >div{
+          overflow-y:auto;
+          height:~"calc(100% - 3.5rem)";
+        }
+      }
+    }
   }
 
-  &.panel-notedisplay,
-  &.panel-chorddisplay{
-    min-height:8rem;
+  &.panel-keydetails{
+    min-height:16rem;
     .store-button{
       margin:0.5rem;
     }
 
+    hr{
+      border-color: @color-blue;
+      border-width: 1px;
+    }
+
+    h2{
+      color: @color-blue;
+      text-shadow:0 0 1rem @color-blue;
+    }
+
     span{
       display:inline-block;
-      padding:.5rem;
+      padding:.25rem;
+      color: @color-purple;
+
+      cursor: pointer;
+
+      &:hover{
+        color: @color-blue;
+        text-shadow:0 0 1rem @color-blue;
+      }
+
+      &.active{
+        color: @color-white;
+        text-shadow:0 0 1rem @color-white;
+      }
+    }
+
+    .sidebuttons{
+      .store-button{
+        min-height: 8rem;
+      }
     }
   }
 
+  &.panel-pattern{
+    .sidebuttons{
+      .store-button{
+        white-space:nowrap;
+        min-height: 8rem;
 
+        &.active-button{
+          background-color: @color-green;
+          color: @color-black;
+          box-shadow:0 0 2rem @color-green;
+        }
+      }
+    }
+  }
+
+  &.panel-settings{
+    min-height:8rem;
+  }
 
   &.panel-tools{
+    min-height:24rem;
+    color:@color-blue;
+    text-shadow:0 0 1rem @color-blue;
+
+    hr{
+      border-color:@color-blue;
+    }
+
+    .selection-buttons{
+      >*{
+        display:inline-block;
+        margin:.5rem;
+        width:8rem;
+      }
+      .icon-container{
+        min-height: 6rem;
+      }
+
+      padding-bottom:.5rem;
+    }
+
+    .found-keys{
+      padding-top:.25rem;
+
+      border-top: 1px solid @color-blue;
+      transition: color .5s;
+
+      cursor: pointer;
+      .active{
+        color: @color-red;
+        text-shadow:0 0 1rem @color-red;
+        transition: color .5s;
+      }
+      .key-list span{
+        &:hover{
+          color: @color-white;
+          text-shadow:0 0 1rem @color-white;
+          transition: color .5s;
+        }
+      }
+      .scale-list p{
+        &:hover{
+          color: @color-white;
+          text-shadow:0 0 1rem @color-white;
+          transition: color .5s;
+        }
+      }
+
+      span{
+        padding: 0rem .5rem;
+      }
+
+      .found-keys-scalelabel{
+        padding: 0rem;
+        color: @color-purple;
+        text-shadow:0 0 1rem @color-purple;
+      }
+
+    }
+  }
+
+  &.panel-tools,&.panel-settings{
     .selection-buttons{
       >*{
         display:inline-block;

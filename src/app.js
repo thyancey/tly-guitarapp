@@ -7,8 +7,11 @@ import 'src/themes/page.less';
 
 class App extends Component {
   render() {
+    global.getStore = () => {
+      return this.refs.storeDebugger && this.refs.storeDebugger.state;
+    }
     return (
-      <Provider>
+      <Provider ref={'storeDebugger'}>
         <Header/>
         <Main/>
       </Provider>

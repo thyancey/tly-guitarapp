@@ -9,16 +9,15 @@ require('./style.less');
 class ScalePanel extends Component {
   onScaleClick(scaleLabel){
     this.props.actions.setScale(scaleLabel);
-    this.props.actions.setChord(null);
+    // this.props.actions.setChord(null);
 
-    const octaveNote = `${this.props.musicKey}-${this.props.octave}`;
-    const scaleNotes = MusicMan.getScale(octaveNote, scaleLabel);
-    const midiNotes = MusicMan.getMidiScale(scaleNotes);
-
-    this.props.actions.dispatchMusicEvent({
-      type: 'SCALE_FULL',
-      notes: midiNotes
-    });
+    if(this.props.playScales){
+      global.setTimeout(() => {
+        this.props.actions.dispatchEasyMusicEvent({
+          type: 'SCALE_FULL'
+        });
+      }, 0);
+    }
   }
 
   createScaleButtons(scales){
@@ -37,16 +36,19 @@ class ScalePanel extends Component {
   }
 
   render() {
-    return (
+    const flipEnabled = this.props.scaleRegion === 'western';
+    return (          
       <div>
-        {this.createScaleButtons(MusicMan.getScales())}
+        <div>
+          {this.createScaleButtons(MusicMan.getScales())}
+        </div>
       </div>
+
     );
   }
 }
 
 export default connect(state => ({ 
-  musicKey: state.musicKey,
   scale: state.scale,
-  octave: state.octave
+  playScales: state.playMode === 'scale'
 }))(ScalePanel);

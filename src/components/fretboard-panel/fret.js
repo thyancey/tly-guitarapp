@@ -1,45 +1,50 @@
 import React, { Component } from 'react';
+import { connect } from 'src/store';
 
-export default class Fret extends Component {
+class Fret extends Component {
+  
+  selectNote(e){
+    this.props.actions.onFretSelected({
+      isFindModifierPressed: e.shiftKey,
+      isSetModifierPressed: e.ctrlKey,
+      simpleNote: this.props.simpleNote,
+      octaveNote: this.props.octaveNote,
+      octave: this.props.octave
+    });
+  }
 
   render() {
-    let className = 'fret';
+    let classNames = [ 'fret' ];
 
-    if(this.props.chord){
-      if(this.props.isChordFret){
-        className += ' active-fret';
+    if(this.props.isInChord){
+      classNames.push('chord-fret');
+    }
 
-        if(this.props.noteIdx === 0){
-          className += ' root-fret';
-        }
-      }
-    }else if(this.props.noteIdx > -1){
-      className += ' active-fret';
-      if(this.props.noteIdx === 0){
-        className += ' root-fret';
-      }
+    if(this.props.noteIdx === 0){
+      classNames.push('root-fret');
+    }
+    
+    if(this.props.noteIdx > -1){
+      classNames.push('active-fret');
+    }
+
+    if(this.props.isInFound){
+      classNames.push('found-fret');
+    }
+    
+    if(this.props.isInPattern){
+      classNames.push('pattern-fret');
     }
 
     return (
-      <div className={className} onClick={() => this.props.selectNote(this.props.octaveNote, this.props.fretIdx)}>
-        <div className="round-fret fret-note">
-          <div className="round-fret-circle">
-            <span>{this.props.note}</span>
-          </div>
+      <div className={classNames.join(' ')} onClick={(e) => this.selectNote(e)}>
+        <div className="fret-label">
+          <span>{this.props.simpleNote}</span>
         </div>
-        <div className="round-fret fret-idx">
-          <div className="round-fret-circle">
-            <span>{this.props.fretIdx}</span>
-          </div>
-        </div>
-        {/*}
-        <div className="round-fret fret-octave">
-          <div className="round-fret-circle">
-            <span>{this.props.note + '' + this.props.octave}</span>
-          </div>
-        </div>
-      */}
       </div>
     );
   }
 }
+
+export default connect(state => ({ 
+}))(Fret);

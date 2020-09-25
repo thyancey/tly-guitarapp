@@ -1,54 +1,122 @@
 import React, { Component } from 'react';
 import { connect } from 'src/store';
 
-require('./style.less');
+import MusicMan from 'src/utils/musicman';
 import ComboButton from 'src/components/shared/combo-button';
 
+require('./style.less');
+
 class ToolsPanel extends Component {
-  onToggleWriteMode(mode){
-    let newSelectionMode = Object.assign({}, this.props.selectionMode);
-    newSelectionMode.noteClick = !mode;
-    this.props.actions.setSelectionMode(newSelectionMode);
+  constructor(){
+    super();
+
+    this.state = {
+      storedNotes: []
+    };
   }
 
-  onToggleScaleMode(scaleMode){
-    let newSelectionMode = Object.assign({}, this.props.selectionMode);
-    newSelectionMode.scaleMode = !scaleMode;
-    this.props.actions.setSelectionMode(newSelectionMode);
+  onToggleKeyMode(toggleType){
+    let keyFinderMode = this.props.keyFinderMode !== toggleType ? toggleType : 'off';
+
+    this.props.actions.setKeyFinderMode(keyFinderMode);
+  }
+
+  onSetScaleKey(musicKey, scaleLabel){
+    this.props.actions.setKeyFinderMode('off');
+    this.props.actions.setKeyAndScale(musicKey, scaleLabel);
+  }
+
+  onSetKey(musicKey){
+    this.props.actions.setKeyFinderMode('off');
+    this.props.actions.setMusicKey(musicKey);
+  }
+
+  flipScale(){
+    this.props.actions.flipWesternScale();
   }
 
   render() {
-    return(
+    const foundKeys = MusicMan.matchKeysFromNotes(this.props.keyFinderNotes, this.props.scale);
+    const predictedObjs = MusicMan.predictScalesFromNotes(this.props.keyFinderNotes, this.props.scale);
+    const filteredObjs = MusicMan.filterScalesFromNotes(this.props.keyFinderNotes, this.props.scale);
+    const flipEnabled = this.props.scaleRegion === 'western';
+    
+    return (
       <div>
         <div className="selection-buttons">
-          <ComboButton  onClickMethod={(mode) => this.onToggleWriteMode(mode)}
-                        onClickParam={this.props.selectionMode.noteClick}
-                        isActive={this.props.selectionMode.noteClick}
-                        icon="icon-editnote" 
-                        title="Change key" />
-
-          <ComboButton  onClickMethod={(scaleMode) => this.onToggleScaleMode(scaleMode)}
-                        onClickParam={this.props.selectionMode.scaleMode}
-                        isActive={this.props.selectionMode.scaleMode}
-                        icon="icon-scalemode" 
-                        title="Play scales" />
-
-          <ComboButton  onClickMethod={this.props.actions.setDefaultSettings}
-                        isActive={false}
-                        icon="icon-reset" 
-                        title="Reset Layout" />
+          <ComboButton  
+            onClickMethod={() => this.onToggleKeyMode('off')}
+            isActive={this.props.keyFinderMode === 'off'}
+            icon="icon-tools-playnote" 
+            title="Play Note" />
+          <ComboButton  
+            onClickMethod={() => this.onToggleKeyMode('set')}
+            isActive={this.props.keyFinderMode === 'set'}
+            icon="icon-editnote" 
+            title="Set Key" />
+          <ComboButton  
+            onClickMethod={() => this.onToggleKeyMode('find')}
+            isActive={this.props.keyFinderMode === 'find'}
+            icon="icon-editnote" 
+            title="Find Key" />
+          <ComboButton  
+            onClickMethod={() => flipEnabled && this.flipScale()}
+            isDisabled={!flipEnabled}
+            isActive={false}
+            icon="icon-reset" 
+            title="Flip Triad" />
         </div>
-        <div className="volume-container">
-          <p>{'volume'}</p>
-          <input type='range' value={this.props.volume} min={0.0} max={1.0} step={0.05} onChange={e => this.props.actions.setVolume(e.target.value)} />
+        <div className="found-keys">
+          <h2>{`Matching Keys`}</h2>
+          <span className="found-keys-scalelabel">{`${MusicMan.getScaleTitle(this.props.scale)}`}</span><span>{'scales only'}</span>
+          <div className="key-list">
+              <span/>
+            {foundKeys.map((note, index) => (
+              <span 
+                key={'note-' + index} 
+                className={ note === this.props.musicKey ? 'active' : null } 
+                onClick={() => this.onSetKey(note)}>
+                {note}
+              </span>
+            ))}
+          </div>
+          <hr/>
+          <h2>{`Predicted Scales & Keys`}</h2>
+          <div className="scale-list">
+            {predictedObjs.map((foundObj, index) => (
+              <p 
+                key={'notep-' + index} 
+                className={ (foundObj.key === this.props.musicKey && foundObj.scale === this.props.scale) ? 'active' : null } 
+                onClick={() => this.onSetScaleKey(foundObj.key, foundObj.scale)}>
+                {foundObj.scale + ': ' + foundObj.key}
+              </p>
+            ))}
+          </div>
+          <hr/>
+          <h2>{`Filtered Scales & Keys`}</h2>
+          <div className="scale-list">
+            {filteredObjs.map((foundObj, index) => (
+              <p 
+                key={'notef-' + index} 
+                className={ (foundObj.key === this.props.musicKey && foundObj.scale === this.props.scale) ? 'active' : null } 
+                onClick={() => this.onSetScaleKey(foundObj.key, foundObj.scale)}>
+                {foundObj.scale + ': ' + foundObj.key}
+              </p>
+            ))}
+          </div>
         </div>
-
       </div>
     );
   }
+
 }
 
 export default connect(state => ({ 
-  selectionMode: state.selectionMode,
-  volume: state.volume,
+  playMode: state.playMode,
+  keyFinderMode: state.keyFinderMode,
+  keyFinderNotes: state.keyFinderNotes,
+  fretChanges: state.fretChanges,
+  musicKey: state.musicKey,
+  scale: state.scale,
+  scaleRegion: state.scaleRegion
 }))(ToolsPanel);

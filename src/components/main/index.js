@@ -35,10 +35,7 @@ class Main extends Component {
           // { name: simpleNote, octave: octave - 1}
         const strOctave = String(command.payload.octave - 1);
 
-
         this.props.actions.onFretSelected({
-          isFindModifierPressed: false,
-          isSetModifierPressed: false,
           simpleNote: command.payload.name,
           octaveNote: `${command.payload.name}-${strOctave}`,
           octave: strOctave

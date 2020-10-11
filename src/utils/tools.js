@@ -6,6 +6,10 @@ class Tools{
     return '(Class Tools)';
   }
 
+  static clamp(num, min, max) {
+    return num <= min ? min : num >= max ? max : num;
+  }
+
   //- derived from this stack overflow, modified to use pointerEvents instead and have a maxCycles limit
   //- https://stackoverflow.com/questions/8813051/determine-which-element-the-mouse-pointer-is-on-top-of-in-javascript
   static allElementsFromPoint(x, y){

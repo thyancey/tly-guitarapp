@@ -2,6 +2,7 @@ import { initStore } from 'react-waterfall';
 import { Map, List } from 'immutable';
 import MusicMan from 'src/utils/musicman';
 import { isObject } from 'util';
+import Tools from 'src/utils/tools';
 import { PLAY_TYPES } from 'src/components/musicbox';
 
 const triggerSound = (type, octaveNote, scale, dispatchMusicEvent) => {
@@ -368,28 +369,47 @@ const store = {
       }
     },
     setKeyFinderMode: ({ musicKey, scale, chord, instrument, keyFinderMode }, newMode) => {
-      if(newMode === 'off'){
-        const fretMatrix = getFretMatrix(musicKey, scale, chord, instrument, []);
-
-        if(keyFinderMode === 'find'){
-          return {
-            keyFinderNotes: [],
-            keyFinderMode: newMode,
-            fretMatrix: fretMatrix
-          }
-        }else{
-          return {
-            keyFinderMode: newMode,
-            fretMatrix: fretMatrix
-          }
+      console.log('new mode', newMode)
+      const fretMatrix = getFretMatrix(musicKey, scale, chord, instrument, []);
+      return {
+        keyFinderNotes: [],
+        keyFinderMode: newMode,
+        fretMatrix: fretMatrix
+      }
+    },
+    toggleNoteMode: ({ keyFinderMode }, type) => {
+      console.log('toggleNoteMode', type)
+      if(keyFinderMode === type){
+        return {
+          keyFinderMode: 'off'
         }
       }else{
         return {
-          keyFinderMode: newMode
+          keyFinderMode: type
         }
       }
     },
+    lockMatchingKey: ({ keyFinderNotes, scale, chord, instrument, pattern, fretChanges }) => {
+      const foundKeys = MusicMan.matchKeysFromNotes(keyFinderNotes, scale);
+
+      const newMusicKey = foundKeys[0];
+      if(newMusicKey){
+        const fretMatrix = getFretMatrix(newMusicKey, scale, chord, instrument, [], pattern);
+  
+        return Object.assign({ 
+          keyFinderNotes: [],
+          keyFinderMode: 'off',
+          fretMatrix: fretMatrix, 
+          fretChanges: fretChanges+1
+        }, prepareForNewMusicKey(newMusicKey));
+      }else{
+        return {};
+      }
+    },
     setVolume: ({ volume }, newVolume) => ({ volume: newVolume }),
+    changeVolume: ({ volume }, modifier) => ({
+     volume: Tools.clamp((volume + modifier), 0, 1)
+    }),
     setMidiInstrument: ({ fretChanges, instrument }, newMidiInstrument) => {
 
       return Object.assign({ 

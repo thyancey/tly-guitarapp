@@ -1,4 +1,6 @@
-import WebMidi from 'webmidi';
+// import WebMidi from 'webmidi';
+
+import MusicMan from "./musicman";
 
 const _data = [];
 let _commandCallback = null;
@@ -45,24 +47,94 @@ const InputManager = {
   create: (document, commandCallback) => {
     if(!_commandCallback){
       try{
+        InputManager.midiSetup();
+      }catch(e){
+        console.error('midi error', e);
+      }
+  
+
+      _commandCallback = commandCallback;
+      document.addEventListener('keydown', InputManager.onKeyDown.bind(this));
+    }
+  },
+
+  midiSetup: () => {
+    if (!navigator.requestMIDIAccess) {
+      console.warn('WebMIDI is not supported in this browser.');
+      return;
+    }
+
+
+    navigator.requestMIDIAccess().then(midiAccess => {
+      console.log('This browser supports WebMIDI!');
+      console.log(midiAccess);
+
+      // var inputs = midiAccess.inputs;
+      // var outputs = midiAccess.outputs;
+
+      for (var input of midiAccess.inputs.values()){
+        input.onmidimessage = InputManager.onMidiMessage;
+      }
+
+    }, (e) => {
+      console.warn('Could not find any MIDI input');
+    });
+  },
+
+  onMidiMessage(midiMessage){
+    const command = midiMessage.data[0];
+    const note = midiMessage.data[1];
+    const velocity = (midiMessage.data.length > 2) ? midiMessage.data[2] : 0; // a velocity value might not be included with a noteOff command
+
+    switch (command) {
+      case 144: // noteOn
+        if (velocity > 0) {
+          console.log('NOTE ON', note, velocity);
+          // console.log(midiMessage);
+          _commandCallback({
+            action: 'setNoteFromMidi', 
+            payload: note
+          });
+        } else {
+          console.log('NOTE QUIET', note, velocity);
+          // console.log(midiMessage);
+          noteOff(note);
+        }
+        break;
+      case 128: // noteOff
+        // noteOff(note);
+        console.log('NOTE OFF', note, velocity);
+          // console.log(midiMessage);
+        break;
+      // we could easily expand this switch statement to cover other types of commands such as controllers or sysex
+    }
+  },
+
+
+  /*
+  create: (document, commandCallback) => {
+    if(!_commandCallback){
+      try{
         WebMidi.enable(err => {
           // console.log(WebMidi.inputs);
           // console.log(WebMidi.outputs);
           
           _midiInput = WebMidi.getInputById('input-0');
-          _midiInput.addListener('noteon', 'all', event => {
-            if(event.rawVelocity > 100){
-              // console.log(`note value`, event);
-              // console.log(`note value`, event.note);
-              // {number: 40, name: "E", octave: 2}
-              // { name: simpleNote, octave: octave - 1}
-              commandCallback({
-                action: 'setNoteFromMidi', 
-                payload: event.note
-              });
-  
-            }
-          });
+          if(_midiInput){
+            _midiInput.addListener('noteon', 'all', event => {
+              if(event.rawVelocity > 100){
+                // console.log(`note value`, event);
+                // console.log(`note value`, event.note);
+                // {number: 40, name: "E", octave: 2}
+                // { name: simpleNote, octave: octave - 1}
+                commandCallback({
+                  action: 'setNoteFromMidi', 
+                  payload: event.note
+                });
+    
+              }
+            });
+          }
         });
 
       }catch(e){
@@ -73,10 +145,8 @@ const InputManager = {
       _commandCallback = commandCallback;
       document.addEventListener('keydown', InputManager.onKeyDown.bind(this));
     }
-
-
-
   },
+  */
   onKeyDown: e => { 
     console.log('key:', e.code);
     if(_keyMap[e.code]){

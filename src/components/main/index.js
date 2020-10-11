@@ -30,16 +30,8 @@ class Main extends Component {
   onInputCommand(command){
     if(command.action){
       if(command.action === 'setNoteFromMidi'){
-        
-          // {number: 40, name: "E", octave: 2}
-          // { name: simpleNote, octave: octave - 1}
-        const strOctave = String(command.payload.octave - 1);
-
-        this.props.actions.onFretSelected({
-          simpleNote: command.payload.name,
-          octaveNote: `${command.payload.name}-${strOctave}`,
-          octave: strOctave
-        });
+        const fretMessageObj = MusicMan.getFretNoteMessageFromNoteIdx(command.payload);
+        this.props.actions.onFretSelected(fretMessageObj);
       }else{
         if(!this.props.actions[command.action]){
           console.error(`mapped input action "${command.action} does not match a valid action`);

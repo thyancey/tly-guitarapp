@@ -3,13 +3,13 @@ import DATA_INSTRUMENT from 'src/data/instrumentdata.js';
 import DATA_MIDI from 'src/data/mididata.js';
 import { Map, List } from 'immutable';
 
+let cachedScales = null; //- array, eventually
 
 class MusicMan{
 
   static toString(){
     return '(Class MusicMan)';
   }
-
   static getNotes(){
     return DATA_MUSIC.notes;
   }
@@ -18,6 +18,16 @@ class MusicMan{
   }
   static getScales(){
     return DATA_MUSIC.scales;
+  }
+  static getCachedScales(){
+    if(!cachedScales){
+      cachedScales = this.cacheScales();
+    }
+
+    return cachedScales;
+  }
+  static getCachedScale(scaleLabel){
+    return this.getCachedScales().find(cS => cS.id === scaleLabel);
   }
   static getInstruments(){
     return DATA_INSTRUMENT;
@@ -296,102 +306,119 @@ class MusicMan{
       return foundKeys;
     }
 
-    for(let n = 0; n < DATA_MUSIC.notes.length; n++){
-      //- one note at a time
-      let scale = this.getScale(DATA_MUSIC.notes[n], scaleLabel);
+    const foundScale = this.getCachedScale(scaleLabel);
+    Object.keys(foundScale.keyNotes).forEach(kN => {
+      let isContained = this.areAllOfTheseThingsInThoseThings(notesToMatch, foundScale.keyNotes[kN]) ;
 
-      let foundNotes = notesToMatch.filter(note => scale.indexOf(note) > -1);
-      if(foundNotes.length === notesToMatch.length){
-        foundKeys.push(DATA_MUSIC.notes[n]);
+      if(isContained){
+        foundKeys.push(kN);
       }
-    }
+    });
 
     return foundKeys;
   }
 
-  /* based on an array of notes, find any scales and keys that contain those values */
-  static predictScalesFromNotes(notesToMatch, scaleLabel){
+  static cacheScales(){
+    let cachedScales = [];
+    for(let scaleObjKey in DATA_MUSIC.scales){
+      //- filter out chords, etc
+      let keyNotes = {};
+      for(let n = 0; n < DATA_MUSIC.notes.length; n++){
+        keyNotes[DATA_MUSIC.notes[n]] = this.getScale(DATA_MUSIC.notes[n], scaleObjKey);
+      }
+      cachedScales.push({
+        ...DATA_MUSIC.scales[scaleObjKey],
+        id: scaleObjKey,
+        keyNotes: keyNotes
+      })
+    }
+
+    return cachedScales;
+  }
+
+  static areAllOfTheseThingsInThoseThings(theseThings, thoseThings){
+    return (theseThings.filter(a => thoseThings.indexOf(a) === -1).length === 0);
+  }
+
+  /*
+    used to returns scales based on (filterType):
+      "filter": find scales that are entirely contained within the given notes
+      "predict": find scales that contain all of the given notes
+  */
+  static detectKeysAndScales(notesToMatch, scaleLabel, filterType){
     let foundObjs = [];
     if(notesToMatch.length === 0){
       return [];
     }
 
-    for(let referenceScale in DATA_MUSIC.scales){
-      //- for each scale, check each note
-      if(DATA_MUSIC.scales[referenceScale].type !== 'scale'){
-        continue;
+    this.getCachedScales().forEach(scaleObj => {
+      //- kick out chords, etc
+      if(scaleObj.type !== 'scale'){
+        return;
       }
-      
-      for(let n = 0; n < DATA_MUSIC.notes.length; n++){
-        //- one note at a time
-        let scaleNotes = this.getScale(DATA_MUSIC.notes[n], referenceScale);
-        //- now that you have notes in the scale, make sure notesToMatch doesnt have any weirdos
-        let foundNotes = notesToMatch.filter(note => scaleNotes.indexOf(note) > -1);
 
-        if(foundNotes.length === notesToMatch.length){
+      //- if scale has more unique notes than requested, it obv can't be contained within
+      if(filterType === 'filter' && (scaleObj.sequence.length - 1 > notesToMatch.length)){
+        return;
+      }
+
+      Object.keys(scaleObj.keyNotes).forEach(kN => {
+        let isContained = false;
+        if(filterType === 'filter'){
+          isContained = this.areAllOfTheseThingsInThoseThings(scaleObj.keyNotes[kN], notesToMatch);
+        }else if(filterType === 'predict'){
+          isContained = this.areAllOfTheseThingsInThoseThings(notesToMatch, scaleObj.keyNotes[kN]);
+        }
+
+        if(isContained){
           foundObjs.push({
-            key: DATA_MUSIC.notes[n],
-            scale: referenceScale,
-            isCurrent: referenceScale === scaleLabel
+            key: kN,
+            scale: scaleObj.id,
+            isCurrent: scaleObj.id === scaleLabel
           });
         }
-      }
-    }
+      });
+    });
 
     return foundObjs;
   }
 
-  /* based on an array of notes, find any scales and keys that contain a full set of those values */
-  static filterScalesFromNotes(notesToMatch, scaleLabel){
-    let foundObjs = [];
-    if(notesToMatch.length === 0){
-      return [];
+  //- i hate this format, but I dont feel like fixing it right now
+  static getFretNoteMessageFromNoteIdx(noteIdx){
+    const octave = Math.floor((noteIdx / 12) - 2);
+    const name = this.getNoteNameFromIndex(noteIdx);
+
+    return {
+      simpleNote: name,
+      octaveNote: `${name}-${octave}`,
+      octave: octave
     }
-
-    for(let referenceScale in DATA_MUSIC.scales){
-      //- for each scale, check in each key for notes that were given
-      //- if a scale contains ALL notes in notesToMatch, return it
-      if(DATA_MUSIC.scales[referenceScale].type !== 'scale'){
-        continue;
-      }
-      for(let n = 0; n < DATA_MUSIC.notes.length; n++){
-        //- one note at a time
-        const referenceKey = DATA_MUSIC.notes[n];
-        let foundNotes = this.getScale(referenceKey, referenceScale);
-
-        if(foundNotes.length - 1 > notesToMatch.length){
-          //- if more notes than given, the referenceScale is not contained within, quit
-          //- -1 is because foundNodes repeat both start and end note (ex, A, B, C, D, A )
-        }else{
-          const filtered = foundNotes.filter((k,i) => notesToMatch.indexOf(k) === -1);
-          if(filtered.length === 0){
-            //- referenceScale is contained in notesToMatch, so its a match!
-            foundObjs.push({
-              key: referenceKey,
-              scale: referenceScale,
-              isCurrent: referenceScale === scaleLabel
-            });
-          }
-        }
-      }
-    }
-
-    return foundObjs;
   }
 
-  //- octave is optional
-  static getNoteAtIndex(noteIdx, octave){
+  static getOctaveNoteFromNoteIndex(noteIdx){
+    const octave = Math.floor((noteIdx / 12) - 2);
+    return `${this.getNoteNameFromIndex(noteIdx)}-${octave}`;
+  }
+
+  static getNoteNameFromIndex(noteIdx){
     let calcIdx = noteIdx % DATA_MUSIC.notes.length;
     if(calcIdx < 0){
       calcIdx = DATA_MUSIC.notes.length + calcIdx;
     }
 
-    let noteName = DATA_MUSIC.notes[calcIdx]
+    return DATA_MUSIC.notes[calcIdx];
+  }
 
-    if(octave !== null){
+  //- octave is optional
+  static getNoteAtIndex(noteIdx, octave){
+    let noteName = this.getNoteNameFromIndex(noteIdx);
+    
+    if(octave !== null && octave !== undefined){
       noteName = this.getNoteInOctaveFormat(noteName, noteIdx, octave);
     }
 
+    // console.log('>>>', noteName)
+    // console.log(octave)
     return noteName;
   }
 

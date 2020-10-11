@@ -37,8 +37,8 @@ class ToolsPanel extends Component {
 
   render() {
     const foundKeys = MusicMan.matchKeysFromNotes(this.props.keyFinderNotes, this.props.scale);
-    const predictedObjs = MusicMan.predictScalesFromNotes(this.props.keyFinderNotes, this.props.scale);
-    const filteredObjs = MusicMan.filterScalesFromNotes(this.props.keyFinderNotes, this.props.scale);
+    const predictedObjs = MusicMan.detectKeysAndScales(this.props.keyFinderNotes, this.props.scale, 'predict');
+    const filteredObjs = MusicMan.detectKeysAndScales(this.props.keyFinderNotes, this.props.scale, 'filter');
     const flipEnabled = this.props.scaleRegion === 'western';
     
     return (

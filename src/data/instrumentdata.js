@@ -4,7 +4,7 @@ export default {
     "title": "Guitar (Standard)",
     "strings": [
       {
-        "note":"E-1",
+        "note":"E-2",
         "frets":[0,22]
       },
       {
@@ -12,11 +12,11 @@ export default {
         "frets":[0,22]
       },
       {
-        "note":"D-2",
+        "note":"D-3",
         "frets":[0,22]
       },
       {
-        "note":"G-2",
+        "note":"G-3",
         "frets":[0,22]
       },
       {
@@ -24,7 +24,7 @@ export default {
         "frets":[0,22]
       },
       {
-        "note":"E-3",
+        "note":"E-4",
         "frets":[0,22]
       }
     ],
@@ -400,7 +400,7 @@ export default {
     "midiId": "electricGuitar",
     "strings": [
       {
-        "note":"D-1",
+        "note":"D-2",
         "frets":[0,22]
       },
       {
@@ -408,11 +408,11 @@ export default {
         "frets":[0,22]
       },
       {
-        "note":"D-2",
+        "note":"D-3",
         "frets":[0,22]
       },
       {
-        "note":"G-2",
+        "note":"G-3",
         "frets":[0,22]
       },
       {
@@ -420,7 +420,7 @@ export default {
         "frets":[0,22]
       },
       {
-        "note":"E-3",
+        "note":"E-4",
         "frets":[0,22]
       }
     ]
@@ -430,7 +430,7 @@ export default {
     "midiId": "electricBass",
     "strings": [
       {
-        "note":"E-1",
+        "note":"E-2",
         "frets":[0,22]
       },
       {
@@ -438,13 +438,13 @@ export default {
         "frets":[0,22]
       },
       {
-        "note":"D-2",
+        "note":"D-3",
         "frets":[0,22]
       },
       {
-        "note":"G-2",
+        "note":"G-3",
         "frets":[0,22]
-      }
+      },
     ]
   },
   "banjo-open-g":{
@@ -464,7 +464,7 @@ export default {
         "frets":[0,22]
       },
       {
-        "note":"B-3",
+        "note":"B-2",
         "frets":[0,22]
       },
       {
@@ -490,7 +490,7 @@ export default {
         "frets":[0,12]
       },
       {
-        "note":"A-4",
+        "note":"A-3",
         "frets":[0,12]
       }
     ],
@@ -663,15 +663,15 @@ export default {
     "midiId": "shamisen",
     "strings": [
       {
+        "note":"C-2",
+        "frets":[0,12]
+      },
+      {
+        "note":"F-2",
+        "frets":[0,12]
+      },
+      {
         "note":"C-3",
-        "frets":[0,12]
-      },
-      {
-        "note":"F-3",
-        "frets":[0,12]
-      },
-      {
-        "note":"C-4",
         "frets":[0,12]
       }
     ]

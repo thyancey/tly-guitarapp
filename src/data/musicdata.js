@@ -1,9 +1,6 @@
 export default {
   "numFrets":23,
   "notes":[
-    "A",
-    "A#",
-    "B",
     "C",
     "C#",
     "D",
@@ -12,7 +9,10 @@ export default {
     "F",
     "F#",
     "G",
-    "G#"
+    "G#",
+    "A",
+    "A#",
+    "B",
   ],
   "westernScaleFlips":{
     "major":{

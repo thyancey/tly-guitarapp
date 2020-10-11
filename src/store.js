@@ -476,6 +476,7 @@ const store = {
 
     //- TODO: this method needs A LOT OF HELP
     onFretSelected: ({ keyFinderMode, musicKey, fretChanges, playMode, scale, keyFinderNotes, instrument, chord }, noteObj) => {
+      console.log('onFretSelected', noteObj)
       let results = {};
       let fretMatrix;
       let wasModified = false;

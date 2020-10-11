@@ -201,8 +201,8 @@ const DEFAULT_SETTINGS = {
       right: ['tools', 'notedisplay', 'chord', 'settings']
     },
     horizontal:{
-      top: ['fret'],
-      bottom: ['instrument', 'scale', 'pattern', 'musicKey', 'tools']
+      top: ['fret', 'tools' ],
+      bottom: ['instrument', 'scale', 'pattern', 'musicKey']
     },
   }
 }
@@ -269,6 +269,42 @@ const store = {
         fretMatrix: fretMatrix, 
         fretChanges: fretChanges+1
       }, prepareForSetScale(newScale));
+    },
+    nextScale: ({ musicKey, fretChanges, instrument, scale }) => {
+      const newScale = MusicMan.getAdjacentScaleLabel(scale, 1);
+      const fretMatrix = getFretMatrix(musicKey, newScale, null, instrument, [], null);
+
+      return Object.assign({ 
+        fretMatrix: fretMatrix, 
+        fretChanges: fretChanges+1
+      }, prepareForSetScale(newScale));
+    },
+    prevScale: ({ musicKey, fretChanges, instrument, scale }) => {
+      const newScale = MusicMan.getAdjacentScaleLabel(scale, -1);
+      const fretMatrix = getFretMatrix(musicKey, newScale, null, instrument, [], null);
+
+      return Object.assign({ 
+        fretMatrix: fretMatrix, 
+        fretChanges: fretChanges+1
+      }, prepareForSetScale(newScale));
+    },
+    nextKey: ({ fretChanges, scale, chord, instrument, pattern, musicKey }) => {
+      const newMusicKey = MusicMan.getAdjacentMusicKey(musicKey, 1);
+      const fretMatrix = getFretMatrix(newMusicKey, scale, chord, instrument, [], pattern);
+
+      return Object.assign({ 
+        fretMatrix: fretMatrix, 
+        fretChanges: fretChanges+1
+      }, prepareForNewMusicKey(newMusicKey));
+    },
+    prevKey: ({ fretChanges, scale, chord, instrument, pattern, musicKey }) => {
+      const newMusicKey = MusicMan.getAdjacentMusicKey(musicKey, -1);
+      const fretMatrix = getFretMatrix(newMusicKey, scale, chord, instrument, [], pattern);
+
+      return Object.assign({ 
+        fretMatrix: fretMatrix, 
+        fretChanges: fretChanges+1
+      }, prepareForNewMusicKey(newMusicKey));
     },
     setKeyAndScale: ({ fretChanges, chord, instrument }, newMusicKey, newScale) => {
       const fretMatrix = getFretMatrix(newMusicKey, newScale, chord, instrument, [], null);

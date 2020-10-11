@@ -7,6 +7,7 @@ import MusicMan from 'src/utils/musicman';
 
 import DragCover from 'src/components/main/drag-cover';
 import Workspace from './workspace';
+import InputManager from 'src/utils/input-manager';
 
 require('./style.less');
 
@@ -22,8 +23,20 @@ class Main extends Component {
     this.state = {
       activeError:null
     };
+
+    InputManager.create(global.document, this.onInputCommand.bind(this));
   }
 
+  onInputCommand(command){
+    if(command.action){
+      if(!this.props.actions[command.action]){
+        console.error(`mapped input action "${command.action} does not match a valid action`);
+      }else{
+        this.props.actions[command.action]();
+      }
+
+    }
+  }
 
   render() {
     let mainClassName = 'main';
@@ -33,6 +46,7 @@ class Main extends Component {
 
     return(
       <div className={mainClassName} >
+        {/* <InputManager/> */}
         <ErrorContainer activeError={this.state.activeError}/>
         <MusicBox ref="musicBox" scale={this.props.scale} midiInstrument={this.props.midiInstrument} volume={this.props.volume} />
         <DragCover  isDragging={this.props.isDragging} 

@@ -238,8 +238,30 @@ class MusicMan{
     return -1;
   }
 
+  static getAdjacentScaleLabel(curScaleLabel, modifier){
+    const scaleKeys = Object.keys(DATA_MUSIC.scales);
+    const newIdx = scaleKeys.findIndex(s => s === curScaleLabel) + modifier;
+     
+    if(newIdx >= scaleKeys.length){
+      return scaleKeys[0];
+    }else if(newIdx < 0){
+      return scaleKeys[scaleKeys.length - 1];
+    }else{
+      return scaleKeys[newIdx];
+    }
+  }
 
+  static getAdjacentMusicKey(curMusicKey, modifier){
+    const newIdx = DATA_MUSIC.notes.findIndex(n => n === curMusicKey) + modifier;
 
+    if(newIdx >= DATA_MUSIC.notes.length){
+      return DATA_MUSIC.notes[0];
+    }else if(newIdx < 0){
+      return DATA_MUSIC.notes[DATA_MUSIC.notes.length - 1];
+    }else{
+      return DATA_MUSIC.notes[newIdx];
+    }
+  }
 
 /* More intense music stuff methods */
 

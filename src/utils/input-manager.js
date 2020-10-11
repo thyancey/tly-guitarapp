@@ -44,26 +44,30 @@ const _keyMap = {
 const InputManager = {
   create: (document, commandCallback) => {
     if(!_commandCallback){
-      
-      WebMidi.enable(err => {
-        // console.log(WebMidi.inputs);
-        // console.log(WebMidi.outputs);
-        
-        _midiInput = WebMidi.getInputById('input-0');
-        _midiInput.addListener('noteon', 'all', event => {
-          if(event.rawVelocity > 100){
-            // console.log(`note value`, event);
-            // console.log(`note value`, event.note);
-            // {number: 40, name: "E", octave: 2}
-            // { name: simpleNote, octave: octave - 1}
-            commandCallback({
-              action: 'setNoteFromMidi', 
-              payload: event.note
-            });
-
-          }
+      try{
+        WebMidi.enable(err => {
+          // console.log(WebMidi.inputs);
+          // console.log(WebMidi.outputs);
+          
+          _midiInput = WebMidi.getInputById('input-0');
+          _midiInput.addListener('noteon', 'all', event => {
+            if(event.rawVelocity > 100){
+              // console.log(`note value`, event);
+              // console.log(`note value`, event.note);
+              // {number: 40, name: "E", octave: 2}
+              // { name: simpleNote, octave: octave - 1}
+              commandCallback({
+                action: 'setNoteFromMidi', 
+                payload: event.note
+              });
+  
+            }
+          });
         });
-      });
+
+      }catch(e){
+        console.error('WebMidi error', e);
+      }
       
 
       _commandCallback = commandCallback;

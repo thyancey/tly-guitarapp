@@ -31,10 +31,12 @@
   },
   "dependencies": {
     "immutable": "^3.8.2",
+    "jzz": "^1.0.9",
     "less": "^3.0.4",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-waterfall": "^3.0.7",
+    "web-midi-api": "^2.0.8",
     "webmidi": "^2.5.1"
   }
 }

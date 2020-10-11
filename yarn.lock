@@ -20,6 +20,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.11.8.tgz#fe2012f2355e4ce08bca44aeb3abbb21cf88d33f"
   integrity sha512-KPcKqKm5UKDkaYPTuXSx8wEP7vE9GnuaXIZKijwRYcePpZFDVuy2a57LarFKiORbHOuTOOwYzxVxcUzsh2P2Pw==
 
+"@types/webmidi@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@types/webmidi/-/webmidi-2.0.4.tgz#d1bb7287d59cc350333d225ce8b3ad4e54c5e6da"
+  integrity sha512-ouA837zUpSzURsUGvcnay6JwUz2B/UoJP3Lkacnz60y+rul8/auVOFS9LSO6v0gdNbGvRkbHEpayD8PbO7IKhw==
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.9.0.tgz#bd850604b4042459a5a41cd7d338cbed695ed964"
@@ -3170,6 +3175,11 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
+jazz-midi@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/jazz-midi/-/jazz-midi-1.7.3.tgz#8c928062c81031c8a8636e6c87d43d5891bb2eb7"
+  integrity sha512-3+V4ZxmYainXoHDaevDBexHQumD3ONlbUgo6zmUXb6VKlJ05XxM+7Xhv7HPbWSOuVTV+gpTV9CI25PwUZJRy/w==
+
 js-base64@^2.1.9:
   version "2.6.4"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.6.4.tgz#f4e686c5de1ea1f867dbcad3d46d969428df98c4"
@@ -3229,6 +3239,14 @@ json5@^1.0.1:
   integrity sha512-aKS4WQjPenRxiQsC93MNfjx+nbF4PAdYzmd/1JIj8HYzqfbu86beTuNgXDzPknWk0n0uARlyewZo4s++ES36Ow==
   dependencies:
     minimist "^1.2.0"
+
+jzz@^1.0.7, jzz@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/jzz/-/jzz-1.0.9.tgz#a4c8782ee5cbd39d03b74f402b4847a1279cd728"
+  integrity sha512-yvmo8kuUShGsffIwC8L2sTkuGYH83p6+VGsay++nbUPpxiANGZmlKg+kU/51wpJ42vj/5mr8JgQ9l/hrRvmyHw==
+  dependencies:
+    "@types/webmidi" "^2.0.4"
+    jazz-midi "^1.7.3"
 
 killable@^1.0.1:
   version "1.0.1"
@@ -5534,6 +5552,13 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   integrity sha512-O84QOnr0icsbFGLS0O3bI5FswxzRr8/gHwWkDlQFskhSPryQXvrTMxjxGP4+iWYoauLoBvfDpkrOauZ+0iZpDA==
   dependencies:
     minimalistic-assert "^1.0.0"
+
+web-midi-api@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/web-midi-api/-/web-midi-api-2.0.8.tgz#ec15483640c2423703f7fea438f29baba03a1b79"
+  integrity sha512-enCNTytwLyKVUsbjDf3drBnWVWBtEI4O1OT+vxc1eFokJfwgy/ktDoSsTiHcObuxXy+kxt6dDfh1saH3z+KBXw==
+  dependencies:
+    jzz "^1.0.7"
 
 webaudiofont@^2.5.24:
   version "2.5.53"

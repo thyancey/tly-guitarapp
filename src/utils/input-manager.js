@@ -1,10 +1,7 @@
-// import WebMidi from 'webmidi';
-
-import MusicMan from "./musicman";
+require('web-midi-api');
 
 const _data = [];
 let _commandCallback = null;
-let _midiInput = null;
 
 const _keyMap = {
   'BracketLeft': {
@@ -47,23 +44,21 @@ const InputManager = {
   create: (document, commandCallback) => {
     if(!_commandCallback){
       try{
-        InputManager.midiSetup();
+        InputManager.rawMidiSetup();
       }catch(e){
         console.error('midi error', e);
       }
   
-
       _commandCallback = commandCallback;
       document.addEventListener('keydown', InputManager.onKeyDown.bind(this));
     }
   },
 
-  midiSetup: () => {
+  rawMidiSetup: () => {
     if (!navigator.requestMIDIAccess) {
       console.warn('WebMIDI is not supported in this browser.');
       return;
     }
-
 
     navigator.requestMIDIAccess().then(midiAccess => {
       console.log('This browser supports WebMIDI!');
@@ -72,7 +67,11 @@ const InputManager = {
       // var inputs = midiAccess.inputs;
       // var outputs = midiAccess.outputs;
 
+      console.log('inputs:', midiAccess.inputs)
+      console.log('inputValues:', midiAccess.inputs.values())
+
       for (var input of midiAccess.inputs.values()){
+        console.log('lookin at input...', input);
         input.onmidimessage = InputManager.onMidiMessage;
       }
 
@@ -82,6 +81,7 @@ const InputManager = {
   },
 
   onMidiMessage(midiMessage){
+    // console.log('onMidiMessage', midiMessage)
     const command = midiMessage.data[0];
     const note = midiMessage.data[1];
     const velocity = (midiMessage.data.length > 2) ? midiMessage.data[2] : 0; // a velocity value might not be included with a noteOff command
@@ -110,43 +110,6 @@ const InputManager = {
     }
   },
 
-
-  /*
-  create: (document, commandCallback) => {
-    if(!_commandCallback){
-      try{
-        WebMidi.enable(err => {
-          // console.log(WebMidi.inputs);
-          // console.log(WebMidi.outputs);
-          
-          _midiInput = WebMidi.getInputById('input-0');
-          if(_midiInput){
-            _midiInput.addListener('noteon', 'all', event => {
-              if(event.rawVelocity > 100){
-                // console.log(`note value`, event);
-                // console.log(`note value`, event.note);
-                // {number: 40, name: "E", octave: 2}
-                // { name: simpleNote, octave: octave - 1}
-                commandCallback({
-                  action: 'setNoteFromMidi', 
-                  payload: event.note
-                });
-    
-              }
-            });
-          }
-        });
-
-      }catch(e){
-        console.error('WebMidi error', e);
-      }
-      
-
-      _commandCallback = commandCallback;
-      document.addEventListener('keydown', InputManager.onKeyDown.bind(this));
-    }
-  },
-  */
   onKeyDown: e => { 
     console.log('key:', e.code);
     if(_keyMap[e.code]){

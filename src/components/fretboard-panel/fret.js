@@ -35,6 +35,9 @@ class Fret extends Component {
     if(this.props.isInPattern){
       classNames.push('pattern-fret');
     }
+    if(this.props.isMidiNote){
+      classNames.push('active-midi');
+    }
 
     return (
       <div className={classNames.join(' ')} onClick={(e) => this.selectNote(e)}>

@@ -89,22 +89,28 @@ const InputManager = {
     switch (command) {
       case 144: // noteOn
         if (velocity > 0) {
-          console.log('NOTE ON', note, velocity);
+          // console.log('NOTE ON', note, velocity);
           // console.log(midiMessage);
           _commandCallback({
             action: 'setNoteFromMidi', 
             payload: note
           });
         } else {
-          console.log('NOTE QUIET', note, velocity);
-          // console.log(midiMessage);
-          noteOff(note);
+          // console.log('NOTE QUIET', note, velocity);
+          // noteOff(note);
+          _commandCallback({
+            action: 'removeNoteFromMidi', 
+            payload: note
+          });
         }
         break;
       case 128: // noteOff
+        // console.log('NOTE OFF', note, velocity);
         // noteOff(note);
-        console.log('NOTE OFF', note, velocity);
-          // console.log(midiMessage);
+          _commandCallback({
+            action: 'removeNoteFromMidi', 
+            payload: note
+          });
         break;
       // we could easily expand this switch statement to cover other types of commands such as controllers or sysex
     }

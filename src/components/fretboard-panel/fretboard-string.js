@@ -32,6 +32,7 @@ export default class FretboardString extends Component {
           isInChord={fret.isInChord}
           isInFound={fret.isInFound}
           isInPattern={fret.isInPattern}
+          isMidiNote={fret.isMidiNote}
           noteIdx={fret.noteIdx}
           fretData={fret} />
       );

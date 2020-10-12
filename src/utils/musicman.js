@@ -70,7 +70,9 @@ class MusicMan{
     return patterns;
   }
 
-  static findPatternRanges(patternObj, strings, notes, fretBounds){
+  // static findPatternRanges(patternObj, strings, notes, fretBounds){
+  static findPatternRanges(fData){
+    const { patternObj, strings, notes, fretBounds } = fData;
     const ranges = [];
     const foundString = strings[patternObj.refString];
     const stringFretBounds = fretBounds[patternObj.refString];
@@ -123,43 +125,51 @@ class MusicMan{
     return found;
   }
 
-  static convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes, chordFretIdxs, patternObj){
+  static convertToStringsMatrix(fData){
     const stringResults = [];
+    const patternRanges = fData.patternObj ? MusicMan.findPatternRanges(fData) : [];
 
-    // const pattern = DATA_MUSIC.scalePatterns[0].patterns[4];
-    const pattern = null;
-    const patternRanges = patternObj ? MusicMan.findPatternRanges(patternObj, strings, notes, fretBounds) : [];
-
-    for(let i = 0; i < strings.length; i++){
+    for(let i = 0; i < fData.strings.length; i++){
       const stringPatternRanges = patternRanges[i];
 
       const resultObj = {
-        fretBounds: fretBounds[i],
-        frets: MusicMan.convertToNotesMatrix(strings[i], notes, keyFinderNotes, chordFretIdxs[i], fretBounds[i], stringPatternRanges)
+        fretBounds: fData.fretBounds[i],
+        frets: MusicMan.convertToNotesMatrix(stringPatternRanges, {
+          string: fData.strings[i], 
+          fretBounds: fData.fretBounds[i], 
+          notes: fData.notes, 
+          keyFinderNotes: fData.keyFinderNotes, 
+          midiNotes: fData.midiNotes,
+          chordFret: fData.chordFretIdxs[i], 
+        })
       };
       stringResults.push(resultObj);
     }
     return new List(stringResults);
   }
 
-  static convertToNotesMatrix(string, notes, keyFinderNotes, chordFret, fretBounds, patternRanges){
+  static convertToNotesMatrix(patternRanges, fData){
     // console.log('keyfinder notes: ', keyFinderNotes);
     const retNotes = [];
-    for(let i = 0; i < string.length; i++){
-      const octaveNote = string[i];
-      const fretIdx = i + fretBounds[0];
+    for(let i = 0; i < fData.string.length; i++){
+      const octaveNote = fData.string[i];
+      const fretIdx = i + fData.fretBounds[0];
       const octaveNoteObj = MusicMan.splitOctaveNote(octaveNote);
-      const noteIdx = notes.indexOf(octaveNoteObj.simpleNote);
-      const isFound = keyFinderNotes && keyFinderNotes.indexOf(octaveNoteObj.simpleNote) > -1 || false;
+      const midiNote = this.getMidiNote(octaveNote);
+      const noteIdx = fData.notes.indexOf(octaveNoteObj.simpleNote);
+      const isFound = fData.keyFinderNotes && fData.keyFinderNotes.indexOf(octaveNoteObj.simpleNote) > -1 || false;
+      // console.log('midiNotes', fData.midiNotes, midiNote);
 
       retNotes.push({
         isInKey: noteIdx > -1,
-        isInChord: chordFret === fretIdx,
+        isInChord: fData.chordFret === fretIdx,
         isInFound: isFound,
+        isMidiNote: fData.midiNotes.indexOf(midiNote) > -1,
         isInPattern: MusicMan.isFretIndexInPatternRanges(fretIdx, patternRanges),
-        fretIdx: fretIdx,
-        noteIdx: noteIdx,
-        octaveNote: octaveNote,
+        fretIdx,
+        noteIdx,
+        octaveNote,
+        midiNote,
         octave: octaveNoteObj.octave,
         simpleNote: octaveNoteObj.simpleNote,
       });
@@ -385,10 +395,11 @@ class MusicMan{
 
   //- i hate this format, but I dont feel like fixing it right now
   static getFretNoteMessageFromNoteIdx(noteIdx){
-    const octave = Math.floor((noteIdx / 12) - 2);
+    const octave = Math.floor((noteIdx / 12) - 1);
     const name = this.getNoteNameFromIndex(noteIdx);
 
     return {
+      noteIdx: noteIdx,
       simpleNote: name,
       octaveNote: `${name}-${octave}`,
       octave: octave
@@ -713,7 +724,7 @@ class MusicMan{
   static getMidiNote(octaveNote){
     // console.log('getMidiNote(' + octaveNote + ')');
     // console.log('and ', MusicMan.getNoteChange('C-2', octaveNote));
-    return MusicMan.getNoteChange('C-2', octaveNote) + 48;
+    return MusicMan.getNoteChange('C-3', octaveNote) + 48;
   }
 
   static getMidiScale(scaleNotes, descend){

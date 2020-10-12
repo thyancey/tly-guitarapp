@@ -32,6 +32,9 @@ class Main extends Component {
       if(command.action === 'setNoteFromMidi'){
         const fretMessageObj = MusicMan.getFretNoteMessageFromNoteIdx(command.payload);
         this.props.actions.onFretSelected(fretMessageObj);
+      }else if(command.action === 'removeNoteFromMidi'){
+        const fretMessageObj = MusicMan.getFretNoteMessageFromNoteIdx(command.payload);
+        this.props.actions.onFretReleased(fretMessageObj);
       }else{
         if(!this.props.actions[command.action]){
           console.error(`mapped input action "${command.action} does not match a valid action`);
@@ -50,7 +53,6 @@ class Main extends Component {
 
     return(
       <div className={mainClassName} >
-        {/* <InputManager/> */}
         <ErrorContainer activeError={this.state.activeError}/>
         <MusicBox ref="musicBox" scale={this.props.scale} midiInstrument={this.props.midiInstrument} volume={this.props.volume} />
         <DragCover  isDragging={this.props.isDragging} 

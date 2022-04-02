@@ -34,6 +34,12 @@ class MusicKeyPanel extends Component {
     });
   }
 
+  onModeChange(event){
+    if(event && event.target && !isNaN(event.target.value)){
+      this.props.actions.setMode(parseInt(event.target.value));
+    }
+  }
+
   createNoteButtons(){
     return MusicMan.getNotes().map((note, index) => (
             <StoreButton  actionMethod={(param) => this.onMusicKeyClick(param)} 
@@ -44,8 +50,8 @@ class MusicKeyPanel extends Component {
     ));
   }
 
-  createChordButtons(instrument, musicKey, scale){
-    const chordsArray = MusicMan.getChordDefinitions(instrument, musicKey, scale)
+  createChordButtons(instrument, musicKey, scale, mode){
+    const chordsArray = MusicMan.getChordDefinitions(instrument, musicKey, scale, mode)
     let retArray = []
 
     retArray = chordsArray.map((chord, index) => (
@@ -61,12 +67,28 @@ class MusicKeyPanel extends Component {
   }
 
   render() {
-    const simpleNotes = MusicMan.getScale(this.props.musicKey, this.props.scale);
+    const simpleNotes = MusicMan.getScale(this.props.musicKey, this.props.scale, this.props.mode);
+    const modes = MusicMan.getModes();
 
     return (
       <div>
         <div className="subpanel">
           {this.createNoteButtons()}
+        </div>
+        <hr/>
+        <div className="subpanel">
+          <h2>{'Mode'}</h2>
+          <div className="active-mode">
+            <select name="modes" value={this.props.mode} onChange={e => this.onModeChange(e)}>
+              {modes.map((modeLabel, idx) => (
+                <option
+                  key={`mode-${idx}`}
+                  value={ idx } >
+                  {modeLabel}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <hr/>
         <div className="subpanel">
@@ -81,7 +103,7 @@ class MusicKeyPanel extends Component {
         <div className="subpanel">
           <h2>{'Chords in Key'}</h2>
           <div className="sidebuttons">
-            {this.createChordButtons(this.props.instrument, this.props.musicKey, this.props.scale)}
+            {this.createChordButtons(this.props.instrument, this.props.musicKey, this.props.scale, this.props.mode)}
           </div>
         </div>
       </div>
@@ -95,5 +117,6 @@ export default connect(state => ({
   scale: state.scale,
   playScales: state.playMode === 'scale',
   instrument: state.instrument,
-  chord: state.chord
+  chord: state.chord,
+  mode: state.mode
 }))(MusicKeyPanel);

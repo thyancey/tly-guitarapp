@@ -15,13 +15,12 @@ class ModePanel extends Component {
     const modes = MusicMan.getModes();
     return (
       <React.Fragment>
-          <SelectDropdown 
-            name="modes" 
-            value={this.props.mode} 
-            onChange={value => this.onModeChange(parseInt(value))}
-            options={modes}
-          >
-          </SelectDropdown>
+        <SelectDropdown 
+          name="modes" 
+          value={this.props.mode} 
+          onChange={value => this.onModeChange(parseInt(value))}
+          options={modes.map((m, idx) => ({ label: m, value: idx }))}
+        />
       </React.Fragment>
     );
   }

@@ -16,11 +16,11 @@ export default class SelectDropdown extends Component {
         value={this.props.value} 
         onChange={e => this.props.onChange(e.target.value)}
       >
-        {this.props.options.map((label, idx) => (
+        {this.props.options.map((opt, idx) => (
           <option
-            key={label}
-            value={this.props.useLabelForValue ? label : idx}>
-            {label}
+            key={opt.value}
+            value={opt.value}>
+            {opt.label}
           </option>
         ))}
       </select>

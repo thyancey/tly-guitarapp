@@ -164,6 +164,7 @@ const prepareForSetChord = (newChord) => {
 }
 
 const prepareForSetInstrument = (newInstrument, newMidiInstrument) => {
+  console.warn('prepareForSetInstrument', newMidiInstrument);
   return { 
     instrument: newInstrument,
     midiInstrument: newMidiInstrument,
@@ -180,8 +181,6 @@ const prepareForFlipWesternScale = (newKey, newScale) => {
     scaleRegion: scaleRegion
   }
 }
-
-
 
 const setCachedLayoutData = (layout, panelPositions) => {
   // console.log('setCachedLayoutData', layout, panelPositions);
@@ -201,41 +200,38 @@ const setCachedLayoutData = (layout, panelPositions) => {
   }
 }
 
-const DEFAULT_SETTINGS = {
-  currentLayout: 'horizontal', // vertical doesnt work at all anymore
-  layoutGroups:{
-    vertical:{
-      left: ['musicKey', 'scale', 'instrument'],
-      center: ['fret','chorddisplay'],
-      right: ['tools', 'notedisplay', 'chord', 'settings']
-    },
-    horizontal:{
-      top: ['fret', 'tools' ],
-      bottom: ['instrument', 'scale', 'pattern', 'mode', 'musicKey']
-    },
+const DEFAULT_LAYOUT_GROUPS = {
+  vertical:{
+    left: ['musicKey', 'scale', 'instrument'],
+    center: ['fret','chorddisplay'],
+    right: ['tools', 'notedisplay', 'chord', 'settings']
+  },
+  horizontal:{
+    top: ['fret', 'tools' ],
+    bottom: ['scale', 'mode', 'musicKey','instrument','pattern']
   }
 }
 
 const store = {
   initialState: {
     notes: List.of('C', 'D', 'E', 'F', 'G', 'A', 'B', 'C'),
-    musicKey: 'C',
-    scale: 'major',
+    musicKey: getCachedData('musicKey', 'C'),
+    scale: getCachedData('scale', 'major'),
     scaleRegion: 'western',
-    instrument: 'guitar-standard',
+    instrument: getCachedData('instrument', 'guitar-standard'),
     maxFrets: 20,
-    midiInstrument: 'electricGuitar',
+    midiInstrument: getCachedData('midiInstrument', 'pizzicato'),
     octave: 2,
-    mode: 0,
-    pattern: null,
+    mode: getCachedData('mode', 0),
+    pattern: getCachedData('pattern', null),
     chord: null,
-    volume: .4,
+    volume: getCachedData('volume', 0.2),
     fretChanges: 0,
     playMode: 'note',
     keyFinderMode: 'off',
     keyFinderNotes: [],
-    currentLayout: getCachedData('currentLayout', DEFAULT_SETTINGS.currentLayout),
-    layoutGroups: getCachedData('panelPositions', DEFAULT_SETTINGS.layoutGroups),
+    currentLayout: getCachedData('currentLayout', 'horizontal'),
+    layoutGroups: getCachedData('panelPositions', DEFAULT_LAYOUT_GROUPS),
     isDragging: false,
     dragX:-1,
     dragY:-1,
@@ -271,6 +267,10 @@ const store = {
         mode
       });
 
+      setCachedData({
+        musicKey: musicKey
+      });
+
       return Object.assign({ 
         fretMatrix: fretMatrix, 
         fretChanges: fretChanges+1
@@ -285,25 +285,33 @@ const store = {
         pattern,
         mode
       });
+      
+      setCachedData({
+        pattern: pattern
+      });
 
       return Object.assign({ 
         fretMatrix: fretMatrix, 
         fretChanges: fretChanges+1
       }, prepareForNewPattern(pattern));
     },
-    setScale: ({ musicKey, fretChanges, instrument, mode }, scale) => {
-      console.log('-> setScale', scale);
+    setScale: ({ musicKey, fretChanges, instrument, mode }, newScale) => {
+      console.log('-> setScale', newScale);
       const fretMatrix = getFretMatrix({
         musicKey,
-        scale,
+        scale: newScale,
         instrument,
         mode
+      });
+
+      setCachedData({
+        scale: newScale
       });
 
       return Object.assign({ 
         fretMatrix: fretMatrix, 
         fretChanges: fretChanges+1
-      }, prepareForSetScale(scale));
+      }, prepareForSetScale(newScale));
     },
     nextScale: ({ musicKey, fretChanges, instrument, scale, mode }) => {
       const newScale = MusicMan.getAdjacentScaleLabel(scale, 1);
@@ -312,6 +320,10 @@ const store = {
         scale: newScale,
         instrument,
         mode
+      });
+
+      setCachedData({
+        scale: newScale
       });
 
       return Object.assign({ 
@@ -326,6 +338,10 @@ const store = {
         scale: newScale,
         instrument,
         mode
+      });
+
+      setCachedData({
+        scale: newScale
       });
 
       return Object.assign({ 
@@ -344,6 +360,10 @@ const store = {
         mode
       });
 
+      setCachedData({
+        musicKey: newMusicKey
+      });
+
       return Object.assign({ 
         fretMatrix: fretMatrix, 
         fretChanges: fretChanges+1
@@ -359,6 +379,10 @@ const store = {
         pattern,
         mode
       });
+      
+      setCachedData({
+        musicKey: newMusicKey
+      });
 
       return Object.assign({ 
         fretMatrix: fretMatrix, 
@@ -372,6 +396,11 @@ const store = {
         chord,
         instrument,
         mode
+      });
+
+      setCachedData({
+        musicKey: musicKey,
+        scale: scale
       });
 
       return Object.assign({ 
@@ -409,11 +438,16 @@ const store = {
 
       const midiInstrument = MusicMan.getInstrumentMidiId(instrument);
 
+      setCachedData({
+        instrument,
+        midiInstrument
+      });
+
       return Object.assign({ 
         fretMatrix: fretMatrix, 
         fretChanges: fretChanges+1,
         pattern: null
-      }, prepareForSetInstrument(newInstrument, midiInstrument));
+      }, prepareForSetInstrument(instrument, midiInstrument));
     },
     setOctave: ({ fretChanges }, newOctave) => {
 
@@ -454,8 +488,8 @@ const store = {
         playMode: newPlayMode 
       }
     },
-    setKeyFinderMode: ({ musicKey, scale, chord, instrument, mode }, newMode) => {
-      console.log('new mode', newMode)
+    setKeyFinderMode: ({ musicKey, scale, chord, instrument, mode }, newKeyFinderMode) => {
+      console.log('new mode', newKeyFinderMode)
       const fretMatrix = getFretMatrix({
         musicKey,
         scale,
@@ -466,21 +500,16 @@ const store = {
 
       return {
         keyFinderNotes: [],
-        keyFinderMode: newMode,
+        keyFinderMode: newKeyFinderMode,
         fretMatrix: fretMatrix
       }
     },
     toggleNoteMode: ({ keyFinderMode }, type) => {
-      console.log('toggleNoteMode', type)
-      if(keyFinderMode === type){
-        return {
-          keyFinderMode: 'off'
-        }
-      }else{
-        return {
-          keyFinderMode: type
-        }
-      }
+      const newMode = keyFinderMode === type ? 'off' : type;
+
+      return {
+        keyFinderMode: newMode
+      };
     },
     setMode: ({ fretChanges, musicKey, scale, chord, instrument, pattern }, mode) => {
       console.warn('----> set setMode', mode)
@@ -491,6 +520,10 @@ const store = {
         instrument,
         pattern,
         mode
+      });
+
+      setCachedData({
+        mode: mode
       });
 
       return Object.assign({
@@ -522,11 +555,29 @@ const store = {
         return {};
       }
     },
-    setVolume: ({ volume }, newVolume) => ({ volume: newVolume }),
-    changeVolume: ({ volume }, modifier) => ({
-     volume: Tools.clamp((volume + modifier), 0, 1)
-    }),
+    setVolume: ({}, newVolume) => {
+      setCachedData({
+        volume: newVolume
+      });
+      
+      return { 
+        volume: newVolume
+      }
+    },
+    changeVolume: ({ volume }, modifier) => {
+      const newVolume = Tools.clamp((volume + modifier), 0, 1);
+      setCachedData({
+        volume: newVolume
+      });
+
+      return {
+        volume: newVolume
+      };
+    },
     setMidiInstrument: ({ fretChanges, instrument }, newMidiInstrument) => {
+      setCachedData({
+        midiInstrument: newMidiInstrument
+      });
 
       return Object.assign({ 
         fretChanges: fretChanges+1
@@ -612,7 +663,6 @@ const store = {
 
     //- TODO: this method needs A LOT OF HELP
     onFretSelected: ({ keyFinderMode, musicKey, fretChanges, playMode, scale, keyFinderNotes, instrument, chord, mode }, noteObj) => {
-      console.log('onFretSelected', noteObj)
       let results = {};
       let fretMatrix;
       let wasModified = false;

@@ -7,11 +7,13 @@ export default {
     },
     "steelGuitar": {
       "midiId": 260,
-      "title": "Steel Guitar"
+      "title": "Steel Guitar",
+      "sustain": 0.25
     },
     "electricGuitar": {
       "midiId": 288,
-      "title": "Electric Guitar"
+      "title": "Electric Guitar",
+      "sustain": 1.0
     },
     "electricBass": {
       "midiId": 378,
@@ -35,11 +37,13 @@ export default {
     },
     "strings": {
       "midiId": 9,
-      "title": "Strings"
+      "title": "Strings",
+      "sustain": 1.0
     },
     "pizzicato": {
       "midiId": 496,
-      "title": "Pizzicato"
+      "title": "Pizzicato",
+      "sustain": 0.4
     },
     "aahs": {
       "midiId": 578,

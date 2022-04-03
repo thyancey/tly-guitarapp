@@ -19,7 +19,7 @@ class MusicKeyPanel extends Component {
     }
   }
 
-  onChordClick(chordLabel){
+  onChordClick(chordLabel, midiInstrument){
     if(this.props.chord === chordLabel){
       chordLabel = null;
     }
@@ -30,7 +30,8 @@ class MusicKeyPanel extends Component {
     
     this.props.actions.dispatchMusicEvent({
       type: 'STRUM_DOWN',
-      notes: midiNotes
+      notes: midiNotes,
+      midiInstrument
     });
   }
 
@@ -44,12 +45,12 @@ class MusicKeyPanel extends Component {
     ));
   }
 
-  createChordButtons(instrument, musicKey, scale, mode){
+  createChordButtons(instrument, musicKey, scale, mode, midiInstrument){
     const chordsArray = MusicMan.getChordDefinitions(instrument, musicKey, scale, mode)
     let retArray = []
 
     retArray = chordsArray.map((chord, index) => (
-      <StoreButton  actionMethod={(chord) => this.onChordClick(chord)}
+      <StoreButton  actionMethod={(chord) => this.onChordClick(chord, midiInstrument)}
                     actionParam={chord.id}
                     isActive={(chord.id === this.props.chord) && !chord.disabled} 
                     isDisabled={chord.disabled} 
@@ -81,7 +82,13 @@ class MusicKeyPanel extends Component {
         <div className="subpanel">
           <h2>{'Chords in Key'}</h2>
           <div className="sidebuttons">
-            {this.createChordButtons(this.props.instrument, this.props.musicKey, this.props.scale, this.props.mode)}
+            {this.createChordButtons(
+              this.props.instrument, 
+              this.props.musicKey, 
+              this.props.scale, 
+              this.props.mode, 
+              this.props.midiInstrument
+            )}
           </div>
         </div>
       </div>
@@ -96,5 +103,6 @@ export default connect(state => ({
   playScales: state.playMode === 'scale',
   instrument: state.instrument,
   chord: state.chord,
-  mode: state.mode
+  mode: state.mode,
+  midiInstrument: state.midiInstrument
 }))(MusicKeyPanel);

@@ -7,12 +7,12 @@ require('./style.less');
 
 const SCALE_SPEED = .25;
 const SUSTAIN_VALUES = {
-  NOTE:.5,
-  SCALE:1,
+  NOTE:.25,
+  SCALE:.5,
   CHORD:.5,
-  STRUM_UP:.5,
-  STRUM_DOWN:.5,
-  SNAP:2.5
+  STRUM_UP:.25,
+  STRUM_DOWN:.25,
+  SNAP:0.5
 }
 
 export const PLAY_TYPES = [ 'NOTE', 'SCALE', 'SCALE_FULL', 'CHORD', 'STRUM_UP', 'STRUM_DOWN', 'SNAP' ];
@@ -24,6 +24,10 @@ export default class MusicBox extends Component {
     this.state = {
       curInstrument: this.findInstrument()
     };
+  }
+  
+  getInstrument(id){
+    return MIDI_INSTRUMENT_DATA.instruments[id];
   }
 
   getInstruments(){
@@ -44,10 +48,18 @@ export default class MusicBox extends Component {
   playFullScale(midiNotes) {
     this.playScale(midiNotes.slice(0).concat(midiNotes.reverse().slice(1)));
   }
+  
+  getSustain(midiInstrumentId, type){
+    const instra = this.getInstrument(midiInstrumentId)
+    const sust = (instra && instra.sustain) || SUSTAIN_VALUES[type];
+    return sust;
+  }
 
-  playNotes(midiNotes, type){
+  playNotes(midiNotes, type, midiInstrument){
+    const sustain = this.getSustain(midiInstrument, type);
+
     switch(type){
-      case 'NOTE': this.midiSounds.playChordNow(this.state.curInstrument.midiId, midiNotes, SUSTAIN_VALUES.NOTE);
+      case 'NOTE': this.midiSounds.playChordNow(this.state.curInstrument.midiId, midiNotes, sustain);
         break;
       case 'SCALE': 
         this.midiSounds.cancelQueue();
@@ -57,13 +69,13 @@ export default class MusicBox extends Component {
         this.midiSounds.cancelQueue();
         this.playFullScale(midiNotes);
         break;
-      case 'CHORD': this.midiSounds.playChordNow(this.state.curInstrument.midiId, midiNotes, SUSTAIN_VALUES.CHORD);
+      case 'CHORD': this.midiSounds.playChordNow(this.state.curInstrument.midiId, midiNotes, sustain);
         break;
-      case 'STRUM_UP': this.midiSounds.playStrumUpNow(this.state.curInstrument.midiId, midiNotes, SUSTAIN_VALUES.STRUM_UP);
+      case 'STRUM_UP': this.midiSounds.playStrumUpNow(this.state.curInstrument.midiId, midiNotes, sustain);
         break;
-      case 'STRUM_DOWN': this.midiSounds.playStrumDownNow(this.state.curInstrument.midiId, midiNotes, SUSTAIN_VALUES.STRUM_DOWN);
+      case 'STRUM_DOWN': this.midiSounds.playStrumDownNow(this.state.curInstrument.midiId, midiNotes, sustain);
         break;
-      case 'SNAP': this.midiSounds.playSnapNow(this.state.curInstrument.midiId, midiNotes, SUSTAIN_VALUES.SNAP);
+      case 'SNAP': this.midiSounds.playSnapNow(this.state.curInstrument.midiId, midiNotes, sustain);
         break;
     }
   }
@@ -104,7 +116,7 @@ export default class MusicBox extends Component {
   }
 
   onMusicEvent(musicEvent){
-    this.playNotes(musicEvent.notes, musicEvent.type);
+    this.playNotes(musicEvent.notes, musicEvent.type, musicEvent.midiInstrument);
   }
 
   setVolume(newVolume){

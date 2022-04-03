@@ -3,9 +3,7 @@ import DATA_INSTRUMENT from 'src/data/instrumentdata.js';
 import DATA_MIDI from 'src/data/mididata.js';
 import { Map, List } from 'immutable';
 
-
 class MusicMan{
-
   static toString(){
     return '(Class MusicMan)';
   }
@@ -535,8 +533,6 @@ class MusicMan{
     return retFrets;
   }
 
-
-
   static getChordFretIdxs(chordLabel, instrumentLabel){
     const chordObj = MusicMan.getChordObj(chordLabel, instrumentLabel);
     if(!chordObj){
@@ -572,7 +568,6 @@ class MusicMan{
 
     return noteChange;
   }
-
 
   static getChordDefinitions(instrumentLabel, musicKey, scaleLabel, mode){
     const chords = MusicMan.getInstrumentChords(instrumentLabel) || [];
@@ -650,7 +645,6 @@ class MusicMan{
         }
       }
 
-
       if(!found){
         //- found nothing, so return crap
         scaleChords.push(
@@ -665,10 +659,6 @@ class MusicMan{
         triadIdx++;
       }
     }
-
-
-    // console.log(scaleChords);
-
 
     return scaleChords;
   }

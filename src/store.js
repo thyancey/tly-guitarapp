@@ -5,7 +5,7 @@ import { isObject } from 'util';
 import Tools from 'src/utils/tools';
 import { PLAY_TYPES } from 'src/components/musicbox';
 
-const triggerSound = (type, octaveNote, scale, mode, dispatchMusicEvent) => {
+const triggerSound = (type, octaveNote, scale, mode, midiInstrument) => {
   if(PLAY_TYPES.indexOf(type) === -1){
     console.error(`given type "${type}" is not a valid note trigger type. Available types: ${PLAY_TYPES}`);
     return null;
@@ -14,14 +14,16 @@ const triggerSound = (type, octaveNote, scale, mode, dispatchMusicEvent) => {
       const midiNote = MusicMan.getMidiNote(octaveNote);
       global.dispatchMusicEvent({
         type: type,
-        notes: [midiNote]
+        notes: [midiNote],
+        midiInstrument: midiInstrument
       });
     }else{
       const octaveNotes = MusicMan.getScale(octaveNote, scale, mode);
       const midiNotes = MusicMan.getMidiScale(octaveNotes);
       global.dispatchMusicEvent({
         type: type,
-        notes: midiNotes
+        notes: midiNotes,
+        midiInstrument: midiInstrument
       });
     }
   }
@@ -642,7 +644,7 @@ const store = {
       return {};
     },
 
-    dispatchEasyMusicEvent: ({ musicKey, octave, scale, mode }, musicEvent) => {
+    dispatchEasyMusicEvent: ({ musicKey, octave, scale, mode, midiInstrument }, musicEvent) => {
 
       if(!global.dispatchMusicEvent){
         console.error('dispatchMusicEvent method was not defined on window.');
@@ -654,7 +656,11 @@ const store = {
           const scaleNotes = MusicMan.getScale(octaveNote, musicEvent.scale || scale, mode);
           musicEvent.notes = MusicMan.getMidiScale(scaleNotes);
 
-          global.dispatchMusicEvent(musicEvent);
+          console.log('dispatchin ', midiInstrument)
+          global.dispatchMusicEvent({ 
+            ...musicEvent,
+            midiInstrument
+          });
         }
 
       }
@@ -662,7 +668,7 @@ const store = {
     },
 
     //- TODO: this method needs A LOT OF HELP
-    onFretSelected: ({ keyFinderMode, musicKey, fretChanges, playMode, scale, keyFinderNotes, instrument, chord, mode }, noteObj) => {
+    onFretSelected: ({ keyFinderMode, musicKey, fretChanges, playMode, scale, keyFinderNotes, instrument, midiInstrument, chord, mode }, noteObj) => {
       let results = {};
       let fretMatrix;
       let wasModified = false;
@@ -700,9 +706,9 @@ const store = {
       }
   
       if(playMode === 'scale'){
-        triggerSound('SCALE_FULL', noteObj.octaveNote, scale, mode);
+        triggerSound('SCALE_FULL', noteObj.octaveNote, scale, mode, midiInstrument);
       }else{
-        triggerSound('NOTE', noteObj.octaveNote, scale, mode);
+        triggerSound('NOTE', noteObj.octaveNote, scale, mode, midiInstrument);
       }
 
       if(wasModified){

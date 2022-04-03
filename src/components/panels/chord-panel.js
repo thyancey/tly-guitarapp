@@ -19,7 +19,8 @@ class ChordPanel extends Component {
     
     this.props.actions.dispatchMusicEvent({
       type: 'STRUM_DOWN',
-      notes: midiNotes
+      notes: midiNotes,
+      midiInstrument: 'cheese'
     });
   }
   

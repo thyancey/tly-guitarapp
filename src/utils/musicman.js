@@ -33,6 +33,14 @@ class MusicMan{
     }
   }
 
+  static getModes(){
+    return DATA_MUSIC.modes;
+  }
+  
+  static getModeLabel(idx){
+    return DATA_MUSIC.modes[idx] || 'ERROR';
+  }
+
   static getPattern(patternId){
     if(!patternId) return null;
 
@@ -116,8 +124,6 @@ class MusicMan{
   static convertToStringsMatrix(strings, notes, fretBounds, keyFinderNotes, chordFretIdxs, patternObj){
     const stringResults = [];
 
-    // const pattern = DATA_MUSIC.scalePatterns[0].patterns[4];
-    const pattern = null;
     const patternRanges = patternObj ? MusicMan.findPatternRanges(patternObj, strings, notes, fretBounds) : [];
 
     for(let i = 0; i < strings.length; i++){
@@ -209,7 +215,6 @@ class MusicMan{
   }
 
   static getScaleSequence(scaleLabel){
-    // console.log('getScaleSequence', scaleLabel);
     try{
       return DATA_MUSIC.scales[scaleLabel].sequence;
     }catch(e){
@@ -219,7 +224,6 @@ class MusicMan{
   }
   
   static getScaleRegion(scaleLabel){
-    // console.log('getScaleSequence', scaleLabel);
     try{
       return DATA_MUSIC.scales[scaleLabel].region;
     }catch(e){
@@ -230,12 +234,7 @@ class MusicMan{
 
   //- ex, convert 'g' to 2. -1 if none found
   static getNoteIndex(noteName){
-    for(var i = 0; i < DATA_MUSIC.notes.length; i++){
-      if(DATA_MUSIC.notes[i] === noteName){
-        return i;
-      }
-    }
-    return -1;
+    return DATA_MUSIC.notes.findIndex(note => note === noteName);
   }
 
   static getAdjacentScaleLabel(curScaleLabel, modifier){
@@ -266,12 +265,12 @@ class MusicMan{
 /* More intense music stuff methods */
 
   /* major and minor scales are related, this is for helping with quick switching between the two */
-  static getWesternFlip(key, scaleLabel){
+  static getWesternFlip(key, scaleLabel, mode){
     const flippedScaleObj = DATA_MUSIC.westernScaleFlips[scaleLabel];
     if(!flippedScaleObj){
       return null;
     }else{
-      const oldScale = this.getScale(key, scaleLabel);
+      const oldScale = this.getScale(key, scaleLabel, mode);
       const noteIdx = oldScale.indexOf(key);
 
       let flippedKeyIdx = noteIdx + flippedScaleObj.diff;
@@ -290,7 +289,7 @@ class MusicMan{
 
   //- from a list of notes, and a scale, find any matching keys
   //- discard any scales that dont contain a note in your set
-  static matchKeysFromNotes(notesToMatch, scaleLabel){
+  static matchKeysFromNotes(notesToMatch, scaleLabel, mode){
     let foundKeys = [];
     if(notesToMatch.length === 0){
       return foundKeys;
@@ -298,7 +297,7 @@ class MusicMan{
 
     for(let n = 0; n < DATA_MUSIC.notes.length; n++){
       //- one note at a time
-      let scale = this.getScale(DATA_MUSIC.notes[n], scaleLabel);
+      let scale = this.getScale(DATA_MUSIC.notes[n], scaleLabel, mode);
 
       let foundNotes = notesToMatch.filter(note => scale.indexOf(note) > -1);
       if(foundNotes.length === notesToMatch.length){
@@ -310,7 +309,7 @@ class MusicMan{
   }
 
   /* based on an array of notes, find any scales and keys that contain those values */
-  static predictScalesFromNotes(notesToMatch, scaleLabel){
+  static predictScalesFromNotes(notesToMatch, scaleLabel, mode){
     let foundObjs = [];
     if(notesToMatch.length === 0){
       return [];
@@ -324,7 +323,7 @@ class MusicMan{
       
       for(let n = 0; n < DATA_MUSIC.notes.length; n++){
         //- one note at a time
-        let scaleNotes = this.getScale(DATA_MUSIC.notes[n], referenceScale);
+        let scaleNotes = this.getScale(DATA_MUSIC.notes[n], referenceScale, mode);
         //- now that you have notes in the scale, make sure notesToMatch doesnt have any weirdos
         let foundNotes = notesToMatch.filter(note => scaleNotes.indexOf(note) > -1);
 
@@ -342,7 +341,7 @@ class MusicMan{
   }
 
   /* based on an array of notes, find any scales and keys that contain a full set of those values */
-  static filterScalesFromNotes(notesToMatch, scaleLabel){
+  static filterScalesFromNotes(notesToMatch, scaleLabel, mode){
     let foundObjs = [];
     if(notesToMatch.length === 0){
       return [];
@@ -357,7 +356,7 @@ class MusicMan{
       for(let n = 0; n < DATA_MUSIC.notes.length; n++){
         //- one note at a time
         const referenceKey = DATA_MUSIC.notes[n];
-        let foundNotes = this.getScale(referenceKey, referenceScale);
+        let foundNotes = this.getScale(referenceKey, referenceScale, mode);
 
         if(foundNotes.length - 1 > notesToMatch.length){
           //- if more notes than given, the referenceScale is not contained within, quit
@@ -403,6 +402,19 @@ class MusicMan{
     return Math.floor(noteIdx / DATA_MUSIC.notes.length) + parseInt(curOctave);
   }
 
+
+  /* 
+    returns scale sequence, adding to the end a note which is an octave above (+12) the first note
+    // ([ 0, 2, 4 ]) => [ 0, 2, 4, 12] 
+
+    also shifts if youre using a mode
+    // ([ 0, 2, 4 ], 1) => [ 2, 4, 12, 14 ] 
+  */
+  static getCompleteSequence(sequence, mode){
+    const shifted = this.shiftArray(sequence, mode);
+    return [ ...shifted, shifted[0] + 12 ];
+  }
+
   /* returns a full scale based on an octave note and a label (major)
     //- ex, ("C-", "major") returns
     //- C, D, E, F, G, A, B, C
@@ -410,8 +422,8 @@ class MusicMan{
     //- ("C-2", "major") returns 
     //- C-2, D-2, E-2, F-2, G-2, A-3, B-3, C-3
   */
-  static getScale(octaveNote, scaleLabel){
-    // console.log('getScale', octaveNote, scaleLabel);
+  static getScale(octaveNote, scaleLabel, mode){
+    // console.log('getScale', octaveNote, scaleLabel, mode);
     if(octaveNote.indexOf('-') === -1){
       octaveNote += '-';
     }
@@ -419,18 +431,23 @@ class MusicMan{
     const octave = octaveNote.split('-')[1] || null;
 
     const sequence = MusicMan.getScaleSequence(scaleLabel);
+    const shiftedSequence = MusicMan.getCompleteSequence(sequence, mode);
     let scale = [];
 
     let curIdx = MusicMan.getNoteIndex(note);
-    for(var i = 0; i < sequence.length; i++){
+    for(var i = 0; i < shiftedSequence.length; i++){
       //- it's ok to pass octave here as null if this was called without an octave note
-      scale.push(MusicMan.getNoteAtIndex(curIdx + sequence[i], octave));
+      scale.push(MusicMan.getNoteAtIndex(curIdx + shiftedSequence[i], octave));
     }
-    
     return scale;
   }
 
-
+  static shiftArray(array, amount = 0){
+    return array.map((_, idx) => {
+      const offsetIdx = Math.abs((idx + amount) % array.length);
+      return array[offsetIdx];
+    });
+  }
 
   static getInstrumentMidiId(instrumentLabel){
     try{
@@ -557,12 +574,12 @@ class MusicMan{
   }
 
 
-  static getChordDefinitions(instrumentLabel, musicKey, scaleLabel){
+  static getChordDefinitions(instrumentLabel, musicKey, scaleLabel, mode){
     const chords = MusicMan.getInstrumentChords(instrumentLabel) || [];
 
     if(musicKey && scaleLabel){
       //- get chords for key and scale
-      return(MusicMan.getScaleChords(chords, musicKey, scaleLabel));
+      return(MusicMan.getScaleChords(chords, musicKey, scaleLabel, mode));
     }else{
       const retChords = [];
       for(var key in chords){
@@ -573,8 +590,12 @@ class MusicMan{
     }
   }
 
-  static getScaleChords(chords, musicKey, scaleLabel){
-    // console.log('getScaleChords')
+  static getShiftedTriads(triadArray, mode){
+    const shifted = MusicMan.shiftArray(triadArray, mode);
+    return [ ...shifted, shifted[0] ];
+  }
+
+  static getScaleChords(chords, musicKey, scaleLabel, mode){
     const scaleChords = [];
 
     const triadType = MusicMan.getScaleTriadType(scaleLabel);
@@ -589,12 +610,14 @@ class MusicMan{
       return [];
     }
 
-    const scaleNotes = MusicMan.getScale(musicKey, scaleLabel);
+    const shiftedTriadLabels = MusicMan.getShiftedTriads(triadLabels, mode);
+
+    const scaleNotes = MusicMan.getScale(musicKey, scaleLabel, mode);
     if(!scaleNotes){
       return [];
     }
 
-    // console.log(scaleNotes);
+    // console.log("scaleNotes!", scaleNotes);
 
     let triadIdx = 0;
 
@@ -613,10 +636,11 @@ class MusicMan{
             // console.log('(root) found ' + chordLabel + ' for ' + scaleNotes[i]);
 
             // console.log('triad checking: ' + chords[chordLabel].triad + ' and ' + triadLabels[triadIdx]);
-            if(chords[chordLabel].triad !== undefined && chords[chordLabel].triad === triadLabels[triadIdx]){
-              // console.log('(triad) found ' + chords[chordLabel].triad + ' for ' + triadLabels[triadIdx]);
+            if(chords[chordLabel].triad !== undefined && chords[chordLabel].triad === shiftedTriadLabels[triadIdx]){
+              // console.log('(triad) found ' + chords[chordLabel].triad + ' for ' + shiftedTriadLabels[triadIdx]);
               let chordObj = chords[chordLabel];
               chordObj.id = chordObj.id || chordLabel;
+              // console.log('puhsin', chordLabel)
               scaleChords.push(chords[chordLabel]);
               triadIdx++;
               found = true;
@@ -631,7 +655,7 @@ class MusicMan{
         //- found nothing, so return crap
         scaleChords.push(
           {
-            "title": scaleNotes[i] + this.getReadableTriad(triadLabels[triadIdx]),
+            "title": scaleNotes[i] + this.getReadableTriad(shiftedTriadLabels[triadIdx]),
             "root": scaleNotes[i],
             "triad": null,
             "fingering": null,

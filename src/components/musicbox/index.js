@@ -7,11 +7,11 @@ require('./style.less');
 
 const SCALE_SPEED = .25;
 const SUSTAIN_VALUES = {
-  NOTE:1.25,
+  NOTE:.5,
   SCALE:1,
-  CHORD:2.5,
-  STRUM_UP:2.5,
-  STRUM_DOWN:2.5,
+  CHORD:.5,
+  STRUM_UP:.5,
+  STRUM_DOWN:.5,
   SNAP:2.5
 }
 
@@ -72,7 +72,7 @@ export default class MusicBox extends Component {
     if(!instrumentId){
       instrumentId = MIDI_INSTRUMENT_DATA.defaultInstrument;
     }
-    return MIDI_INSTRUMENT_DATA.instruments[instrumentId];
+    return { ...MIDI_INSTRUMENT_DATA.instruments[instrumentId], id: instrumentId }
   }
 
   setMidiInstrument(newId){
@@ -93,8 +93,11 @@ export default class MusicBox extends Component {
 
   componentDidUpdate(prevProps){
     if(prevProps.midiInstrument !== this.props.midiInstrument){
-      this.setMidiInstrument(this.props.midiInstrument)
+      this.setMidiInstrument(this.props.midiInstrument);
+    } else if(this.state.curInstrument && this.state.curInstrument.id !== this.props.midiInstrument){
+      this.setMidiInstrument(this.props.midiInstrument);
     }
+    
     if(prevProps.volume !== this.props.volume){
       this.setVolume(this.props.volume);
     }

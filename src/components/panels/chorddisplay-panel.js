@@ -8,7 +8,7 @@ require('./style.less');
 class ChordDisplay extends Component {
 
   render() {
-    const chords = MusicMan.getChordDefinitions(this.props.instrument, this.props.musicKey, this.props.scale);
+    const chords = MusicMan.getChordDefinitions(this.props.instrument, this.props.musicKey, this.props.scale, this.props.mode);
 
     return (
       <div className="active-chords">
@@ -24,5 +24,6 @@ class ChordDisplay extends Component {
 export default connect(state => ({ 
   musicKey: state.musicKey,
   scale: state.scale,
-  instrument: state.instrument
+  instrument: state.instrument,
+  mode: state.mode
 }))(ChordDisplay);

@@ -8,7 +8,7 @@ require('./style.less');
 class NoteDisplayPanel extends Component {
 
   render() {
-    const simpleNotes = MusicMan.getScale(this.props.musicKey, this.props.scale);
+    const simpleNotes = MusicMan.getScale(this.props.musicKey, this.props.scale, this.props.mode);
 
     return (
       <div className="active-notes">
@@ -23,5 +23,6 @@ class NoteDisplayPanel extends Component {
 
 export default connect(state => ({ 
   musicKey: state.musicKey,
-  scale: state.scale
+  scale: state.scale,
+  mode: state.mode
 }))(NoteDisplayPanel);

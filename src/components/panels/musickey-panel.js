@@ -44,8 +44,8 @@ class MusicKeyPanel extends Component {
     ));
   }
 
-  createChordButtons(instrument, musicKey, scale){
-    const chordsArray = MusicMan.getChordDefinitions(instrument, musicKey, scale)
+  createChordButtons(instrument, musicKey, scale, mode){
+    const chordsArray = MusicMan.getChordDefinitions(instrument, musicKey, scale, mode)
     let retArray = []
 
     retArray = chordsArray.map((chord, index) => (
@@ -61,7 +61,7 @@ class MusicKeyPanel extends Component {
   }
 
   render() {
-    const simpleNotes = MusicMan.getScale(this.props.musicKey, this.props.scale);
+    const simpleNotes = MusicMan.getScale(this.props.musicKey, this.props.scale, this.props.mode);
 
     return (
       <div>
@@ -81,7 +81,7 @@ class MusicKeyPanel extends Component {
         <div className="subpanel">
           <h2>{'Chords in Key'}</h2>
           <div className="sidebuttons">
-            {this.createChordButtons(this.props.instrument, this.props.musicKey, this.props.scale)}
+            {this.createChordButtons(this.props.instrument, this.props.musicKey, this.props.scale, this.props.mode)}
           </div>
         </div>
       </div>
@@ -95,5 +95,6 @@ export default connect(state => ({
   scale: state.scale,
   playScales: state.playMode === 'scale',
   instrument: state.instrument,
-  chord: state.chord
+  chord: state.chord,
+  mode: state.mode
 }))(MusicKeyPanel);

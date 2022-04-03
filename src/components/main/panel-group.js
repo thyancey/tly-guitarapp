@@ -11,6 +11,7 @@ import ScalePanel from 'src/components/panels/scale-panel';
 import ToolsPanel from 'src/components/panels/tools-panel';
 import PatternPanel from 'src/components/panels/pattern-panel';
 import SettingsPanel from 'src/components/panels/settings-panel';
+import ModePanel from 'src/components/panels/mode-panel';
 import Panel from 'src/components/panels/panel';
 
 require('./style.less');
@@ -65,6 +66,11 @@ const MAP_PANELS = {
     panelClass: 'tools',
     title: 'Tools',
     component: <ToolsPanel/>
+  }, 
+  mode:{
+    panelClass: 'mode',
+    title: 'Modes',
+    component: <ModePanel/>
   }
 }
 

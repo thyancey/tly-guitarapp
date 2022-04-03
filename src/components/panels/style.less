@@ -129,7 +129,7 @@
 
 /* TODO, remove this need for specificity */
 #workspace .panelgroup.mod-bottom .panel-container.panel-musickey{
-  flex-basis: 18rem;
+  flex-basis: 30rem;
 }
 
 .panel-container{
@@ -161,85 +161,75 @@
   }
 
   &.panel-chord,
-  &.panel-scale,
-  &.panel-instrument{
+  &.panel-scale {
     min-height:20rem;
+    // min-height:15rem;
     .store-button{
       font-size:1.5rem;
       padding:.25rem;
       margin:@button-margins;
     }
+  }
+
+  &.panel-instrument{
+    min-height:14rem;
+
+    .panel-body{
+      overflow-y:hidden;
+      height:100%;
+    }
 
     .instrument-groups{
       height:100%;
-      overflow-y:none;
+      display:flex;
+      
       div.left,div.right{
-        display:inline-block;
-        vertical-align:top;
+        flex:1;
+        display:flex;
+        flex-direction:column;
         width:50%;
-        height:100%;
-        overflow-y:hidden;
+        padding:1rem;
 
-        >div{
-          overflow-y:auto;
-          height:~"calc(100% - 3.5rem)";
+        select{
+          flex:1;
+          width:100%;
         }
       }
     }
   }
 
-  &.panel-keydetails{
-    min-height:16rem;
-    .store-button{
-      margin:0.5rem;
-    }
+  &.panel-mode{
+    min-height:12rem;
+    
+    .panel-body{
+      padding:.5rem;
+      height:100%;
 
-    hr{
-      border-color: @color-blue;
-      border-width: 1px;
-    }
-
-    h2{
-      color: @color-blue;
-      text-shadow:0 0 1rem @color-blue;
-    }
-
-    span{
-      display:inline-block;
-      padding:.25rem;
-      color: @color-purple;
-
-      cursor: pointer;
-
-      &:hover{
-        color: @color-blue;
-        text-shadow:0 0 1rem @color-blue;
-      }
-
-      &.active{
-        color: @color-white;
-        text-shadow:0 0 1rem @color-white;
-      }
-    }
-
-    .sidebuttons{
-      .store-button{
-        min-height: 8rem;
+      .select-dropdown{
+        width:100%;
+        height:100%;
       }
     }
   }
 
   &.panel-pattern{
-    .sidebuttons{
-      .store-button{
-        white-space:nowrap;
-        min-height: 8rem;
+    min-height:12rem;
 
-        &.active-button{
-          background-color: @color-green;
-          color: @color-black;
-          box-shadow:0 0 2rem @color-green;
-        }
+    .panel-body{
+      display:flex;
+      height:100%;
+      padding:.5rem;
+    }
+    .store-button{
+      flex:1;
+      white-space:nowrap;
+      margin:.5rem .5rem;
+      padding:1rem .5rem;
+
+      &.active-button{
+        background-color: @color-green;
+        color: @color-black;
+        box-shadow:0 0 1.5rem @color-green;
       }
     }
   }
@@ -330,3 +320,4 @@
     }
   }
 }
+

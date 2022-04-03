@@ -36,9 +36,9 @@ class ToolsPanel extends Component {
   }
 
   render() {
-    const foundKeys = MusicMan.matchKeysFromNotes(this.props.keyFinderNotes, this.props.scale);
-    const predictedObjs = MusicMan.predictScalesFromNotes(this.props.keyFinderNotes, this.props.scale);
-    const filteredObjs = MusicMan.filterScalesFromNotes(this.props.keyFinderNotes, this.props.scale);
+    const foundKeys = MusicMan.matchKeysFromNotes(this.props.keyFinderNotes, this.props.scale, this.props.mode);
+    const predictedObjs = MusicMan.predictScalesFromNotes(this.props.keyFinderNotes, this.props.scale, this.props.mode);
+    const filteredObjs = MusicMan.filterScalesFromNotes(this.props.keyFinderNotes, this.props.scale, this.props.mode);
     const flipEnabled = this.props.scaleRegion === 'western';
     
     return (
@@ -118,5 +118,6 @@ export default connect(state => ({
   fretChanges: state.fretChanges,
   musicKey: state.musicKey,
   scale: state.scale,
-  scaleRegion: state.scaleRegion
+  scaleRegion: state.scaleRegion,
+  mode: state.mode
 }))(ToolsPanel);

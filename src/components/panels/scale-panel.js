@@ -36,14 +36,12 @@ class ScalePanel extends Component {
   }
 
   render() {
-    const flipEnabled = this.props.scaleRegion === 'western';
     return (          
       <div>
         <div>
           {this.createScaleButtons(MusicMan.getScales())}
         </div>
       </div>
-
     );
   }
 }

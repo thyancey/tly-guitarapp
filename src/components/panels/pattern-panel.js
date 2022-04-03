@@ -20,9 +20,10 @@ class PatternPanel extends Component {
     retArray = foundPatterns.map((pattern, index) => (
       <StoreButton  actionMethod={(pattern) => this.onPatternClick(pattern)}
                     actionParam={pattern.id}
+                    extraClasses={'centered-text'}
                     isActive={(pattern.id === this.props.pattern)} 
                     isDisabled={pattern.disabled} 
-                    title={`Pat. ${index + 1}`}
+                    title={`#${index + 1}`}
                     key={index}/>
     ));
 
@@ -31,13 +32,10 @@ class PatternPanel extends Component {
 
 
   render() {
-    return (          
-      <div>
-        <div className="sidebuttons">
-          {this.createPatternButtons(this.props.instrument, this.props.scale)}
-        </div>
-      </div>
-
+    return (
+      <React.Fragment>
+        {this.createPatternButtons(this.props.instrument, this.props.scale)}
+      </React.Fragment>
     );
   }
 }

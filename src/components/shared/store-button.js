@@ -5,6 +5,10 @@ require('./style.less');
 export default class StoreButton extends Component {
   render() {
     let className = 'store-button';
+    if(this.props.extraClasses){
+      className += ` ${this.props.extraClasses}`;
+    }
+    
     if(this.props.isActive){
       className += ' active-button';
     }

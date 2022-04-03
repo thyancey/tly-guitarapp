@@ -202,7 +202,7 @@ const setCachedLayoutData = (layout, panelPositions) => {
 }
 
 const DEFAULT_SETTINGS = {
-  currentLayout: 'horizontal',
+  currentLayout: 'horizontal', // vertical doesnt work at all anymore
   layoutGroups:{
     vertical:{
       left: ['musicKey', 'scale', 'instrument'],
@@ -211,7 +211,7 @@ const DEFAULT_SETTINGS = {
     },
     horizontal:{
       top: ['fret', 'tools' ],
-      bottom: ['instrument', 'scale', 'pattern', 'musicKey']
+      bottom: ['instrument', 'scale', 'pattern', 'mode', 'musicKey']
     },
   }
 }

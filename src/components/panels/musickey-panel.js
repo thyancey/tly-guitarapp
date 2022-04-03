@@ -34,12 +34,6 @@ class MusicKeyPanel extends Component {
     });
   }
 
-  onModeChange(event){
-    if(event && event.target && !isNaN(event.target.value)){
-      this.props.actions.setMode(parseInt(event.target.value));
-    }
-  }
-
   createNoteButtons(){
     return MusicMan.getNotes().map((note, index) => (
             <StoreButton  actionMethod={(param) => this.onMusicKeyClick(param)} 
@@ -68,27 +62,11 @@ class MusicKeyPanel extends Component {
 
   render() {
     const simpleNotes = MusicMan.getScale(this.props.musicKey, this.props.scale, this.props.mode);
-    const modes = MusicMan.getModes();
 
     return (
       <div>
         <div className="subpanel">
           {this.createNoteButtons()}
-        </div>
-        <hr/>
-        <div className="subpanel">
-          <h2>{'Mode'}</h2>
-          <div className="active-mode">
-            <select name="modes" value={this.props.mode} onChange={e => this.onModeChange(e)}>
-              {modes.map((modeLabel, idx) => (
-                <option
-                  key={`mode-${idx}`}
-                  value={ idx } >
-                  {modeLabel}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
         <hr/>
         <div className="subpanel">

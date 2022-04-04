@@ -8,7 +8,7 @@ class Header extends Component {
   render() {
     return(
       <header>
-        <h3>{'Tom\'s Guitar App'}</h3>
+        <h3>{'Fret Ref'}</h3>
         <a href="http://www.thomasyancey.com" target="_blank">{'...see some of my other stuff'}</a>
 
         <div className="volume-container">
